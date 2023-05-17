@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block rootcontent %}
+<link rel="stylesheet" href="{% static 'css\home\home-style.css' %}" type="text/css">
+
+<div class="page-categories" id="categories">
+    {% for categoriesbatch in categories|get_categories_batches %}
+        <div class="categories-cards">
+                {% for category in categoriesbatch %}
+                    <div
+                        class="category-card {% cycle 'frs' 'sec' 'thr' 'fou' 'fif' 'six' 'sev' 'eig' 'nin' %}-card bg"
+                        style="background: url('media/{{ category.preview }}');filter: grayscale(100%);"
+                        onmouseover="onhover(this)"
+                        onmouseout="onunhover(this)"
+                        id="{{ category.title }}">
+                        <div class="category-card-onhover-filter">
+                            {{ category.title|upper }}
+                        </div>
+                    </div>
+                {% endfor %}
+        </div>
+    {% endfor %}
+</div>
+<footer style="text-align: center;">
+    footer!
+</footer>
+<script type="text/javascript" src="{% static 'js\home\page-categories.js' %}"></script>
+{% endblock %}

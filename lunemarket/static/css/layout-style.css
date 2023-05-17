@@ -75,7 +75,7 @@
 .main-header {
     display: flex;
     vertical-align: middle;
-    line-height: 13vh;
+    line-height: 7vh;
     width: 100%;
     height: 100%;
     text-align: center;
@@ -107,10 +107,10 @@
 }
 
 .header-nav-button {
-    margin: 2vh auto 2vh;
-    height: 6vh;
-    font-size: 2.5vh;
-    line-height: 2.5vh;
+    margin: 1.4vh auto 1.4vh;
+    height: 4.2vh;
+    font-size: 1.75vh;
+    line-height: 1.75vh;
     display: inline-block;
     vertical-align: middle;
     border: 0px;
@@ -124,7 +124,7 @@
 .logo {
     margin: 1vh auto 1vh;
     display: block;
-    height: 8vh;
+    height: 5vh;
     aspect-ratio: 1/1;
     filter: drop-shadow(0px 0px 2.5px gray) grayscale(80%);;
 }

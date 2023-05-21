@@ -1,5 +1,5 @@
 from django.test import TestCase
-from ..filters import get_categories_batches
+from products.filters import get_categories_batches
 
 
 class FiltersTestCase(TestCase):

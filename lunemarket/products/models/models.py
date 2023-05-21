@@ -1,53 +1,37 @@
-import hashlib
-import random
-
-from os import listdir
-from os.path import isfile, join
+from typing import Union
 from django.db import models
 from products import validators
+from django.core.exceptions import ValidationError
 
-
-def _get_image_name(filename: str) -> str:
-    filename = ''.join(random.choice(list(filename)))
-    return hashlib.sha256(filename.encode('utf-8')).hexdigest()
-
-
-def _get_target_directory(model_dictionary: dict) -> str:
-    return 'cards' if 'category' in model_dictionary else 'categories'
-
-
-def _get_file_extension(filename: str) -> str:
-    return filename.split('.')[-1]
-
-
-def _get_img_upload_path(self: models.Model, filename: str) -> str:
-    target_dir, img_hash, img_extension = (_get_target_directory(model_dictionary=self.__dict__),
-                                           _get_image_name(filename=filename),
-                                           _get_file_extension(filename=filename))
-    return f"{target_dir}/{self.title}/{img_hash}.{img_extension}"
+from .models_utils import get_image_path
 
 
 class Categories(models.Model):
     id = models.AutoField(primary_key=True)
-
     title = models.CharField("Category name",
                              max_length=40,
                              unique=True,
-                             validators=[validators.category_title_validator, validators.duplicate_spaces_validator],
+                             validators=[validators.category_title_validator],
                              null=False)
-
     parent = models.ForeignKey(to="self",
                                to_field="title",
                                verbose_name="Parent category",
                                null=True,
                                blank=True,
                                on_delete=models.CASCADE)
-
-    preview = models.ImageField(upload_to=_get_img_upload_path,
-                                null=False)
+    photo = models.ImageField(upload_to=get_image_path,
+                              null=False)
 
     def __str__(self):
         return self.title
+
+    def delete(self, using=None, keep_parents=False):
+        _delete_photo(model=self)
+        super().delete(using=using, keep_parents=keep_parents)
+
+    def clean(self):
+        if not self.parent and not self.title.isalpha():
+            raise ValidationError("title of category without parent may contain only lowercase words and spaces")
 
     class Meta:
         db_table = "Categories"
@@ -59,23 +43,32 @@ class Cards(models.Model):
     title = models.CharField("Name of product",
                              max_length=100,
                              unique=True,
-                             validators=[validators.card_title_validator, validators.duplicate_spaces_validator],
+                             validators=[validators.card_title_validator],
                              null=False)
-
     category = models.ForeignKey(to=Categories,
                                  to_field="title",
                                  verbose_name="Category name",
                                  null=False,
                                  on_delete=models.DO_NOTHING)
-
-    photo = models.ImageField(upload_to=_get_img_upload_path,
+    photo = models.ImageField(upload_to=get_image_path,
                               null=False,
                               verbose_name="Card title photo")
+    price = models.PositiveSmallIntegerField(name="Price of products",
+                                             null=False,
+                                             default=int())
 
     def __str__(self):
-        return f"{self.title}"
+        return self.title
+
+    def delete(self, using=None, keep_parents=False):
+        _delete_photo(model=self)
+        super().delete(using=using, keep_parents=keep_parents)
 
     class Meta:
         db_table = "Cards"
         verbose_name = "Card"
         verbose_name_plural = "Cards"
+
+
+def _delete_photo(model: Union[Categories, Cards]):
+    model.photo.delete(save=True)

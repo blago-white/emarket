@@ -2,23 +2,26 @@
 {% extends 'layout.html' %}
 {% load static %}
 
-{% block rootcontent %}
+{% block head %}
 <link rel="stylesheet" href="{% static 'css\home\home-style.css' %}" type="text/css">
+{% endblock %}
 
+{% block rootcontent %}
 <div class="page-categories" id="categories">
     {% for categoriesbatch in categories|get_categories_batches %}
         <div class="categories-cards">
-                {% for category in categoriesbatch %}
-                    <div
+                    {% for category in categoriesbatch %}
+                    <a
                         class="category-card {% cycle 'frs' 'sec' 'thr' 'fou' 'fif' 'six' 'sev' 'eig' 'nin' %}-card bg"
-                        style="background: url('media/{{ category.preview }}');filter: grayscale(100%);"
+                        style="background: url('media/{{ category.photo }}');filter: grayscale(100%);"
                         onmouseover="onhover(this)"
                         onmouseout="onunhover(this)"
-                        id="{{ category.title }}">
+                        id="{{ category.title }}"
+                        href="/category/{{ category.title }}">
                         <div class="category-card-onhover-filter">
                             {{ category.title|upper }}
                         </div>
-                    </div>
+                    </a>
                 {% endfor %}
         </div>
     {% endfor %}

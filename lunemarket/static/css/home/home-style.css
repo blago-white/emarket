@@ -6,6 +6,7 @@
     color: white;
     background-size: cover!important;
     background-position: center center!important;
+    text-decoration: none;
 }
 
 .category-card-onhover-filter {
@@ -28,6 +29,140 @@
     opacity: 1;
     color: white;
     transition: opacity .2s, color .2s;
+}
+
+@media(aspect-ratio < 10/16) {
+    .categories-cards {
+        grid-template-columns: repeat(2, 1fr)!important;
+    }
+
+    .categories-cards {
+        height: 400vmin!important;
+    }
+
+    .category-card {
+        filter: grayscale(45%)!important;
+    }
+
+    .category-card-onhover-filter {
+        opacity: 1;
+        color: white!important;
+    }
+
+    .frs-card {
+        grid-row-start: 1;
+        grid-row-end: 1;
+        grid-column-start: 1;
+        grid-column-end: 1;
+    }
+
+    .sec-card {
+        grid-row-start: 1;
+        grid-row-end: 1;
+        grid-column-start: 2;
+        grid-column-end: 2;
+    }
+
+    .thr-card {
+        grid-row-start: 2;
+        grid-row-end: 2;
+        grid-column-start: 1;
+        grid-column-end: 1;
+    }
+
+    .fou-card {
+        grid-row-start: 2;
+        grid-row-end: 2;
+        grid-column-start: 2;
+        grid-column-end: 2;
+    }
+
+    .fif-card {
+        grid-row-start: 3;
+        grid-row-end: 3;
+        grid-column-start: 1;
+        grid-column-end: 1;
+    }
+
+    .six-card {
+        grid-row-start: 3;
+        grid-row-end: 3;
+        grid-column-start: 2;
+        grid-column-end: 2;
+    }
+
+    .sev-card {
+        grid-row-start: 4;
+        grid-row-end: 4;
+        grid-column-start: 1;
+        grid-column-end: 1;
+    }
+
+    .eig-card {
+        grid-row-start: 4;
+        grid-row-end: 4;
+        grid-column-start: 2;
+        grid-column-end: 2;
+    }
+
+    .nin-card {
+        grid-row-start: 5;
+        grid-row-end: 5;
+        grid-column-start: 1;
+        grid-column-end: 3;
+    }
+}
+
+@media(aspect-ratio < 6/5) and (aspect-ratio > 10/16) {
+    .categories-cards {
+        grid-template-columns: repeat(5, 1fr)!important;
+    }
+
+    .category-card {
+        filter: grayscale(45%)!important;
+    }
+
+    .category-card-onhover-filter {
+        opacity: 1;
+        color: white!important;
+    }
+
+    .frs-card {
+        grid-row-end: 2;
+        grid-column-end: 3;
+    }
+
+    .sec-card {
+        grid-row-start: 2;
+        grid-row-end: 3;
+        grid-column-start: 1;
+        grid-column-end: 3;
+    }
+
+    .thr-card {
+        grid-row-end: 2;
+    }
+
+    .fif-card {
+        grid-row-end: 3;
+        grid-column-start: 3;
+        grid-column-end: 7;
+    }
+
+    .six-card {
+        grid-row-start: 3;
+        grid-row-end: 3;
+        grid-column-start: 2;
+        grid-column-end: 3;
+    }
+
+    .sev-card {
+        grid-column-start: 5;
+    }
+
+    .nin-card {
+        grid-column-end: 2;
+    }
 }
 
 .categories-cards {

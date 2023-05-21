@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block head %}
+{% endblock %}
+
+{% block rootcontent %}
+<link rel="stylesheet" href="{% static 'css\products\products-listing.css' %}" type="text/css">
+<div class="cards">
+    {% for item in items %}
+        <a class="card" href="/{{ item.title }}">
+            <div class="card-preview-wrapper">
+                <img src="../../media/{{ item.photo }}" class="card-preview">
+            </div>
+            <div class="card-content">
+                <b>{{ item.title }}</b>
+                <b>{{ item.parent }}</b>
+            </div>
+        </a>
+    {% endfor %}
+</div>
+{% endblock %}

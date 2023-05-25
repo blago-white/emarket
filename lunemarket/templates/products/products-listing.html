@@ -3,21 +3,34 @@
 {% load static %}
 
 {% block head %}
+    {% if items %}
+        <link rel="stylesheet" href="{% static 'css\products\products-listing.css' %}" type="text/css">
+    {% else %}
+        <link rel="stylesheet" href="{% static 'css\products\warns.css' %}" type="text/css">
+    {% endif %}
+{% endblock %}
+
+{% block header %}
+    {% include 'base-header.html' %}
 {% endblock %}
 
 {% block rootcontent %}
-<link rel="stylesheet" href="{% static 'css\products\products-listing.css' %}" type="text/css">
-<div class="cards">
-    {% for item in items %}
-        <a class="card" href="/{{ item.title }}">
-            <div class="card-preview-wrapper">
-                <img src="../../media/{{ item.photo }}" class="card-preview">
+    {% if items %}
+        <div class="cards">
+                {% for item in items %}
+                    {% if items_is == "categories" %}
+                        {% include "products/cards-templates/category-card.html" %}
+                    {% elif items_is == "cards" %}
+                        {% include "products/cards-templates/product-card.html" %}
+                    {% endif %}
+                {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty_warn_wrapper ">
+            <div class="empty_warn">
+                This category is empty!
             </div>
-            <div class="card-content">
-                <b>{{ item.title }}</b>
-                <b>{{ item.parent }}</b>
-            </div>
-        </a>
-    {% endfor %}
-</div>
+        </div>
+    {% endif %}
+    <script type="text/javascript" src="{% static 'js\products\products-listing.js' %}"></script>
 {% endblock %}

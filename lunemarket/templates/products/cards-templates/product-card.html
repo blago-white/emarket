@@ -1,0 +1,9 @@
+<a class="card" href="{% url 'product-card' item.title %}">
+    <div class="card-preview-wrapper">
+        <img src="../../../media/{{ item.photo }}" class="card-preview">
+    </div>
+    <div class="card-content">
+        <b>{{ item.title|dashes_to_spaces }}</b>
+        <b>{{ item.price }} $</b>
+    </div>
+</a>

@@ -2,6 +2,7 @@ from typing import Union
 from django.db import models
 from products import validators
 from django.core.exceptions import ValidationError
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 from .models_utils import get_image_path
 
@@ -44,7 +45,10 @@ class Cards(models.Model):
                              max_length=100,
                              unique=True,
                              validators=[validators.card_title_validator],
-                             null=False)
+                             null=False,
+                             primary_key=True,
+                             help_text="""Use dashes instead of spaces, on the user's side all dashes will be 
+                                       replaced with space characters""")
     category = models.ForeignKey(to=Categories,
                                  to_field="title",
                                  verbose_name="Category name",
@@ -53,9 +57,8 @@ class Cards(models.Model):
     photo = models.ImageField(upload_to=get_image_path,
                               null=False,
                               verbose_name="Card title photo")
-    price = models.PositiveSmallIntegerField(name="Price of products",
-                                             null=False,
-                                             default=int())
+    price = models.FloatField(verbose_name="Price of product in dollars",
+                              validators=[MinValueValidator(0), MaxValueValidator(5000)])
 
     def __str__(self):
         return self.title

@@ -1,18 +1,23 @@
 .cards {
     width: 100%;
+    height: 100%;
     text-align: center;
     display: grid;
+    justify-items: center;
     grid-template-columns: repeat(4, 1fr);
     padding: 2em;
     gap: 2em;
+    filter: grayscale(0%);
+    transition: filter .2s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
 .card {
     align-items: center;
-    background-color: black;
+    background-color: white;
     border-radius: .5em;
     height: min-content;
     aspect-ratio: 10/10;
+    height: 100%;
     overflow: hidden;
     border: 0px;
     box-shadow: 0px 0px .5em silver;
@@ -21,13 +26,13 @@
 
 .card:hover {
     box-shadow: 0px 0px .5em black;
-    transition: box-shadow .2s cubic-bezier(0.22, 0.61, 0.36, 1);
+    background-color: black;
+    transition: box-shadow .2s cubic-bezier(0.22, 0.61, 0.36, 1), background-color .0s .2s;
 }
 
 .card-preview {
     height: 100%;
     width: auto;
-    border-radius: .8em;
     opacity: 1;
     transition: opacity .2s;
 }
@@ -52,16 +57,88 @@
     bottom: 0px;
     background: rgb(0, 0, 0);
     color: white;
+    visibility: hidden;
     transform: translate(0px, 100%);
     transition: all .2s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
 .card:hover .card-content {
     transform: translate(0px, 0px);
+    visibility: visible;
     transition: transform .2s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
 .card:hover .card-preview {
     opacity: .0;
     transition: opacity .0s .2s;
+}
+
+@media(aspect-ratio <= 18/10) {
+    .cards {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .card {
+        align-items: baseline;
+        aspect-ratio: auto;
+        width: 100%;
+    }
+
+    .card:hover .card-content{
+        transform: translate(50%, 0px);
+        transition: none;
+    }
+
+    .card:hover {
+        box-shadow: none;
+        background-color: white;
+        transition: none;
+    }
+
+    .card:hover .card-preview {
+        opacity: 1;
+        transition: none;
+    }
+
+    .card-preview-wrapper {
+        width: 70%;
+    }
+
+    .card-content {
+        transform: translate(50%, 0px);
+        visibility: visible;
+        width: 30%;
+        left: 54.8%;
+        transition: none;
+    }
+}
+
+@media(aspect-ratio <= 12/9) {
+    .cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .card-content {
+        transform: translate(50%, 0px);
+        visibility: visible;
+        width: 40%;
+        left: 39.9%;
+    }
+
+    .card-preview-wrapper {
+        width: 60%;
+    }
+}
+
+@media(aspect-ratio <= 75/90) {
+    .cards {
+        grid-template-columns: repeat(1, 1fr);
+        height: auto;
+        padding-inline: 1em;
+        padding-top: 4em;
+    }
+
+    .card {
+        height: 50vmin;
+    }
 }

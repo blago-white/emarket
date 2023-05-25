@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css\products\product-details.css' %}" type="text/css">
+{% endblock %}
+
+{% block header %}
+    {% include 'base-header.html' %}
+{% endblock %}
+
+{% block rootcontent %}
+    <div class="page-bg">
+        <div class="card-content">
+            <div class="card-photo-wrapper">
+                <img src="../../../media/{{ item_info.photo }}" class="card-photo">
+            </div>
+            <div class="card-info">
+                <div class="prod-info">
+                    <header class="card-title">
+                        {{ item_info.category }}<br>{{ item_info.title|dashes_to_spaces }}
+                    </header>
+                </div>
+                <div class="purchase">
+                    <button class="button-buy">buy</button>
+                    <div class="price">{{ item_info.price }} $</div>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript" src="{% static 'js\products\products-listing.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js\products\floated-elements.js' %}"></script>
+    </div>
+{% endblock %}

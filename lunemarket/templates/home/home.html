@@ -6,6 +6,10 @@
 <link rel="stylesheet" href="{% static 'css\home\home-style.css' %}" type="text/css">
 {% endblock %}
 
+{% block header %}
+    {% include 'base-header.html' %}
+{% endblock %}
+
 {% block rootcontent %}
 <div class="page-categories" id="categories">
     {% for categoriesbatch in categories|get_categories_batches %}
@@ -17,7 +21,7 @@
                         onmouseover="onhover(this)"
                         onmouseout="onunhover(this)"
                         id="{{ category.title }}"
-                        href="/category/{{ category.title }}">
+                        href="products/category/{{ category.title }}">
                         <div class="category-card-onhover-filter">
                             {{ category.title|upper }}
                         </div>

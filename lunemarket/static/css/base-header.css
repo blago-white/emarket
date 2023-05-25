@@ -1,0 +1,84 @@
+.main-header-wrapper {
+    width: 100%;
+    position: sticky;
+    display: flex;
+    justify-content: center;
+    top: 40px;
+    height: 0px;
+    overflow: hidden;
+    z-index: 10;
+}
+
+.main-header {
+    position: fixed;
+    display: flex;
+    padding-inline: .2em;
+    height: 7vh;
+    background-color: transparent;
+    background-color: rgba(255, 255, 255, .3);
+    backdrop-filter: blur(.1em);
+    justify-content: center;
+    box-shadow: 0px 0px .1em gray;
+    top: 1.5vh;
+    overflow: hidden;
+    border-radius: .2em;
+    width: 35vw;
+    gap: .2vw;
+}
+
+.header-nav {
+    display: flex;
+    text-align: center;
+    vertical-align: middle;
+    gap: .2em;
+    width: inherit;
+}
+
+.header-nav-button {
+    font-weight: 900;
+    margin: auto auto auto;
+    height: 6vh;
+    font-size: 1.75vh;
+    line-height: 1.75vh;
+    display: inline-block;
+    vertical-align: middle;
+    border: 0px;
+    width: 50%;
+    min-width: fit-content;
+    overflow: hidden;
+    background: rgb(255, 255, 255, .1);
+    box-shadow: 0px 0px .3em rgb(60, 60, 60);
+    border-radius: .2em;
+    transition: all .2s;
+}
+
+.header-nav-button:hover {
+    background: rgb(255, 255, 255, .2);
+    box-shadow: 0px 0px 2em rgb(64, 64, 64);
+    transition: all .2s;
+}
+
+@media screen and (device-aspect-ratio < 1/1) {
+    .main-header {
+        justify-content: space-between!important;
+    }
+    .header-nav {
+        width: 100%!important;
+    }
+}
+
+
+@media (width<857px) and (device-aspect-ratio < 1/1) {
+    .main-header {
+        width: 300px!important;
+    }
+}
+
+
+@media(aspect-ratio < 75/90) {
+    .main-header {
+        border-radius: 0px!important;
+        width: 100%!important;
+        top: 0px!important;
+    }
+}

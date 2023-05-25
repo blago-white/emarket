@@ -2,10 +2,12 @@ from django.shortcuts import render
 from django.views.generic import ListView, DetailView
 from django.db.models import QuerySet
 from .models.models import Cards, Categories
+from django.conf import settings
 from products.filters import *
 
 
 class ProductsView(ListView):
+    paginate_by = settings.CATEGORY_PRODUCTS_BATCH_SIZE
     model = Cards
     template_name = "products\\products-listing.html"
     context_object_name = "items"

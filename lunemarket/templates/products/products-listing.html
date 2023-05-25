@@ -16,15 +16,20 @@
 
 {% block rootcontent %}
     {% if items %}
-        <div class="cards">
-                {% for item in items %}
-                    {% if items_is == "categories" %}
-                        {% include "products/cards-templates/category-card.html" %}
-                    {% elif items_is == "cards" %}
-                        {% include "products/cards-templates/product-card.html" %}
-                    {% endif %}
-                {% endfor %}
+        {% if items.count < 3 %}
+            <div class="cards" style="height: 100vmin;">
+        {% else %}
+            <div class="cards">
+        {% endif %}
+            {% for item in items %}
+                {% if items_is == "categories" %}
+                    {% include "products/cards-templates/category-card.html" %}
+                {% elif items_is == "cards" %}
+                    {% include "products/cards-templates/product-card.html" %}
+                {% endif %}
+            {% endfor %}
         </div>
+        {% include 'products/paginator.html' %}
     {% else %}
         <div class="empty_warn_wrapper ">
             <div class="empty_warn">

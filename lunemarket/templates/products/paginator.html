@@ -1,0 +1,24 @@
+{% load static %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'css\products\pagination.css' %}" type="text/css">
+{% endblock %}
+
+{% if page_obj.has_previous %}
+    <a class="paginator left" href="?page={{ page_obj.previous_page_number }}">
+        <img src="{% static 'img\products\arrow.png' %}" class="arrow left-arrow">
+    </a>
+{% endif %}
+{% if page_obj.has_next %}
+    <a class="paginator right" href="?page={{ page_obj.next_page_number }}">
+        <img src="{% static 'img\products\arrow.png' %}" class="arrow right-arrow">
+    </a>
+{% endif %}
+
+<div class="page-indicator-wrapper">
+    <div class="page-indicator">
+        {% for i in page_obj.paginator.page_range %}
+            <div class="indicator {% if i == page_obj.number %}active{% endif %}"></div>
+        {% endfor %}
+    </div>
+</div>

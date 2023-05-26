@@ -34,11 +34,13 @@ def invert_sorting(sorting: str) -> str:
         return sorting
 
 
-def compile_url_args_for_pagination(price: str = None, filters: bool = None) -> str:
+def compile_url_args_for_pagination(price: str = None, filters: bool = None, min_: int = None) -> str:
     url_args = str()
 
-    for name, value in (("price", price), ("filter", filters)):
-        url_args += "&" + (f"{name}" if type(value) is bool else f"{name}={value}")
+    for name, value in (("price", price), ("filters", filters), ("min", min_)):
+        url_args += (
+            ("&" + name if value else "") if type(value) is bool else f"&{name}={value}"
+                           ) if value is not None else ""
 
     return url_args
 

@@ -10,11 +10,29 @@
 {% endblock %}
 
 {% block extension-window %}
-    <div class="filters" style="{% if filters_window_is_open %}display: block;{% else %}display: none;{% endif %}">
+    <div class="filters" style="{% if filters %}display: flex;{% else %}display: none;{% endif %}">
         <a class="header-nav-button header-filters header-filter"
-           href="?page={{ page_obj.number }}&price={{ sorting|invert_sorting }}&filters"
+           id="change-order"
+           href="?page={{ page_obj.number }}{{ url_args_invert_sorting }}"
            title="{% if sorting|invert_sorting == '1' %}from expensive to cheap{% else %} from cheap to expensive {% endif %}">
             <img src="{% static 'img\products\ordering-icon.png' %}" class="ordering-icon">
         </a>
+        <div class="header-nav-button header-filters header-filter price-interval" title="{{ min_price }}">
+            <input type="range"
+                   min="0"
+                   max="5000"
+                   class="price-input"
+                   list="values"
+                   step="100"
+                   value="{{ min_price }}">
+            <datalist id="values">
+                <option value="0" label="0"></option>
+                <option value="1000" label="1000"></option>
+                <option value="2000" label="2000"></option>
+                <option value="3000" label="3000"></option>
+                <option value="4000" label="4000"></option>
+                <option value="5000" label="5000"></option>
+            </datalist>
+        </div>
     </div>
 {% endblock %}

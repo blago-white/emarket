@@ -5,12 +5,14 @@
 {% endblock %}
 
 {% if page_obj.has_previous %}
-    <a class="paginator left" href="?page={{ page_obj.previous_page_number }}">
+    <a class="paginator left"
+       href="?page={{ page_obj.previous_page_number }}&price={{ sorting }}{{ filters_window_is_open|get_url_arg_from_bool:'&filters' }}">
         <img src="{% static 'img\products\arrow.png' %}" class="arrow left-arrow">
     </a>
 {% endif %}
 {% if page_obj.has_next %}
-    <a class="paginator right" href="?page={{ page_obj.next_page_number }}">
+    <a class="paginator right"
+       href="?page={{ page_obj.next_page_number }}&price={{ sorting }}{{ filters_window_is_open|get_url_arg_from_bool:'&filters' }}">
         <img src="{% static 'img\products\arrow.png' %}" class="arrow right-arrow">
     </a>
 {% endif %}

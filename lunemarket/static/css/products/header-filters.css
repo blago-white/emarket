@@ -1,0 +1,25 @@
+.header-filters {
+    width: auto;
+    aspect-ratio: 1 / 1;
+}
+
+.header-filter {
+    aspect-ratio: 2 / 1;
+    margin: 0px;
+    display: flex;
+    justify-content: center;
+}
+
+.header-filter:hover {
+    box-shadow: 0px 0px 2em rgb(64 64 64);
+}
+
+.filters {
+    width: 100%;
+    height: 50%;
+}
+
+.ordering-icon {
+    height: 100%;
+    opacity: .75;
+}

@@ -1,0 +1,20 @@
+{% extends 'header.html' %}
+{% load static %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'css\products\header-filters.css' %}" type="text/css">
+{% endblock %}
+
+{% block navigation %}
+    <button class="header-nav-button header-filters" onclick="Filters()">F</button>
+{% endblock %}
+
+{% block extension-window %}
+    <div class="filters" style="{% if filters_window_is_open %}display: block;{% else %}display: none;{% endif %}">
+        <a class="header-nav-button header-filters header-filter"
+           href="?page={{ page_obj.number }}&price={{ sorting|invert_sorting }}&filters"
+           title="{% if sorting|invert_sorting == '1' %}from expensive to cheap{% else %} from cheap to expensive {% endif %}">
+            <img src="{% static 'img\products\ordering-icon.png' %}" class="ordering-icon">
+        </a>
+    </div>
+{% endblock %}

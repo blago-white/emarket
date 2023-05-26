@@ -11,7 +11,11 @@
 {% endblock %}
 
 {% block header %}
-    {% include 'base-header.html' %}
+    {% if items_is == "cards" %}
+        {% include 'products/filters-header.html' %}
+    {% else %}
+        {% include 'header.html' %}
+    {% endif %}
 {% endblock %}
 
 {% block rootcontent %}
@@ -38,4 +42,5 @@
         </div>
     {% endif %}
     <script type="text/javascript" src="{% static 'js\products\products-listing.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js\products\filters-window.js' %}"></script>
 {% endblock %}

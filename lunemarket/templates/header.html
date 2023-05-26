@@ -1,12 +1,18 @@
 {% load static %}
 
 <link rel="stylesheet" href="{% static 'css\base-header.css' %}" type="text/css">
+{% block head %}
+{% endblock %}
 
 <header class="main-header-wrapper">
-    <div class="main-header main-header-floated">
+    <div class="main-header" style="{% if filters_window_is_open %}height: 14vh;{% else %}height: 7vh;{% endif %}">
         <nav class="header-nav">
             <button class="header-nav-button">account</button>
             <button class="header-nav-button">create</button>
+            {% block navigation %}
+            {% endblock %}
         </nav>
+        {% block extension-window %}
+        {% endblock %}
     </div>
 </header>

@@ -12,6 +12,7 @@
 .main-header {
     position: fixed;
     display: flex;
+    flex-wrap: wrap;
     padding-inline: .2em;
     height: 7vh;
     background-color: transparent;
@@ -32,6 +33,7 @@
     vertical-align: middle;
     gap: .2em;
     width: inherit;
+    height: 7vh;
 }
 
 .header-nav-button {

@@ -21,12 +21,22 @@ class ProductsView(ListView):
             query_set: QuerySet = self.model.objects.filter(category=category)
             self._used_model = self.model
 
-        return query_set.order_by("price" if self._used_model == self.model else "title")
+        return query_set.order_by((self.get_ordering() if self._used_model == self.model else "title"))
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(object_list=None, **kwargs)
         context.update({"items_is": "categories" if self._used_model == Categories else "cards"})
+        context.update({"sorting": get_url_arg_from_ordering_field(field=self.get_ordering())})
+        context.update({"filters_window_is_open": "filters" in self.request.GET.keys()})
+        context.update({"url_args": compile_url_args_for_pagination(
+            price=context["sorting"],
+            filters="filters" in self.request.GET.keys()
+        )})
+
         return context
+
+    def get_ordering(self):
+        return get_ordering_field_from_url_arg(url_arg=self.request.GET.get("price"), field="price")
 
 
 class CardView(DetailView):

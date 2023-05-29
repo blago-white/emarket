@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 import os
 from pathlib import Path
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -80,7 +83,7 @@ DATABASES = {'default': {
         'NAME': os.environ.get("POSTGRES_DB"),
         'USER': os.environ.get("POSTGRES_USER"),
         'PASSWORD': os.environ.get("POSTGRES_PASSWORD"),
-        'HOST': os.environ.get("POSTGRES_HOST"),
+        # 'HOST': os.environ.get("POSTGRES_HOST"),
         'PORT': os.environ.get("POSTGRES_PORT"),
     }
 }
@@ -132,3 +135,4 @@ MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MAIN_PAGE_CATEGORIES_BATCH_SIZE = 9
+CATEGORY_PRODUCTS_BATCH_SIZE = 8

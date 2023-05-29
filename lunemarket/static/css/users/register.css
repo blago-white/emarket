@@ -1,0 +1,138 @@
+.form {
+    position: relative;
+    top: 25vh;
+    display: flex;
+    height: 50vh;
+    justify-content: center
+}
+
+.register-form {
+    display: grid;
+    grid-template-rows: repeat(5, 1fr);
+    overflow: hidden;
+    gap: 1vh;
+    width: 36%;
+    height: -webkit-fill-available;
+    padding-block: 2em;
+    padding-inline: 1em;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+    min-width: 250px;
+    background: rgb(0, 0, 0, .5);
+    border-radius: 1em;
+    box-shadow: 0px 0px .5em rgb(0, 0, 0, .5);
+}
+
+input {
+    background: rgb(0, 0, 0, .5);
+    border: 0px;
+    width: 50%;
+    height: 1.5em;
+    color: white;
+    border-radius: .2em;
+    outline-style: none;
+}
+
+label:hover {
+    color: white;
+    text-shadow: 0px 0px .1em white;
+}
+
+p {
+    margin-bottom: 0vh;
+    display: none;
+}
+
+.submit-button {
+    color: white;
+    margin-inline: auto;
+    background: rgb(0, 0, 0, .5);
+    border-radius: .2em;
+    width: 6em;
+    height: 1.6em;
+    border: 0px;
+    padding: 0px;
+    padding-inline: .5em;
+    transition: background .2s ease;
+}
+
+.submit-button:hover {
+    background: rgb(32, 0, 0, 1);
+}
+
+.data-input {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: monospace;
+    color: gray;
+    gap: .5em;
+    text-align: end;
+    transition: color .1s ease;
+}
+
+.data-input:hover .errorlist {
+    display: inline;
+}
+
+.user-input {
+    display: unset;
+}
+
+.warn-icon {
+    width: 1.7em;
+    aspect-ratio: 1/1;
+}
+
+.warnings {
+    display: unset;
+    width: 1.7em;
+    aspect-ratio: 1/1;
+}
+
+.warn-info {
+    position: absolute;
+    height: 0px;
+    width: 0px;
+}
+
+.warn {
+    width: max-content;
+    text-align: start;
+    position: absolute;
+    background: rgb(0, 0, 0, 1);
+    border-radius: .2em;
+    padding-inline: .5em;
+}
+
+@media(aspect-ratio<1/1) {
+    .register-form {
+        width: 90%;
+    }
+    .warn {
+        display: table-cell;
+        position: relative;
+    }
+}
+
+@media(max-width: 575px) and (aspect-ratio<1/1) {
+    .data-input {
+        flex-direction: column;
+        text-align: center;
+        gap: 0em;
+        width: 25em;
+        margin: 0px;
+    }
+    .register-form {
+        flex-wrap: nowrap;
+        gap: .5rem;
+        min-width: 300px;
+    }
+}
+
+@media(max-width: 575px) and (aspect-ratio > 1/1) {
+    .form-label {
+        margin: 0px;
+    }
+}

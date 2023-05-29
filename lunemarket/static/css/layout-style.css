@@ -28,9 +28,9 @@
     animation: background-animation 20s ease infinite;
 }
 
-@media(aspect-ratio <= 75/90) {
+@media(aspect-ratio <= 75 / 90) {
     .page-content  {
-        background: radial-gradient(circle, rgba(65,65,65,1) 0%, rgba(255,255,255,1) 100%);
+        background: radial-gradient(circle, rgba(128,128,128,1) 0%, rgba(255,255,255,1) 100%);
         -webkit-animation: none;
         -moz-animation: none;
         animation: none;

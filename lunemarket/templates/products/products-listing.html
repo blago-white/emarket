@@ -10,6 +10,10 @@
     {% endif %}
 {% endblock %}
 
+{% block title %}
+    products
+{% endblock %}
+
 {% block header %}
     {% if items_is == "cards" %}
         {% include 'products/filters-header.html' %}

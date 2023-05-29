@@ -6,6 +6,10 @@
 <link rel="stylesheet" href="{% static 'css\products\product-details.css' %}" type="text/css">
 {% endblock %}
 
+{% block title %}
+{{ item_info.title|dashes_to_spaces }}
+{% endblock %}
+
 {% block header %}
     {% include 'header.html' %}
 {% endblock %}

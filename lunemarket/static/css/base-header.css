@@ -42,7 +42,9 @@
     height: 6vh;
     font-size: 1.75vh;
     line-height: 1.75vh;
-    display: inline-block;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     vertical-align: middle;
     border: 0px;
     width: 50%;

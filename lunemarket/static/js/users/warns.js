@@ -1,36 +1,32 @@
 let clicked = false;
 
 
-function ChangeVisibilityWarnHover(event) {
-    if (clicked) {return}
-    console.log(event.type);
-
+function ChangeVisibilityWarnClick(event) {
     let warn_window;
-    const target_element = event.type == "mouseenter" ? event.toElement.id : event.fromElement.id;
+    const target_element_id = event.target.parentElement.id;
 
     warn_window = document.getElementById(
-        "warn-window-" + target_element
+        "warn-window-" + target_element_id
     );
 
-    const target_opacity = event.type == "mouseenter" ? "1" : "0";
-    warn_window.animate({"opacity": target_opacity}, {duration: 200, easing: "ease-in-out"})
+    const target_opacity = clicked ? "0" : "1";
+    warn_window.animate({"opacity": target_opacity},
+                        {duration: 200})
 
-    if (event.type == "mouseenter") {
+    if (!clicked) {
         warn_window.style.display = "unset";
-    }
-
-    else if (event.type == "mouseleave") {
         setTimeout(e => {
-            warn_window.style.display = "none"
+            warn_window.style.opacity = target_opacity;
         }, 200);
     }
 
-    setTimeout(e => {
-        warn_window.style.opacity = target_opacity;
-    }, 200);
-}
+    else if (clicked) {
+        setTimeout(e => {
+            warn_window.style.display = "none";
+            warn_window.style.opacity = target_opacity;
+        }, 200);
+    }
 
-function ChangeVisibilityWarnClick(event) {
     clicked = !clicked;
 }
 
@@ -38,8 +34,6 @@ function ChangeVisibilityWarnClick(event) {
 function RegisterHandlers(elements) {
     for (warn in elements) {
         try {
-            elements[warn].addEventListener("mouseenter", ChangeVisibilityWarnHover);
-            elements[warn].addEventListener("mouseleave", ChangeVisibilityWarnHover);
             elements[warn].addEventListener("click", ChangeVisibilityWarnClick);
         } catch {}
     }

@@ -7,7 +7,11 @@ from .forms import RegisterUserForm
 from .filters import *
 
 
-class RegisterUser(CreateView):
+class RegisterUserView(CreateView):
     form_class = RegisterUserForm
     template_name = "users/register.html"
-    success_url = reverse_lazy("home")
+    success_url = reverse_lazy("account")
+
+
+class AccountView:
+    pass

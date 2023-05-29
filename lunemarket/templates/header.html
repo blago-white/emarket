@@ -7,12 +7,10 @@
 <header class="main-header-wrapper">
     <div class="main-header" style="{% if filters %}height: 14vh;{% else %}height: 7vh;{% endif %}">
         <nav class="header-nav">
-            <button class="header-nav-button">
-                <a style="color: black;text-decoration: none;" href="{% url 'register' %}">account</a>
-            </button>
-            <button class="header-nav-button">
-                <a style="color: black;text-decoration: none;" href="{% url 'register' %}">create</a>
-            </button>
+            <a class="header-nav-button" style="color: black;text-decoration: none;width: 100%;" href="{% url 'register' %}">
+                account
+            </a>
+            <a class="header-nav-button" style="color: black;text-decoration: none;width: 100%;">create</a>
             {% block navigation %}
             {% endblock %}
         </nav>

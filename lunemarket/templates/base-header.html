@@ -1,0 +1,15 @@
+{% extends 'main-header.html' %}
+{% load static %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'css\products\base-header.css' %}" type="text/css">
+{% endblock %}
+
+{% block navigation %}
+    {% if request.user %}
+        <a class="header-nav-button" href="{% url 'account' user.id %}">account</a>
+    {% else %}
+        <a class="header-nav-button" href="{% url 'register' %}">registrate</a>
+    {% endif %}
+    <a class="header-nav-button" href="{% url 'home' %}">home</a>
+{% endblock %}

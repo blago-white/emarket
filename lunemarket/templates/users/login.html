@@ -5,13 +5,21 @@
 <link rel="stylesheet" href="{% static 'css\users\login.css' %}" type="text/css" xmlns="http://www.w3.org/1999/html">
 {% endblock %}
 
+{% block title %}
+login
+{% endblock %}
+
+{% block header %}
+{% include 'base-header.html' %}
+{% endblock %}
+
 {% block rootcontent %}
 <div class="form">
     <form method="post" class="register-form {% if form.non_field_errors %}errors{%else%}{%endif%}">
         {% csrf_token %}
         {% for field in form %}
             <p class="data-input">
-                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                <label for="{{ field.id_for_label }}">{{ field.label|lower }}</label>
                 {{ field }}
             </p>
         {% endfor %}

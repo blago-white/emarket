@@ -1,0 +1,12 @@
+.account-info {
+    color: white;
+    grid-template-rows: 1fr 1fr;
+}
+
+.account-info-string {
+    text-align: center;
+}
+
+.account-info-string:hover {
+    text-shadow: 0px 0px .1em white;
+}

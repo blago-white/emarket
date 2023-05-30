@@ -20,9 +20,9 @@
     align-items: center;
     justify-content: center;
     min-width: 250px;
-    background: rgb(0, 0, 0, .5);
+    background-color: rgba(255, 255, 255, .3);
     border-radius: 1em;
-    box-shadow: 0px 0px .5em rgb(0, 0, 0, .5);
+    box-shadow: 0px 0px .1em gray;
 }
 
 input {
@@ -33,11 +33,6 @@ input {
     color: white;
     border-radius: .2em;
     outline-style: none;
-}
-
-label:hover {
-    color: white;
-    text-shadow: 0px 0px .1em white;
 }
 
 p {
@@ -67,15 +62,21 @@ p {
     align-items: center;
     justify-content: center;
     font-family: monospace;
-    color: gray;
+    color: black;
     gap: .5em;
     text-align: end;
-    transition: color .1s ease;
+    text-shadow: none;
+    transition: text-shadow .2s ease;
 }
 
 .data-input:hover .errorlist {
     display: inline;
 }
+
+.data-input:hover {
+    text-shadow: 0px 0px .2em gray;
+}
+
 
 .user-input {
     display: unset;
@@ -90,6 +91,7 @@ p {
     display: unset;
     width: 1.7em;
     aspect-ratio: 1/1;
+    color: white;
 }
 
 .warn-info {
@@ -102,9 +104,15 @@ p {
     width: max-content;
     text-align: start;
     position: absolute;
-    background: rgb(0, 0, 0, 1);
+    background: rgb(255, 255, 255, .2);
+    backdrop-filter: blur(.05em);
     border-radius: .2em;
     padding-inline: .5em;
+    transition: backdrop-filter .2s ease;
+}
+
+.warn:hover {
+    backdrop-filter: blur(.5em);
 }
 
 @media(aspect-ratio<1/1) {

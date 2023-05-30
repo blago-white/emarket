@@ -64,6 +64,11 @@
     transition: all .2s;
 }
 
+.square-button {
+    width: auto;
+    aspect-ratio: 1 / 1;
+}
+
 @media screen and (device-aspect-ratio < 1/1) {
     .main-header {
         justify-content: space-between!important;

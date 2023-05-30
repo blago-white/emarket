@@ -1,0 +1,42 @@
+@import "register.css";
+
+input {
+    width: 100%;
+}
+
+p {
+    margin-bottom: auto;
+    display: unset;
+}
+
+.register-form {
+    grid-template-rows: repeat(3, 1fr);
+    width: 25%;
+    min-width: 15em;
+    padding-inline: 1em;
+    padding-block: 1em;
+}
+
+.errors {
+    grid-template-rows: auto auto auto auto;
+}
+
+.form-error {
+    display: none;
+    color: red;
+}
+
+@media(max-width: 775px) and (aspect-ratio<1/1) {
+    .data-input {
+        flex-direction: column;
+        text-align: center;
+        gap: 0em;
+        width: 100%;
+        margin: 0px;
+    }
+    .register-form {
+        flex-wrap: nowrap;
+        gap: .5rem;
+        min-width: 90%;
+    }
+}

@@ -1,0 +1,26 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css\users\login.css' %}" type="text/css" xmlns="http://www.w3.org/1999/html">
+{% endblock %}
+
+{% block rootcontent %}
+<div class="form">
+    <form method="post" class="register-form {% if form.non_field_errors %}errors{%else%}{%endif%}">
+        {% csrf_token %}
+        {% for field in form %}
+            <p class="data-input">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+            </p>
+        {% endfor %}
+        <div class="form-error" style="display: {% if form.non_field_errors %}unset{% else %}none{% endif %}">
+            {% for form_error in form.non_field_errors %}
+            {{ form_error }}<br>
+            {% endfor %}
+        </div>
+        <button type="submit" class="submit-button">login</button>
+    </form>
+</div>
+{% endblock %}

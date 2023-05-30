@@ -5,31 +5,33 @@
 <link rel="stylesheet" href="{% static 'css\users\register.css' %}" type="text/css" xmlns="http://www.w3.org/1999/html">
 {% endblock %}
 
+{% block title %}
+    registration
+{% endblock %}
+
 {% block rootcontent %}
 <div class="form">
     <form method="post" class="register-form">
         {% csrf_token %}
         {% for field_id, field in form|enumerate_ %}
-            {% if field.label %}
-                <p class="data-input">
-                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                    {{ field }}
-                    {% if field.errors %}
-                        <span class="warnings" id="{{ field_id }}">
-                            <img src="{% static 'img\users\warn.png' %}" class="warn-icon">
-                            <span class="warn-info" style="opacity: 0;display: none" id="warn-window-{{ field_id }}">
-                                <span class="warn">
-                                    {% for err in field.errors %}
-                                        {% for part in err|wrapp %}
-                                            {{ part }}<br>
-                                        {% endfor %}
+            <p class="data-input">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                    <span class="warnings" id="{{ field_id }}">
+                        <img src="{% static 'img\users\warn.png' %}" class="warn-icon">
+                        <span class="warn-info" style="opacity: 0;display: none" id="warn-window-{{ field_id }}">
+                            <span class="warn">
+                                {% for err in field.errors %}
+                                    {% for part in err|wrapp %}
+                                        {{ part }}<br>
                                     {% endfor %}
-                                </span>
+                                {% endfor %}
                             </span>
                         </span>
-                    {% endif %}
-                </p>
-            {% endif %}
+                    </span>
+                {% endif %}
+            </p>
         {% endfor %}
         <button type="submit" class="submit-button">Register</button>
     </form>

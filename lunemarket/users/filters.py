@@ -10,5 +10,5 @@ def enumerate_(obj: list | tuple | set) -> enumerate:
 
 
 @register.filter
-def wrapp(string: str) -> str:
+def wrap(string: str) -> list[str]:
     return textwrap.wrap(string, 18)

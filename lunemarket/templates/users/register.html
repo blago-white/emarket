@@ -27,7 +27,7 @@
                         <span class="warn-info" style="opacity: 0;display: none" id="warn-window-{{ field_id }}">
                             <span class="warn">
                                 {% for err in field.errors %}
-                                    {% for part in err|wrapp %}
+                                    {% for part in err|wrap %}
                                         {{ part }}<br>
                                     {% endfor %}
                                 {% endfor %}

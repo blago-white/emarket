@@ -46,9 +46,7 @@ class Cards(models.Model):
                              unique=True,
                              validators=[validators.card_title_validator],
                              null=False,
-                             primary_key=True,
-                             help_text="""Use dashes instead of spaces, on the user's side all dashes will be 
-                                       replaced with space characters""")
+                             primary_key=True)
     category = models.ForeignKey(to=Categories,
                                  to_field="title",
                                  verbose_name="Category name",
@@ -57,7 +55,7 @@ class Cards(models.Model):
     photo = models.ImageField(upload_to=get_image_path,
                               null=False,
                               verbose_name="Card title photo")
-    price = models.FloatField(verbose_name="Price of product in dollars",
+    price = models.FloatField(verbose_name="Price of product",
                               validators=[MinValueValidator(0), MaxValueValidator(5000)])
 
     def __str__(self):
@@ -66,6 +64,13 @@ class Cards(models.Model):
     def delete(self, using=None, keep_parents=False):
         _delete_photo(model=self)
         super().delete(using=using, keep_parents=keep_parents)
+
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        self.title = self.title.replace(" ", "-")
+        return super(Cards, self).save(force_insert=force_insert,
+                                       force_update=force_update,
+                                       using=using,
+                                       update_fields=update_fields)
 
     class Meta:
         db_table = "Cards"

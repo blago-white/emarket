@@ -1,8 +1,11 @@
 from django.shortcuts import render
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, CreateView
 from django.db.models import QuerySet
 from .models.models import Cards, Categories
 from django.conf import settings
+from django.urls import reverse_lazy
+from products.forms import AddProductForm, AddCategoryForm
+from django.contrib.auth.mixins import LoginRequiredMixin
 from products.filters import *
 
 
@@ -39,6 +42,7 @@ class ProductsView(ListView):
             min_=self._get_acceptable_range_price(),
             filters="filters" in self.request.GET.keys(),
         )})
+        context.update({"max_item_price": Cards.objects.aggregate(Max('price'))["price__max"]})
         context.update({"min_price": self._get_acceptable_range_price()})
 
         return context
@@ -65,4 +69,22 @@ class CardView(DetailView):
         query_set: QuerySet = self.model.objects.filter(title=prod_title)
 
         return query_set.order_by("title")
+
+
+class AddProductView(LoginRequiredMixin, CreateView):
+    model = Cards
+    template_name = "products\\add-product.html"
+    form_class = AddProductForm
+
+    def get_success_url(self):
+        return reverse_lazy("home")
+
+
+class AddCategoryView(LoginRequiredMixin, CreateView):
+    model = Categories
+    template_name = "products\\add-category.html"
+    form_class = AddCategoryForm
+
+    def get_success_url(self):
+        return reverse_lazy("home")
 

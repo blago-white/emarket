@@ -1,0 +1,55 @@
+select {
+    background: rgb(0, 0, 0, .5);
+    border-radius: .2em;
+    border: 0px;
+    height: 1.5em;
+    color: white;
+    text-align: center;
+    transition: all .2s ease;
+}
+
+option {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background: transparent;
+}
+
+option:checked {
+    background: rgb(255, 255, 255, .5);
+    color: black;
+    box-shadow: 0px 0px 1em white;
+}
+
+input[type="file"] {
+    border-radius: .2em;
+    background: rgb(0, 0, 0, .5);
+}
+
+input[type="number"] {
+    width: 2.6em;
+}
+
+.drop {
+    color: white;
+    font-weight: 100;
+    background: rgb(0, 0, 0, .5);
+    padding-inline: .2em;
+    border-radius: .2em;
+    transition: all .2s ease;
+}
+
+.drop:hover {
+    background: rgb(255, 255, 255, .5);
+    color: black;
+    box-shadow: 0px 0px 1em white;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    display: none;
+}
+
+select:focus-visible {
+    outline: none;
+}

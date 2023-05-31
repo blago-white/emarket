@@ -17,21 +17,19 @@
            title="{% if sorting|invert_sorting == '1' %}from expensive to cheap{% else %} from cheap to expensive {% endif %}">
             <img src="{% static 'img\products\ordering-icon.png' %}" class="ordering-icon">
         </a>
-        <div class="header-nav-button header-filters header-filter price-interval" title="{{ min_price }}">
+        <div class="header-nav-button header-filters header-filter price-interval"
+             title="price should not be lower than {{ min_price }}$">
             <input type="range"
                    min="0"
-                   max="5000"
+                   max="{{ max_item_price }}"
                    class="price-input"
                    list="values"
-                   step="100"
+                   step="1"
                    value="{{ min_price }}">
             <datalist id="values">
-                <option value="0" label="0"></option>
-                <option value="1000" label="1000"></option>
-                <option value="2000" label="2000"></option>
-                <option value="3000" label="3000"></option>
-                <option value="4000" label="4000"></option>
-                <option value="5000" label="5000"></option>
+                {% for price_stage in max_item_price|get_prices_range %}
+                    <option value="{{ price_stage }}" label="{{ price_stage }}"></option>
+                {% endfor %}
             </datalist>
         </div>
     </div>

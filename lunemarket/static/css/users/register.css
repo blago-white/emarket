@@ -4,7 +4,8 @@
     display: flex;
     align-items: center;
     height: 100vh;
-    justify-content: center
+    justify-content: center;
+    font-weight: 900;
 }
 
 .register-form {
@@ -33,6 +34,13 @@ input {
     color: white;
     border-radius: .2em;
     outline-style: none;
+    transition: all .2s ease;
+}
+
+input:hover {
+    color: black;
+    box-shadow: 0px 0px 1em white;
+    background: rgb(255, 255, 255, .5);
 }
 
 p {
@@ -50,11 +58,13 @@ p {
     border: 0px;
     padding: 0px;
     padding-inline: .5em;
-    transition: background .2s ease;
+    transition: all .2s ease;
 }
 
 .submit-button:hover {
-    background: rgb(0, 0, 0, 1);
+    color: black;
+    box-shadow: 0px 0px 1em white;
+    background: rgb(255, 255, 255, .5);
 }
 
 .data-input {
@@ -72,11 +82,6 @@ p {
 .data-input:hover .errorlist {
     display: inline;
 }
-
-.data-input:hover {
-    text-shadow: 0px 0px .2em gray;
-}
-
 
 .user-input {
     display: unset;

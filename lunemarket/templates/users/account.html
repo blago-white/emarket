@@ -2,8 +2,7 @@
 {% load static %}
 
 {% block head %}
-<link rel="stylesheet" href="{% static 'css\users\login.css' %}" type="text/css" xmlns="http://www.w3.org/1999/html">
-<link rel="stylesheet" href="{% static 'css\users\account.css' %}" type="text/css" xmlns="http://www.w3.org/1999/html">
+    <link rel="stylesheet" href="{% static 'css\users\account.css' %}" type="text/css" xmlns="http://www.w3.org/1999/html">
 {% endblock %}
 
 {% block title %}
@@ -16,9 +15,25 @@ Hi, {{ user.username }}
 
 {% block rootcontent %}
     <div class="form">
-        <div class="register-form account-info">
-            <div class="account-info-string">{{ user.username }}</div>
-            <div class="account-info-string">{{ user.email }}</div>
+        <div class="account-body">
+            <nav class="account-sections">
+                <a class="section" id="section-1" href="{% url 'account-info' request.user.id %}">
+                    <div class="section-text">info</div>
+                    <i class="section-underline {% if current_section == 'info' %}active{% endif %}"
+                       id="section-1-underline"
+                    ></i>
+                </a>
+                <a class="section" id="section-2" href="{% url 'account-cards' request.user.id %}">
+                    <div class="section-text">my cards</div>
+                    <i class="section-underline {% if current_section == 'cards' %}active{% endif %}"
+                       id="section-2-underline"
+                    ></i>
+                </a>
+            </nav>
+            <div class="register-form account-info">
+                {% block profile-content %}
+                {% endblock %}
+            </div>
         </div>
     </div>
 {% endblock %}

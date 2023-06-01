@@ -1,0 +1,16 @@
+{% extends 'users\account.html' %}
+{% load static %}
+
+{% block profile-content %}
+    <div class="user-cards {% if items|length < 4 %}one-row{% endif %}">
+    {% for item in items %}
+        <a class="account-info-string user-card-info"
+           href="{% url 'product-card' item.title %}"
+           style="color: black;text-decoration: none;"
+           title="{{ item.title|dashes_to_spaces }}">
+            <p class="user-card-title">{{ item.title|dashes_to_spaces }}</p>
+            <div class="user-card-price">{{ item.price }}$</div>
+        </a>
+    {% endfor %}
+    </div>
+{% endblock %}

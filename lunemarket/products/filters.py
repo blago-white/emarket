@@ -66,3 +66,4 @@ def get_ordering_field_from_url_arg(url_arg: str, field: str) -> str:
 
 def get_url_arg_from_ordering_field(field: str) -> int:
     return int(field.startswith("-"))
+

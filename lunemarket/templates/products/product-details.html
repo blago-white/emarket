@@ -23,7 +23,12 @@
             <div class="card-info">
                 <div class="prod-info">
                     <header class="card-title">
-                        {{ item_info.category }}<br>{{ item_info.title|dashes_to_spaces }}
+                        {{ item_info.category }}<br>
+                        {{ item_info.title|dashes_to_spaces }}<br>
+                        <a href="{% url 'account' item_info.author.id %}"
+                           style="text-decoration: none;color: white">
+                            author: {{ item_info.author }}
+                        </a>
                     </header>
                 </div>
                 <div class="purchase">

@@ -1,5 +1,5 @@
 from .models.models import Cards, Categories
-from django.forms import ModelForm, TextInput, ModelChoiceField, FileInput, NumberInput, Select
+from django.forms import ModelForm, TextInput, ModelChoiceField, FileInput, NumberInput, URLField, IntegerField
 
 
 class AddProductForm(ModelForm):
@@ -10,7 +10,6 @@ class AddProductForm(ModelForm):
     class Meta:
         model = Cards
         fields = ["title", "category", "photo", "price"]
-
         widgets = {
             "title": TextInput(attrs={
                 "required": True
@@ -20,7 +19,7 @@ class AddProductForm(ModelForm):
                 "accept": "image/*",
                 "style": "display: none",
             }),
-            "price": NumberInput(attrs={"required": True, "min": 1, "max": 5000, "value": 100})
+            "price": NumberInput(attrs={"required": True, "min": 1, "max": 5000, "value": 100}),
         }
 
 

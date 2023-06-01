@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from django.views.generic import ListView, DetailView, CreateView
 from django.db.models import QuerySet
 from .models.models import Cards, Categories
@@ -6,6 +5,7 @@ from django.conf import settings
 from django.urls import reverse_lazy
 from products.forms import AddProductForm, AddCategoryForm
 from django.contrib.auth.mixins import LoginRequiredMixin
+
 from products.filters import *
 
 
@@ -28,27 +28,30 @@ class ProductsView(ListView):
         return query_set.order_by((self.get_ordering() if self._used_model == self.model else "title"))
 
     def get_context_data(self, *, object_list=None, **kwargs):
-        context = super().get_context_data(object_list=None, **kwargs)
-
-        context.update({"items_is": "categories" if self._used_model == Categories else "cards"})
-        context.update({"filters": "filters" in self.request.GET.keys()})
-        context.update({"url_args": compile_url_args_for_pagination(
-            price=get_url_arg_from_ordering_field(field=self.get_ordering()),
-            min_=self._get_acceptable_range_price(),
-            filters="filters" in self.request.GET.keys(),
-        )})
-        context.update({"url_args_invert_sorting": compile_url_args_for_pagination(
-            price=invert_sorting(get_url_arg_from_ordering_field(field=self.get_ordering())),
-            min_=self._get_acceptable_range_price(),
-            filters="filters" in self.request.GET.keys(),
-        )})
-        context.update({"max_item_price": Cards.objects.aggregate(Max('price'))["price__max"]})
-        context.update({"min_price": self._get_acceptable_range_price()})
-
-        return context
+        current_context = super().get_context_data(object_list=None, **kwargs)
+        self._complement_context(current_context)
+        return current_context
 
     def get_ordering(self):
         return get_ordering_field_from_url_arg(url_arg=self.request.GET.get("price"), field="price")
+
+    def _complement_context(self, current_context: dict) -> None:
+        current_context.update({
+            "items_is": "categories" if self._used_model == Categories else "cards",
+            "filters": "filters" in self.request.GET.keys(),
+            "url_args": compile_url_args_for_pagination(
+                price=get_url_arg_from_ordering_field(field=self.get_ordering()),
+                min_=self._get_acceptable_range_price(),
+                filters="filters" in self.request.GET.keys(),
+            ),
+            "url_args_invert_sorting": compile_url_args_for_pagination(
+                price=invert_sorting(get_url_arg_from_ordering_field(field=self.get_ordering())),
+                min_=self._get_acceptable_range_price(),
+                filters="filters" in self.request.GET.keys(),
+            ),
+            "max_item_price": Cards.objects.aggregate(Max('price'))["price__max"],
+            "min_price": self._get_acceptable_range_price()
+        })
 
     def _get_acceptable_range_price(self):
         try:
@@ -77,14 +80,15 @@ class AddProductView(LoginRequiredMixin, CreateView):
     form_class = AddProductForm
 
     def get_success_url(self):
-        return reverse_lazy("home")
+        return reverse_lazy("product-card", kwargs={"title": spaces_to_dashes(self.request.POST["title"])})
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super(AddProductView, self).form_valid(form=form)
 
 
 class AddCategoryView(LoginRequiredMixin, CreateView):
     model = Categories
     template_name = "products\\add-category.html"
     form_class = AddCategoryForm
-
-    def get_success_url(self):
-        return reverse_lazy("home")
-
+    success_url = reverse_lazy("home")

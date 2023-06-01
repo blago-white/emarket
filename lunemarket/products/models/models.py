@@ -3,6 +3,7 @@ from django.db import models
 from products import validators
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator, MaxValueValidator
+from django.contrib.auth.models import User
 
 from .models_utils import get_image_path
 
@@ -57,6 +58,11 @@ class Cards(models.Model):
                               verbose_name="Card title photo")
     price = models.FloatField(verbose_name="Price of product",
                               validators=[MinValueValidator(0), MaxValueValidator(5000)])
+    author = models.ForeignKey(User,
+                               on_delete=models.CASCADE,
+                               verbose_name="Creator's account",
+                               null=False,
+                               default=1)
 
     def __str__(self):
         return self.title

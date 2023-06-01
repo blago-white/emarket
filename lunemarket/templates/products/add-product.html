@@ -20,29 +20,33 @@
     <form enctype="multipart/form-data" method="post" class="register-form">
         {% csrf_token %}
         {% for field in form %}
-            <p class="data-input">
-                <label title="{{ field.label|lower }}">{{ field.name|lower }}</label>
-                {% if field.name == "photo" %}
-                    {{ field }}
-                    <label class="drop" for="{{ field.id_for_label }}">drop file</label>
-                {% else %}
-                    {{ field }}{% if field.name == "price" %}${% endif %}
-                {% endif %}
-                {% if field.errors %}
-                    <span class="warnings" id="{{ field_id }}">
-                        <img src="{% static 'img\users\warn.png' %}" class="warn-icon">
-                        <span class="warn-info" style="opacity: 0;display: none" id="warn-window-{{ field_id }}">
-                            <span class="warn">
-                                {% for err in field.errors %}
-                                    {% for part in err|wrap %}
-                                        {{ part }}<br>
+            {% if field.name != "author" %}
+                <p class="data-input">
+            {% else %}
+                <p class="data-input" style="display:none;">
+            {% endif %}
+                    <label title="{{ field.label|lower }}">{{ field.name|lower }}</label>
+                    {% if field.name == "photo" %}
+                        {{ field }}
+                        <label class="drop" for="{{ field.id_for_label }}">drop file</label>
+                    {% else %}
+                        {{ field }}{% if field.name == "price" %}${% endif %}
+                    {% endif %}
+                    {% if field.errors %}
+                        <span class="warnings" id="{{ field_id }}">
+                            <img src="{% static 'img\users\warn.png' %}" class="warn-icon">
+                            <span class="warn-info" style="opacity: 0;display: none" id="warn-window-{{ field_id }}">
+                                <span class="warn">
+                                    {% for err in field.errors %}
+                                        {% for part in err|wrap %}
+                                            {{ part }}<br>
+                                        {% endfor %}
                                     {% endfor %}
-                                {% endfor %}
+                                </span>
                             </span>
                         </span>
-                    </span>
-                {% endif %}
-            </p>
+                    {% endif %}
+                </p>
         {% endfor %}
         <button type="submit" class="submit-button">Add</button>
     </form>

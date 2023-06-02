@@ -8,6 +8,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.http import HttpResponseRedirect
 from .forms import RegisterUserForm
 from products.models.models import Cards
+from users.mixins import UserLoginRequiredMixin
 from .filters import *
 
 
@@ -25,32 +26,50 @@ class LoginUserView(LoginView):
         return reverse_lazy("home")
 
 
-class AccountView(DetailView):
+class BaseAccountView(UserLoginRequiredMixin):
+    def get_context_data(self, **kwargs):
+        current_context = super().get_context_data(**kwargs)
+        current_context.update({"current_section": self._get_curren_section()})
+
+        if "pk" in self.kwargs and int(self.kwargs.get("pk")) == self.request.user.id:
+            current_context.update({"is_self_account": True})
+
+        return current_context
+
+    def get_user(self, url_pk_name: str = "pk"):
+        if not self.kwargs.get(url_pk_name):
+            raise KeyError(f"Not found url-arg: '{url_pk_name=}'")
+
+        return User.objects.filter(id=self.kwargs.get(url_pk_name))
+
+    def _get_curren_section(self):
+        try:
+            return self._section
+        except AttributeError:
+            return
+
+
+class AccountInfoView(BaseAccountView, DetailView):
     model = User
     template_name = "users/account-info.html"
     context_object_name = "user"
 
-    def get_context_data(self, **kwargs):
-        current_context = super(AccountView, self).get_context_data(**kwargs)
-        current_context.update({"current_section": "info"})
+    _section = "info"
 
-        return current_context
+    def get_queryset(self):
+        return super().get_user()
 
 
-class UserAccountCardsView(ListView):
+class AccountCardsView(BaseAccountView, ListView):
     model = Cards
     template_name = "users/account-cards.html"
     context_object_name = "items"
 
-    def get_context_data(self, **kwargs):
-        current_context = super(UserAccountCardsView, self).get_context_data(**kwargs)
-        current_context.update({"current_section": "cards"})
-        current_context.update({"items_is": "cards"})
-
-        return current_context
+    _section = "cards"
 
     def get_queryset(self):
-        return self.model.objects.filter(author=User.objects.filter(id=self.request.user.id)[0])
+        user = super().get_user()[0]
+        return self.model.objects.filter(author=user)
 
 
 class LogoutUserView(LogoutView):

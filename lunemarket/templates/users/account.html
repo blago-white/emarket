@@ -14,7 +14,7 @@ Hi, {{ user.username }}
 {% endblock %}
 
 {% block rootcontent %}
-    <div class="form">
+    <div class="form {% if products|length < 7 %}{% else %}big{% endif %}">
         <div class="account-body">
             <nav class="account-sections">
                 <a class="section" id="section-1" href="{% url 'account-info' request.user.id %}">
@@ -24,11 +24,19 @@ Hi, {{ user.username }}
                     ></i>
                 </a>
                 <a class="section" id="section-2" href="{% url 'account-cards' request.user.id %}">
-                    <div class="section-text">my cards</div>
+                    <div class="section-text">{% if is_self_account %}my cards{% else %}cards{% endif %}</div>
                     <i class="section-underline {% if current_section == 'cards' %}active{% endif %}"
                        id="section-2-underline"
                     ></i>
                 </a>
+                {% if is_self_account %}
+                    <a class="section" id="section-3" href="{% url 'basket' user.id %}">
+                        <div class="section-text">basket</div>
+                        <i class="section-underline {% if current_section == 'basket' %}active{% endif %}"
+                           id="section-3-underline"
+                        ></i>
+                    </a>
+                {% endif %}
             </nav>
             <div class="register-form account-info">
                 {% block profile-content %}

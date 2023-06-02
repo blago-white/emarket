@@ -4,7 +4,7 @@ from .models.models import Cards, Categories
 from django.conf import settings
 from django.urls import reverse_lazy
 from products.forms import AddProductForm, AddCategoryForm
-from django.contrib.auth.mixins import LoginRequiredMixin
+from users.mixins import UserLoginRequiredMixin
 
 from products.filters import *
 
@@ -74,7 +74,7 @@ class CardView(DetailView):
         return query_set.order_by("title")
 
 
-class AddProductView(LoginRequiredMixin, CreateView):
+class AddProductView(UserLoginRequiredMixin, CreateView):
     model = Cards
     template_name = "products\\add-product.html"
     form_class = AddProductForm
@@ -87,7 +87,7 @@ class AddProductView(LoginRequiredMixin, CreateView):
         return super(AddProductView, self).form_valid(form=form)
 
 
-class AddCategoryView(LoginRequiredMixin, CreateView):
+class AddCategoryView(UserLoginRequiredMixin, CreateView):
     model = Categories
     template_name = "products\\add-category.html"
     form_class = AddCategoryForm

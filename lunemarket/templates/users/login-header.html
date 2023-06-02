@@ -1,0 +1,7 @@
+{% extends 'main-header.html' %}
+{% load static %}
+
+{% block navigation %}
+    <a class="header-nav-button" href="{% url 'register' %}">registrate</a>
+    <a class="header-nav-button" href="{% url 'home' %}">home</a>
+{% endblock %}

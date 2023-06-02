@@ -1,5 +1,11 @@
 @import "login.css";
 
+.big {
+    top: 13vh;
+    height: auto;
+    padding-bottom: 4em;
+}
+
 .account-body {
     display: flex;
     align-items: center;
@@ -24,7 +30,7 @@
 .account-sections {
     width: 100%;
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
 }
 
 .user-card-info {
@@ -38,6 +44,7 @@
     background: rgb(0, 0, 0, .1);
     border-radius: .5em;
     overflow: hidden;
+    box-shadow: 0px 0px .25em rgb(0, 0, 0, .1);
 }
 
 .one-row {
@@ -57,12 +64,12 @@
     transform: translateY(100%);
     background: rgb(255, 255, 255, .5);
     color: black;
-    border-radius: .2em;
+    border-radius: inherit;
     transition: transform .1s ease-in-out;
 }
 
 .user-card-title {
-    transform: translateY(100%);
+    transform: translateY(50%);
     transition: transform .1s ease-in-out;
 }
 
@@ -90,6 +97,7 @@
 
 .section-text {
     font-style: inherit;
+    white-space: nowrap;
     transition: all .2s ease-out;
 }
 
@@ -133,3 +141,9 @@
     }
 }
 
+
+@media(height > 100%) {
+    .page-content {
+        background: red!important;
+    }
+}

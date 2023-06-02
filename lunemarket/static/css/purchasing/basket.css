@@ -1,0 +1,182 @@
+@import "../users/account.css";
+
+
+.account-body {
+    width: 50%;
+}
+
+.account-info {
+    width: 100%;
+    grid-template-columns: 1fr;
+}
+
+.account-sections {
+    width: inherit;
+}
+
+.user-cards {
+    width: 100%;
+    gap: 0.3em;
+}
+
+.user-card-info {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr;
+    height: 4em;
+    overflow: hidden;
+    text-shadow: 0px 0px 0px black!important;
+    border-radius: .75em;
+}
+
+.user-card-title {
+    transform: none;
+    display: flex;
+    text-decoration: none;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    grid-column-start: 1;
+    grid-column-end: 3;
+    grid-row-start: 1;
+    grid-row-end: 1;
+    color: white;
+}
+
+.user-card-bg {
+    width: 100%;
+    overflow: hidden;
+    grid-column-start: 1;
+    grid-column-end: 5;
+    grid-row-start: 1;
+    grid-row-end: 1;
+    z-index: -1;
+}
+
+.card-bg {
+    filter: brightness(.75);
+    width: 100%;
+    z-index: -1;
+}
+
+.user-card-price {
+    transform: translateX(100%);
+    background: rgb(255, 255, 255, 1);
+    grid-column-start: 3;
+    grid-column-end: 5;
+    grid-row-start: 1;
+    grid-row-end: 1;
+}
+
+.user-card-delete {
+    grid-column-start: 1;
+    grid-column-end: 1;
+    grid-row-start: 1;
+    grid-row-end: 1;
+    height: inherit;
+    transform: translateX(-100%);
+    width: auto;
+    aspect-ratio: 1/1;
+    opacity: .5;
+    display: flex;
+    border-radius: inherit;
+    border: 0px;
+    align-items: center;
+    justify-content: center;
+    background: indianred;
+    text-decoration: none;
+    color: white;
+    transition: all .3s cubic-bezier(0, 0, 0.2, 1);
+}
+
+.user-card-delete:hover {
+    opacity: 1;
+}
+
+.user-card-price {
+    padding-right: 50%;
+}
+
+.user-card-price {
+    color: white;
+    background: rgb(192, 192, 192, .5);
+    transition: transform .3s cubic-bezier(0, 0, 0.2, 1);
+}
+
+.button-buy-product-form {
+    grid-column-start: 4;
+    grid-column-end: 5;
+    grid-row-start: 1;
+    grid-row-end: 1;
+
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    color: white;
+
+    background: rgb(255, 255, 255, .5);
+    transform: translateX(100%);
+    border-radius: inherit;
+
+    transition: all .3s cubic-bezier(0, 0, 0.2, 1);
+}
+
+.button-buy-product {
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+    border: 0px;
+}
+
+.button-buy-product-form:hover {
+    background: rgb(255, 255, 255, 1);
+    color: black;
+    z-index: 10;
+}
+
+.user-card-info:hover .button-buy-product-form {
+    transform: translateX(0%);
+}
+
+.user-card-info:hover .user-card-bg {
+    filter: grayscale(50%);
+}
+
+
+.user-card-info:hover .user-card-delete {
+    transform: translateX(0%);
+}
+
+.user-card-info:hover .user-card-title {
+    text-shadow: 0px 0px .1em rgb(255, 255, 255, .5);
+}
+
+.register-form {
+    padding: .25em;
+}
+
+@media(aspect-ratio<10/8) {
+    .account-body {
+        width: 80%;
+    }
+}
+
+@media(aspect-ratio<5/8) {
+    .account-body {
+        width: 95%;
+    }
+}
+
+
+@media(aspect-ratio<1/1) {
+    .account-body {
+        width: 95%;
+    }
+    .button-buy-product-form {
+        transform: none;
+    }
+    .user-card-price {
+        transform: none;
+    }
+}

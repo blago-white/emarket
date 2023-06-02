@@ -12,7 +12,7 @@
             {% if request.user.is_authenticated %}
                 <a
                 class="header-nav-button"
-                href="{% url 'account' user.id %}">
+                href="{% url 'account-info' user.id %}">
                     account
                 </a>
                 <a class="header-nav-button" href="{% url 'add-category' %}">add category</a>

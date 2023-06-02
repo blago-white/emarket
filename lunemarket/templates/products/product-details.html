@@ -25,20 +25,30 @@
                     <header class="card-title">
                         {{ item_info.category }}<br>
                         {{ item_info.title|dashes_to_spaces }}<br>
-                        <a href="{% url 'account' item_info.author.id %}"
+                        <a href="{% url 'account-info' item_info.author.id %}"
                            style="text-decoration: none;color: white">
                             author: {{ item_info.author }}
                         </a>
                     </header>
                 </div>
                 <div class="purchase">
-                    <button class="button-buy">buy</button>
+                    <form class="save-form" method="POST"
+                          action="{% url 'save-product' user.id item_info.title %}">
+                        {% csrf_token %}
+                        {% if user.is_authenticated %}
+                        <button type="submit" class="button-save">
+                                add to basket
+                        </button>
+                        {% else %}
+                            <button type="submit" class="button-save small-text">
+                                login if you like this
+                            </button>
+                        {% endif %}
+                    </form>
                     <div class="price">{{ item_info.price }} $</div>
                 </div>
             </div>
         </div>
-        <script type="text/javascript" src="{% static 'js\products\products-listing.js' %}"></script>
-        <script type="text/javascript" src="{% static 'js\products\floated-elements.js' %}"></script>
     </div>
 {% endblock %}
 {% block scripts %}

@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'products',
     'home',
     'users',
+    'purchasing',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -137,3 +138,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MAIN_PAGE_CATEGORIES_BATCH_SIZE = 9
 CATEGORY_PRODUCTS_BATCH_SIZE = 8
+
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+

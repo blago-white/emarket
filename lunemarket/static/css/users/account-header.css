@@ -1,0 +1,8 @@
+@import "base-header.css";
+
+@media(aspect-ratio<10/8) {
+    .main-header {
+        width: 100%!important;
+        top: 0px!important;
+    }
+}

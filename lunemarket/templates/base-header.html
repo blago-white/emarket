@@ -7,7 +7,7 @@
 
 {% block navigation %}
     {% if request.user %}
-        <a class="header-nav-button" href="{% url 'account' user.id %}">account</a>
+        <a class="header-nav-button" href="{% url 'account-info' user.id %}">account</a>
     {% else %}
         <a class="header-nav-button" href="{% url 'register' %}">registrate</a>
     {% endif %}

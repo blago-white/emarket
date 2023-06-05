@@ -8,8 +8,8 @@ from products.models.models import Cards
 
 
 class ShoppingBasket(models.Model):
-    user = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=False, unique=False)
-    product = models.ForeignKey(Cards, on_delete=models.DO_NOTHING, null=False, unique=False)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=False, unique=False)
+    product = models.ForeignKey(Cards, on_delete=models.CASCADE, null=False, unique=False)
 
     def __str__(self):
         return str(self.id)

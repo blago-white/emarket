@@ -6,7 +6,7 @@
     top: 40px;
     height: 0px;
     overflow: hidden;
-    z-index: 10;
+    z-index: 2;
 }
 
 .main-header {
@@ -15,8 +15,8 @@
     flex-wrap: wrap;
     padding-inline: .2em;
     height: 7vh;
-    background-color: rgba(255, 255, 255, .3);
-    backdrop-filter: blur(.1em);
+    background-color: rgba(255, 255, 255, 0);
+    backdrop-filter: blur(.3em);
     justify-content: center;
     box-shadow: 0px 0px .1em gray;
     top: 1.5vh;
@@ -52,14 +52,13 @@
     color: black;
     text-decoration: none;
     width: 100%;
-    background: rgb(255, 255, 255, .1);
-    box-shadow: 0px 0px .3em rgb(60, 60, 60);
+    background: rgb(255, 255, 255, .4);
     border-radius: .2em;
     transition: all .2s;
 }
 
 .header-nav-button:hover {
-    background: rgb(255, 255, 255, .2);
+    background: rgb(255, 255, 255, .6);
     box-shadow: 0px 0px 2em rgb(64, 64, 64);
     transition: all .2s;
 }
@@ -69,16 +68,6 @@
     aspect-ratio: 1 / 1;
 }
 
-@media screen and (device-aspect-ratio < 1/1) {
-    .main-header {
-        justify-content: space-between!important;
-    }
-    .header-nav {
-        width: 100%!important;
-    }
-}
-
-
 @media (width<857px) and (device-aspect-ratio < 1/1) {
     .main-header {
         width: 300px!important;
@@ -86,7 +75,7 @@
 }
 
 
-@media(aspect-ratio < 75/90) {
+@media(aspect-ratio < 12/10) {
     .main-header {
         border-radius: 0px!important;
         width: 100%!important;

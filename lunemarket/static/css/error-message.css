@@ -1,0 +1,6 @@
+.error-message {
+    height: 100vh;
+    position: absolute;
+    display: table-cell;
+    vertical-align: middle;
+}

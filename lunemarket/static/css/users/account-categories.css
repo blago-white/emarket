@@ -1,0 +1,12 @@
+@import "account-cards.css";
+
+.user-card-delete-card {
+    grid-column-start: 1;
+    grid-column-end: 3;
+}
+
+@media(aspect-ratio < 65/90) {
+    .account-body {
+        margin-top: 46em;
+    }
+}

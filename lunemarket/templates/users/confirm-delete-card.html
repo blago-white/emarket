@@ -1,0 +1,19 @@
+<div class="confirm-window-wrapper" style="opacity: 0;display: none;">
+  <div class="confirm-window">
+    You are shure?
+    {{ item.title }}
+    <div class="buttons-confirm">
+      {% if current_section == "cards" %}
+        <form method="post" action="{% url 'delete-user-card' 'item' %}" id="delete-form">
+      {% elif current_section == "categories" %}
+        <form method="post" action="{% url 'delete-user-category' 'item' %}" id="delete-form">
+      {% endif %}
+        {% csrf_token %}
+        <button type="submit" class="confirm-button delete-button">delete</button>
+      </form>
+      <button class="confirm-button user-card-cancel-card" id="cancel">
+        cancel
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,8 +1,9 @@
-from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic import ListView, DetailView, CreateView, DeleteView
 from django.db.models import QuerySet
 from .models.models import Cards, Categories
 from django.conf import settings
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
+from django.contrib.auth.models import User
 from products.forms import AddProductForm, AddCategoryForm
 from users.mixins import UserLoginRequiredMixin
 
@@ -38,16 +39,16 @@ class ProductsView(ListView):
     def _complement_context(self, current_context: dict) -> None:
         current_context.update({
             "items_is": "categories" if self._used_model == Categories else "cards",
-            "filters": "filters" in self.request.GET.keys(),
+            "filters": int("filters" in self.request.GET.keys()),
             "url_args": compile_url_args_for_pagination(
                 price=get_url_arg_from_ordering_field(field=self.get_ordering()),
                 min_=self._get_acceptable_range_price(),
-                filters="filters" in self.request.GET.keys(),
+                filters=int("filters" in self.request.GET.keys()),
             ),
             "url_args_invert_sorting": compile_url_args_for_pagination(
                 price=invert_sorting(get_url_arg_from_ordering_field(field=self.get_ordering())),
                 min_=self._get_acceptable_range_price(),
-                filters="filters" in self.request.GET.keys(),
+                filters=int("filters" in self.request.GET.keys()),
             ),
             "max_item_price": Cards.objects.aggregate(Max('price'))["price__max"],
             "min_price": self._get_acceptable_range_price()
@@ -67,11 +68,24 @@ class CardView(DetailView):
     slug_field = "title"
     slug_url_kwarg = "title"
 
-    def get_queryset(self):
-        prod_title = self.kwargs.get("title")
-        query_set: QuerySet = self.model.objects.filter(title=prod_title)
+    _card_author_id: int
 
-        return query_set.order_by("title")
+    def get_object(self, queryset=None):
+        prod_title = self.kwargs.get("title")
+        card: Cards = self.model.objects.get(title=prod_title)
+        self._card_author_id = card.author.id
+
+        _increment_card_views(card=card)
+
+        return card
+
+    def get_context_data(self, **kwargs):
+        current_context = super().get_context_data(**kwargs)
+
+        viewer_is_author = self.request.user.id == self._card_author_id
+        current_context.update({"viewer_is_author": viewer_is_author})
+
+        return current_context
 
 
 class AddProductView(UserLoginRequiredMixin, CreateView):
@@ -92,3 +106,26 @@ class AddCategoryView(UserLoginRequiredMixin, CreateView):
     template_name = "products\\add-category.html"
     form_class = AddCategoryForm
     success_url = reverse_lazy("home")
+
+
+class DeleteUserCard(UserLoginRequiredMixin, DeleteView):
+    success_url = reverse_lazy("basket")
+    model = Cards
+
+    def get_object(self, queryset=None):
+        return self.model.objects.filter(author=self.request.user, title=self.kwargs.get("title"))[0]
+
+
+class DeleteUserCategory(UserLoginRequiredMixin, DeleteView):
+    model = Categories
+
+    def get_success_url(self):
+        return reverse("account-categories", kwargs={"pk": self.request.user.id})
+
+    def get_object(self, queryset=None):
+        return self.model.objects.filter(author=self.request.user, title=self.kwargs.get("title"))[0]
+
+
+def _increment_card_views(card: Cards):
+    card.views += 1
+    card.save()

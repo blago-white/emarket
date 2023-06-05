@@ -14,31 +14,50 @@ Hi, {{ user.username }}
 {% endblock %}
 
 {% block rootcontent %}
+<link rel="stylesheet" href="{% static 'css\users\account-sections.css' %}" type="text/css"
+      xmlns="http://www.w3.org/1999/html">
     <div class="form {% if products|length < 7 %}{% else %}big{% endif %}">
-        <div class="account-body">
-            <nav class="account-sections">
-                <a class="section" id="section-1" href="{% url 'account-info' request.user.id %}">
+        <div
+            class="account-body {% if current_section == 'notifications' and notifications|length > 5 %}notifications-body-long{% endif %}">
+            <nav class="account-sections"
+                 style="{% if is_self_account %}{% else %}grid-template-columns: 1fr 1fr 1fr;{% endif %}">
+                <a class="section section-1" id="section-1" href="{% url 'account-info' current_user_account_pk %}">
                     <div class="section-text">info</div>
                     <i class="section-underline {% if current_section == 'info' %}active{% endif %}"
                        id="section-1-underline"
                     ></i>
                 </a>
-                <a class="section" id="section-2" href="{% url 'account-cards' request.user.id %}">
-                    <div class="section-text">{% if is_self_account %}my cards{% else %}cards{% endif %}</div>
+                <a class="section section-2" id="section-2" href="{% url 'account-cards' current_user_account_pk %}">
+                    <div class="section-text">cards</div>
                     <i class="section-underline {% if current_section == 'cards' %}active{% endif %}"
                        id="section-2-underline"
                     ></i>
                 </a>
+                <a class="section section-3" id="section-3"
+                   href="{% url 'account-categories' current_user_account_pk %}">
+                    <div class="section-text">categories</div>
+                    <i class="section-underline {% if current_section == 'categories' %}active{% endif %}"
+                       id="section-3-underline"
+                    ></i>
+                </a>
                 {% if is_self_account %}
-                    <a class="section" id="section-3" href="{% url 'basket' user.id %}">
+                    <a class="section section-4" id="section-4" href="{% url 'basket' %}">
                         <div class="section-text">basket</div>
                         <i class="section-underline {% if current_section == 'basket' %}active{% endif %}"
-                           id="section-3-underline"
+                           id="section-4-underline"
+                        ></i>
+                    </a>
+                    <a class="section section-5" id="section-5"
+                       href="{% url 'account-notifications' %}">
+                        <div class="section-text">notifications</div>
+                        <i class="section-underline {% if current_section == 'notifications' %}active{% endif %}"
+                           id="section-5-underline"
                         ></i>
                     </a>
                 {% endif %}
             </nav>
-            <div class="register-form account-info">
+            <div
+                class="register-form account-info">
                 {% block profile-content %}
                 {% endblock %}
             </div>

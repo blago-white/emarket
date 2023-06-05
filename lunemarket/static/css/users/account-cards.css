@@ -1,5 +1,207 @@
 @import "account.css";
 
+.user-card-info {
+    grid-template-rows: 1fr 1fr 1fr;
+    height: 20vh;
+}
+
+.user-card-bg {
+    grid-row-start: 1;
+    grid-row-end: 4;
+    grid-column-start: 1;
+    grid-column-end: 1;
+    background-size: cover!important;
+    background-position: top!important;
+    width: 100%;
+    transition: all .2s ease;
+}
+
 .account-sections {
     width: inherit;
+}
+
+.user-card-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-shadow: 0px 0px .5em black;
+    grid-row-start: 1;
+    grid-row-end: 2;
+    grid-column-start: 1;
+    grid-column-end: 1;
+}
+
+.user-card-price {
+    background: white;
+    box-shadow: 0px 0px .5em white;
+    grid-row-start: 3;
+    grid-row-end: 3;
+    grid-column-start: 1;
+    grid-column-end: 1;
+    width: 70%;
+    height: 80%;
+    z-index: 1;
+}
+
+.register-form {
+    background-color: rgb(255, 255, 255, .1);
+}
+
+.user-card-delete-card {
+    position: relative;
+    display: flex;
+    width: 70%;
+    height: 80%;
+    align-items: center;
+    justify-content: center;
+    grid-row-start: 3;
+    grid-row-end: 3;
+    grid-column-start: 1;
+    grid-column-end: 1;
+    transform: scaleY(-1);
+    border-radius: inherit;
+    border: 0px;
+    background-color: white;
+    transition: transform .2s ease, background-color .2s 0s;
+}
+
+.user-card-info {
+    background: rgb(255, 255, 255, .7);
+    box-shadow: 0px 0px .1em white;
+}
+
+.user-card-info {
+    grid-template-rows: 1fr 1fr 1fr;
+}
+
+.user-card-info-category {
+    background: rgb(255, 255, 255, .7);
+    box-shadow: 0px 0px .1em white;
+}
+
+.delete-category {
+    transform: none;
+}
+
+.card-views-wrapper {
+    position: relative;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    top: .2em;
+    left: .1em;
+    width: 100%;
+    height: min-content;
+    padding-inline: .1em;
+    grid-row-start: 1;
+    grid-row-end: 1;
+    grid-column-start: 1;
+    grid-column-end: 1;
+}
+
+.card-views {
+    background: rgb(128, 128, 128, .5);
+    backdrop-filter: blur(.5em);
+    color: black;
+    cursor: pointer;
+    z-index: 1;
+    width: 3em;
+    min-width: min-content;
+    height: 1.5em;
+    font-size: .9em;
+    border-radius: .4em;
+}
+
+.user-card-info:hover .user-card-delete-card {
+    background-color: indianred;
+    transform: scaleY(1);
+    box-shadow: 0px 0px .5em indianred;
+}
+
+.user-card-info:hover .user-card-price {
+    transform: translateY(150%);
+}
+
+.user-card-info:hover .static-price {
+    transform: none;
+}
+
+.user-card-info:hover .user-card-title {
+    transform: translateY(50%);
+}
+
+.user-card-info:hover .user-card-bg {
+    filter: blur(1em);
+}
+
+
+@media(aspect-ratio<=4/3) {
+    .user-card-delete-card {
+        transform: none;
+        background: indianred;
+        box-shadow: 0px 0px .5em indianred;
+    }
+    .user-card-price {
+        transform: none;
+        grid-row-start: 2;
+        grid-row-end: 2;
+    }
+    .user-card-title {
+        transform: none;
+    }
+}
+
+@media(aspect-ratio<=565/800) {
+    .account-body {
+        margin-top: 5em;
+    }
+}
+
+@media(aspect-ratio<415/800) {
+    .account-body {
+        margin-top: 25em;
+    }
+}
+
+@media(aspect-ratio < 65/90) {
+    .user-cards {
+        grid-template-columns: 1fr;
+    }
+    .user-card-info {
+        height: 7em;
+        grid-template-rows: 1fr 1fr 1fr 1fr;
+        grid-template-columns: 1fr 1fr;
+        width: 80vw;
+    }
+    .user-card-delete-card {
+        grid-row-start: 4;
+        grid-row-end: 4;
+        grid-column-start: 2;
+        grid-column-end: 2;
+        width: 80%;
+    }
+    .user-card-price {
+        transform: none;
+        grid-row-start: 4;
+        grid-row-end: 4;
+        grid-column-start: 1;
+        grid-column-end: 1;
+        width: 80%;
+    }
+    .user-card-title {
+        grid-row-start: 2;
+        grid-row-end: 2;
+        grid-column-start: 1;
+        grid-column-end: 3;
+    }
+    .user-card-bg {
+        grid-row-start: 1;
+        grid-row-end: 5;
+        grid-column-start: 1;
+        grid-column-end: 4;
+    }
+    .account-body {
+        margin-top: 46em;
+    }
 }

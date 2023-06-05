@@ -1,0 +1,109 @@
+@import "account.css";
+
+.account-info {
+    margin-bottom: 2em;
+}
+
+.notifications-body-long {
+    margin-top: 10em;
+}
+
+.notification {
+    background: rgb(128, 128, 128, .5);
+    border-radius: .5em;
+    width: 100%;
+}
+
+.notification-title {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-inline: .2em;
+    border-radius: inherit;
+}
+
+.delete-notification {
+    background: lightcoral;
+    color: white;
+    border: 0px;
+    transition: all .2s ease;
+}
+
+.notification-title-start {
+    display: flex;
+    gap: .2em;
+}
+
+.theme-marker {
+    font-size: .9em;
+    line-height: 1.1em;
+    padding-inline: .2em;
+    margin-bottom: .2em;
+    margin-top: .2em;
+    border-radius: .5em;
+    transition: all .2s ease;
+}
+
+.theme-marker:hover {
+    box-shadow: 0px 0px .5em white;
+}
+
+.delete-notification:hover {
+    box-shadow: 0px 0px .5em lightcoral;
+}
+
+.notification-details {
+    background: rgb(128, 128, 128, .5);
+    border-radius: .5em;
+    overflow: hidden;
+    padding: .5em;
+}
+
+.notification-full-text {
+    overflow: hidden;
+    text-align: center;
+    padding-inline: .2em;
+}
+
+.notification-date {
+    position: relative;
+    right: 0px;
+    font-size: .75em;
+}
+
+@media (aspect-ratio<52/100) {
+    .notification-title {
+        flex-direction: column;
+    }
+}
+
+@media (aspect-ratio<835/1000) {
+    .notifications-body-long {
+        margin-top: 13em;
+    }
+}
+
+@media (aspect-ratio<776/1000) {
+    .notifications-body-long {
+        margin-top: 13em;
+    }
+}
+
+@media (aspect-ratio<1/2) {
+    .notifications-body-long {
+        margin-top: 15em;
+    }
+}
+
+@media (aspect-ratio<45/100) {
+    .notifications-body-long {
+        margin-top: 18em;
+    }
+}
+
+@media (aspect-ratio<39/100) {
+    .notifications-body-long {
+        margin-top: 22em;
+    }
+}

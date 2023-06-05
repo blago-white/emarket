@@ -25,7 +25,7 @@
                         onmouseover="onhover(this)"
                         onmouseout="onunhover(this)"
                         id="{{ category.title }}"
-                        href="products/category/{{ category.title }}">
+                        href="{% url 'category-products' category.title %}">
                         <div class="category-card-onhover-filter">
                             {{ category.title|upper }}
                         </div>

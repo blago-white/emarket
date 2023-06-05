@@ -1,0 +1,15 @@
+{% load static %}
+
+<div class="account-info-string user-card-info"
+    style="color: black;text-decoration: none;"
+    title="{{ item.title|dashes_to_spaces }}">
+    <div class="user-card-bg"  style="background: url({% static item.photo.name|get_media_path %})"></div>
+     <a class="user-card-title"
+        href="{% url 'category-products' item.title %}"
+        style="{% if not item.price and not is_self_account %}grid-row-start: 1;grid-row-end: 4;transform: none;{% endif %}">
+             {{ item.title|dashes_to_spaces }}
+     </a>
+     {% if is_self_account %}
+         <button class="user-card-delete-card delete-category" id="{{ item.title }}">delete</button>
+     {% endif %}
+</div>

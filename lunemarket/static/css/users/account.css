@@ -30,11 +30,13 @@
 .account-sections {
     width: 100%;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    gap: 0em;
 }
 
 .user-card-info {
     display: grid;
+    justify-items: center;
     grid-template-columns: 1fr 1fr;
     grid-template-columns: 1fr;
     justify-content: space-between;
@@ -42,6 +44,7 @@
     flex-direction: column;
     justify-content: center;
     background: rgb(0, 0, 0, .1);
+    width: 20vw;
     border-radius: .5em;
     overflow: hidden;
     box-shadow: 0px 0px .25em rgb(0, 0, 0, .1);
@@ -61,16 +64,17 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    transform: translateY(100%);
     background: rgb(255, 255, 255, .5);
     color: black;
     border-radius: inherit;
-    transition: transform .1s ease-in-out;
+    transition: transform .2s ease;
 }
 
 .user-card-title {
+    text-decoration: none;
+    color: black;
     transform: translateY(50%);
-    transition: transform .1s ease-in-out;
+    transition: transform .2s ease;
 }
 
 .user-card-info:hover {
@@ -128,22 +132,29 @@
     box-shadow: 0px 0px 1em white, 0px -.2em .5em white;
 }
 
-
 @media(aspect-ratio < 75/90) {
     .user-cards {
         grid-template-columns: 1fr 1fr;
+    }
+    .user-card-info {
+        width: 40vw;
+    }
+    .account-sections {
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        grid-template-rows: 1fr 1fr;
+        gap: .5em;
+    }
+}
+
+@media(aspect-ratio < 1/2) {
+    .account-sections {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr 1fr 1fr;
     }
 }
 
 @media(aspect-ratio < 46/80) {
     .form {
         width: 100%;
-    }
-}
-
-
-@media(height > 100%) {
-    .page-content {
-        background: red!important;
     }
 }

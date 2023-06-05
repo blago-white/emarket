@@ -23,6 +23,11 @@ class Categories(models.Model):
                                on_delete=models.CASCADE)
     photo = models.ImageField(upload_to=get_image_path,
                               null=False)
+    author = models.ForeignKey(User,
+                               on_delete=models.CASCADE,
+                               verbose_name="Creator's account",
+                               null=False,
+                               default=1)
 
     def __str__(self):
         return self.title
@@ -58,11 +63,11 @@ class Cards(models.Model):
                               verbose_name="Card title photo")
     price = models.FloatField(verbose_name="Price of product",
                               validators=[MinValueValidator(0), MaxValueValidator(5000)])
+    views = models.IntegerField(verbose_name="Number of product card views per card", null=False, default=0)
     author = models.ForeignKey(User,
                                on_delete=models.CASCADE,
                                verbose_name="Creator's account",
-                               null=False,
-                               default=1)
+                               null=False)
 
     def __str__(self):
         return self.title

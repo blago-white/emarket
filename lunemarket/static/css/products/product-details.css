@@ -44,6 +44,38 @@
     transition: transform .2s ease;
 }
 
+.color-mark {
+    width: 1em;
+    height: 1em;
+    min-width: min-content;
+    border-radius: .3em;
+    transition: all .2s ease;
+}
+
+.card-info-splitter {
+    width: .11em;
+    height: 100%;
+    background: rgb(220, 220, 220);
+    border-radius: 1em;
+    box-shadow: 0px 0px .05em rgb(220, 220, 220);
+}
+
+.card-product-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .5em;
+}
+
+.cards-list {
+    grid-row-start: 1;
+    grid-row-end: 4;
+    grid-column-start: 1;
+    grid-column-end: 1;
+    overflow-y: scroll;
+    text-align: center;
+}
+
 .card-info {
     position: absolute;
     left: 60vw;
@@ -98,7 +130,7 @@
     flex-direction: column;
     width: 100%;
     text-align: center;
-    font-weight: 900;
+    gap: .2em;
 }
 
 .save-form {
@@ -169,6 +201,10 @@
 
 .purchase:hover {
     background-color: rgb(0, 0, 0, .1);
+}
+
+.card-info:hover {
+    background: rgb(654, 56, 67;
 }
 
 @media(aspect-ratio<134/100) {

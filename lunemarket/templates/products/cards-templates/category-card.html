@@ -1,9 +1,9 @@
-<a class="card" href="{% url 'category-products' item.title|spaces_to_dashes %}">
+<a class="card" href="{% url 'category-products' item.title|spaces_to_dashes %}?{{ url_args }}">
     <div class="card-preview-wrapper">
         <img src="../../../media/{{ item.photo }}" class="card-preview">
     </div>
     <div class="card-content">
         <b>{{ item.title|dashes_to_spaces }}</b>
-        <b>{{ item.parent }}</b>
+        average: <b style="display: contents;">{{ item.price }}$</b>
     </div>
 </a>

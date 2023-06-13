@@ -1,6 +1,0 @@
-@import "register.css";
-@import "add-product.css";
-
-.register-form {
-    grid-template-rows: 1fr 1fr 1fr 1fr;
-}

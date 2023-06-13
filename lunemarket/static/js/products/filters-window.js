@@ -13,9 +13,9 @@ function Filters() {
             }
         }
 
-        header.animate([{height: "14vh"}], {duration: 200, easing: "ease"});
+        header.animate([{height: "13.5vh"}], {duration: 200, easing: "ease"});
         setTimeout(e => {
-            header.style.height = "14vh";
+            header.style.height = "13.5vh";
         }, 200);
         filters_window.style.display = "flex";
     } else {

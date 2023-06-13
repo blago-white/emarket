@@ -5,7 +5,7 @@
 {% endblock %}
 
 <header class="main-header-wrapper">
-    <div class="main-header" style="{% if filters %}height: 14vh;{% else %}height: 7vh;{% endif %}">
+    <div class="main-header" style="{% if filters %}height: 13.5vh;{% else %}height: 7vh;{% endif %}">
         <nav class="header-nav">
             <a class="header-nav-button square-button" href="{{ request.META.HTTP_REFERER|escape }}">B</a>
             {% block navigation %}
@@ -15,8 +15,7 @@
                 href="{% url 'account-info' user.id %}">
                     account
                 </a>
-                <a class="header-nav-button" href="{% url 'add-category' %}">add category</a>
-                <a class="header-nav-button" href="{% url 'add-card' %}">add product</a>
+                <a class="header-nav-button" href="{% url 'add-product' %}">add product</a>
             {% else %}
                 <a
                 class="header-nav-button"

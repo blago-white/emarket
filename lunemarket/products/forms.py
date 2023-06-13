@@ -1,15 +1,22 @@
-from .models.models import Cards, Categories
-from django.forms import ModelForm, TextInput, ModelChoiceField, FileInput, NumberInput, URLField, IntegerField
+from .models.models import Category, Phone
+from django.forms import ModelForm, TextInput, ModelChoiceField, FileInput, NumberInput, URLField, IntegerField, \
+    ChoiceField
 
 
 class AddProductForm(ModelForm):
-    category = ModelChoiceField(queryset=Categories.objects.all(),
+    category = ModelChoiceField(queryset=Category.objects.all(),
                                 empty_label=None,
                                 required=True)
+    color = ChoiceField(choices=Phone.BASE_COLORS,
+                        required=True,
+                        initial="red")
+    stortage = ChoiceField(choices=Phone.STORTAGE_SIZES,
+                           required=True,
+                           initial="128")
 
     class Meta:
-        model = Cards
-        fields = ["title", "category", "photo", "price"]
+        model = Phone
+        fields = ["title", "category", "photo", "price", "color", "stortage", "products_count"]
         widgets = {
             "title": TextInput(attrs={
                 "required": True
@@ -24,12 +31,12 @@ class AddProductForm(ModelForm):
 
 
 class AddCategoryForm(ModelForm):
-    parent = ModelChoiceField(queryset=Categories.objects.all(),
+    parent = ModelChoiceField(queryset=Category.objects.all(),
                               empty_label="",
                               required=False)
 
     class Meta:
-        model = Categories
+        model = Category
         fields = ["title", "parent", "photo"]
 
         widgets = {

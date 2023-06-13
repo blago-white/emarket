@@ -1,24 +1,40 @@
 {% load static %}
 
+<style>
+    .edit-card:hover {
+        background-color: rgb(50, 50, 50);
+    }
+    .delete-card:hover {
+        background-color: rgb(50, 50, 50);
+    }
+    .card-controls:hover {
+        box-shadow: none!important;
+    }
+</style>
+
 <div class="account-info-string user-card-info"
     style="color: black;text-decoration: none;"
     title="{{ item.title|dashes_to_spaces }}">
     {% if is_self_account %}
     <div class="card-views-wrapper">
-        <div class="card-views" title="{{ item.views }} views for this card">{{ item.views }}</div>
+        <span class="card-views" title="{{ item.views }} views for this card">{{ item.views }}</span>
     </div>
     {% endif %}
     <div class="user-card-bg"  style="background: url({% static item.photo.name|get_media_path %})"></div>
      <a class="user-card-title"
-        href="{% url 'product-card' item.title %}"
+        href="{% url 'product-card' item.id %}"
         style="{% if not item.price and not is_self_account %}grid-row-start: 1;grid-row-end: 4;transform: none;{% endif %}">
-             {{ item.category }}/{{ item.title|dashes_to_spaces }}
+         {% if item.category.parent %}{{ item.category.parent }}{% else %}{{ item.category }}{% endif %} {{item.title|dashes_to_spaces }}
      </a>
-    <div
-    class="user-card-price {% if not is_self_account %}static-price{% endif %}">
-        {{ item.price }}$
-    </div>
-     {% if is_self_account %}
-         <button class="user-card-delete-card delete-category" id="{{ item.title }}">delete</button>
-     {% endif %}
+        <div class="user-card-price {% if not is_self_account %}static-price{% endif %}">
+            {{ item.price }}$
+        </div>
+         {% if is_self_account %}
+             <div class="user-card-delete-card card-controls">
+                <button class="user-card-delete-card control-button delete-card" id="{{ item.id }}">delete</button>
+                <a class="user-card-delete-card control-button edit-card" href="{% url 'edit-product' item.id %}">
+                    edit
+                </a>
+             </div>
+    {% endif %}
 </div>

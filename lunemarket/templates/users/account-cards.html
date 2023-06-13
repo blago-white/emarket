@@ -2,26 +2,26 @@
 {% load static %}
 
 {% block head %}
-{% if current_section == "cards" %}
+{% if current_section == "products" %}
     <link rel="stylesheet" href="{% static 'css\users\account-cards.css' %}" type="text/css" xmlns="http://www.w3.org/1999/html">
-{% elif current_section == "categories" %}
-    <link rel="stylesheet" href="{% static 'css\users\account-categories.css' %}" type="text/css"
-          xmlns="http://www.w3.org/1999/html">
 {% endif %}
 <link rel="stylesheet" href="{% static 'css\users\confirm-window.css' %}" type="text/css"
       xmlns="http://www.w3.org/1999/html">
 {% endblock %}
 
 {% block profile-content %}
-    <div class="user-cards {% if items|length < 4 %}one-row{% endif %}">
+    <div class="user-cards"
+         style="{% if items|length < 4 %}grid-template-columns: repeat({{ items|length }}, 1fr);{% endif %}">
     {% if items %}
-        {% for item in items %}
-            {% if current_section == "cards" %}
-                {% include 'users/account-product-card.html' %}
-            {% elif current_section == "categories" %}
+        {% if current_section == "categories" %}
+            {% for item in items %}
                 {% include 'users/account-category-card.html' %}
-            {% endif %}
-        {% endfor %}
+            {% endfor %}
+        {% elif current_section == "products" %}
+            {% for idx, item in items|enumerate_ %}
+                {% include 'users/account-product-card.html' %}
+            {% endfor %}
+        {% endif %}
         {% include 'users/confirm-delete-card.html' %}
     {% else %}
         you have not published products

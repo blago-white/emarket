@@ -6,13 +6,14 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponseRedirect
-from products.models.models import Cards
+from products.models.models import Phone
 from users.views import BaseAccountView
 from users.mixins import UserLoginRequiredMixin
 from users.models import Notifications
 from . import DEFAULT_PURCHASE_MESSAGE_FOR_OWNER
 from .models import ShoppingBasket
 from .emails import EmailPurchase
+from products.filters import dashes_to_spaces
 from .filters import *
 
 
@@ -40,10 +41,10 @@ class DeleteProductFromBucketView(UserLoginRequiredMixin, DeleteView):
         return reverse("basket")
 
     def get_object(self, queryset=None):
-        product_data = Cards.objects.filter(title=self.kwargs.get("productid"))[0]
+        product_data = Phone.objects.get(pk=self.kwargs.get("pk"))
         user = self.request.user
-
-        return self.model.objects.filter(user=user, product=product_data)[0]
+        print(product_data)
+        return self.model.objects.get(user=user, product=product_data)
 
 
 class AddProductToBasketView(UserLoginRequiredMixin, CreateView):
@@ -75,16 +76,16 @@ class AddProductToBasketView(UserLoginRequiredMixin, CreateView):
 class BuyProductView(UserLoginRequiredMixin, DeleteView):
     model = ShoppingBasket
     _user_data: User
-    _product_data: Cards
+    _product_data: Phone
 
     def post(self, request, *args, **kwargs):
         self._user_data = self.request.user
-        self._product_data = _get_product_by_id(product_id=self.kwargs.get("productid"))
+        self._product_data = _get_product_by_id(product_id=self.model.objects.get(pk=self.kwargs.get("pk")).product.id)
 
         return super().post(*args, request=request, **kwargs)
 
     def get_object(self, queryset=None):
-        return get_object_or_404(ShoppingBasket, user=self._user_data, product=self._product_data)
+        return self.model.objects.get(user=self._user_data, product=self._product_data)
 
     def form_valid(self, form):
         _send_purchase_info_email(user=self._user_data, product=self._product_data)
@@ -97,7 +98,7 @@ class BuyProductView(UserLoginRequiredMixin, DeleteView):
         return reverse("basket")
 
 
-def _add_purchase_notification_for_owner(purchaser: User, owner: User, product: Cards) -> None:
+def _add_purchase_notification_for_owner(purchaser: User, owner: User, product: Phone) -> None:
     notification_text = _fill_purchase_notification_for_owner(template=DEFAULT_PURCHASE_MESSAGE_FOR_OWNER,
                                                               purchaser=purchaser,
                                                               product=product)
@@ -105,14 +106,14 @@ def _add_purchase_notification_for_owner(purchaser: User, owner: User, product: 
     notification.save()
 
 
-def _send_purchase_info_email(user: User, product: Cards) -> None:
+def _send_purchase_info_email(user: User, product: Phone) -> None:
     email_purchase = EmailPurchase(username=user.username, user_mail=user.email)
-    email_purchase.send(product_title=product.title, price=product.price)
+    email_purchase.send(product_title=dashes_to_spaces(product.title), price=product.price)
 
 
-def _get_product_by_id(product_id: str) -> Cards:
-    return Cards.objects.filter(title=product_id)[0]
+def _get_product_by_id(product_id: int) -> Phone:
+    return Phone.objects.filter(id=product_id)[0]
 
 
-def _fill_purchase_notification_for_owner(template: str, purchaser: User, product: Cards) -> str:
+def _fill_purchase_notification_for_owner(template: str, purchaser: User, product: Phone) -> str:
     return template.format(username=purchaser.username, productname=product.title, usermail=purchaser.email, price=product.price)

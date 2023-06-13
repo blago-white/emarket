@@ -3,21 +3,20 @@ from django.views.generic import CreateView, DetailView, ListView, DeleteView
 from django.forms import Form
 from django.urls import reverse_lazy
 from django.contrib.auth.models import User
-from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.forms import AuthenticationForm
 from django.http import HttpResponseRedirect
 from django.db.models import Count
 from .forms import RegisterUserForm
-from products.models.models import Cards, Categories
+from products.models.models import Phone, Category
 from users.mixins import UserLoginRequiredMixin
 from users.models import Notifications
 from .filters import *
+from allauth.account.views import LoginView, LogoutView, SignupView
 
 
-class RegisterUserView(CreateView):
+class RegisterUserView(SignupView):
     form_class = RegisterUserForm
     template_name = "users/register.html"
-    success_url = reverse_lazy("home")
 
 
 class LoginUserView(LoginView):
@@ -29,7 +28,7 @@ class LoginUserView(LoginView):
 
 
 class BaseAccountView(UserLoginRequiredMixin):
-    _account_sections = ("info", "cards", "categories", "basket", "notifications")
+    _account_sections = ("info", "products", "basket", "notifications")
 
     def get_context_data(self, **kwargs):
         current_context = super().get_context_data(**kwargs)
@@ -69,29 +68,16 @@ class AccountInfoView(BaseAccountView, DetailView):
         return super().get_user()
 
 
-class AccountCardsView(BaseAccountView, ListView):
-    model = Cards
+class AccountProductsView(BaseAccountView, ListView):
+    model = Phone
     template_name = "users/account-cards.html"
     context_object_name = "items"
-    section = "cards"
+    section = "products"
 
     def get_queryset(self):
         user = super().get_user()[0]
+
         return self.model.objects.filter(author=user).order_by("-views")
-
-
-class AccountCategoriesView(AccountCardsView):
-    model = Categories
-    section = "categories"
-
-    def get_context_data(self, **kwargs):
-        current_context = super().get_context_data(**kwargs)
-        return current_context
-
-    def get_queryset(self):
-        user = super().get_user()[0]
-        return self.model.objects.filter(author=user)
-
 
 class AccountNotificationsView(BaseAccountView, ListView):
     model = Notifications
@@ -116,7 +102,7 @@ class AccountNotificationDeleteView(UserLoginRequiredMixin, DeleteView):
     section = "notifications"
 
     def get_object(self, queryset=None):
-        return self.model.objects.get(id=self.kwargs.get("pk"))
+        return self.model.objects.get(pk=self.kwargs.get("pk"))
 
 
 class LogoutUserView(LogoutView):

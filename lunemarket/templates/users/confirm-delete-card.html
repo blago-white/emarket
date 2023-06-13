@@ -3,10 +3,8 @@
     You are shure?
     {{ item.title }}
     <div class="buttons-confirm">
-      {% if current_section == "cards" %}
-        <form method="post" action="{% url 'delete-user-card' 'item' %}" id="delete-form">
-      {% elif current_section == "categories" %}
-        <form method="post" action="{% url 'delete-user-category' 'item' %}" id="delete-form">
+      {% if current_section == "products" %}
+        <form method="post" action="{% url 'delete-product' 0 %}" id="delete-form">
       {% endif %}
         {% csrf_token %}
         <button type="submit" class="confirm-button delete-button">delete</button>

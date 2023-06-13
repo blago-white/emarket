@@ -26,18 +26,18 @@
                 <div class="user-card-bg">
                     <img src="{% static product.product.photo.name|get_media_path %}" class="card-bg">
                 </div>
-                <a class="user-card-title" href="{% url 'product-card' product.product.title %}">
+                <a class="user-card-title" href="{% url 'product-card' product.product.id %}">
                     {{ product.product.title|dashes_to_spaces }}
                 </a>
                 <div class="user-card-price">{{ product.product.price }}$</div>
-                <form class="user-card-delete" method="POST" action="{% url 'delete-product' product.product.title %}">
+                <form class="user-card-delete" method="POST" action="{% url 'delete-basket-product' product.id %}">
                     {% csrf_token %}
                     <button class="user-card-delete" type="submit" value="DELETE">
                         delete
                     </button>
                 </form>
                 <form class="button-buy-product-form" method="POST"
-                      action="{% url 'buy-product' product.product.title %}">
+                      action="{% url 'buy-product' product.id %}">
                     {% csrf_token %}
                     <button type="submit" value="BUY" class="button-buy-product">
                         buy

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models.models import Categories, Cards
+from .models.models import Category, Phone
 
-admin.site.register(Categories)
-admin.site.register(Cards)
+admin.site.register(Category)
+admin.site.register(Phone)

@@ -40,6 +40,7 @@
     grid-column-start: 1;
     grid-column-end: 1;
     width: 70%;
+    max-width: 20vw;
     height: 80%;
     z-index: 1;
 }
@@ -59,11 +60,8 @@
     grid-row-end: 3;
     grid-column-start: 1;
     grid-column-end: 1;
-    transform: scaleY(-1);
     border-radius: inherit;
     border: 0px;
-    background-color: white;
-    transition: transform .2s ease, background-color .2s 0s;
 }
 
 .user-card-info {
@@ -72,6 +70,7 @@
 }
 
 .user-card-info {
+    width: 100%;
     grid-template-rows: 1fr 1fr 1fr;
 }
 
@@ -80,8 +79,19 @@
     box-shadow: 0px 0px .1em white;
 }
 
-.delete-category {
+.card-controls {
+    overflow: hidden;
+    color: black;
+    max-width: 20vw;
+    box-shadow: none;
+    transition: box-shadow .2s ease;
+}
+
+.control-button {
     transform: none;
+    height: 100%;
+    border-radius: unset;
+    transition: all .2s ease;
 }
 
 .card-views-wrapper {
@@ -100,6 +110,10 @@
     grid-column-end: 1;
 }
 
+.user-cards {
+    width: 90vw;
+}
+
 .card-views {
     background: rgb(128, 128, 128, .5);
     backdrop-filter: blur(.5em);
@@ -113,10 +127,33 @@
     border-radius: .4em;
 }
 
-.user-card-info:hover .user-card-delete-card {
-    background-color: indianred;
-    transform: scaleY(1);
-    box-shadow: 0px 0px .5em indianred;
+.card-footer {
+    grid-row-start: 3;
+    grid-row-end: 3;
+    grid-column-start: 1;
+    grid-column-end: 1;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.edit-card {
+    text-decoration: none;
+    color: inherit;
+    border-radius: unset;
+    height: 100%;
+    min-width: mion-content;
+    background: rgb(255, 255, 255);
+    transition: all .2s ease;
+}
+
+.delete-card {
+    background: rgb(255, 255, 255);
+    color: black;
+    font-weight: bold;
+    min-width: mion-content;
+    padding: 0px;
 }
 
 .user-card-info:hover .user-card-price {
@@ -132,15 +169,47 @@
 }
 
 .user-card-info:hover .user-card-bg {
-    filter: blur(1em);
+    filter: blur(.2em) contrast(75%);
 }
 
+.edit-card:hover {
+    color: rgb(176, 196, 222, .75);
+    text-shadow: 0px 0px .5em rgb(176, 196, 222);
+}
+
+.delete-card:hover {
+    color: rgb(255, 109, 106, .75);
+    text-shadow: 0px 0px .5em rgb(255, 109, 106);
+}
+
+.user-card-info:hover .card-controls {
+    box-shadow: 0px 0px .5em white;
+}
+
+@media(min-width: 90vh) {
+    .user-cards {
+        width: 84vh;
+    }
+}
 
 @media(aspect-ratio<=4/3) {
+    .edit-card {
+        background-color: rgb(176, 196, 222);
+        box-shadow: none;
+        border-radius: inherit;
+    }
+    .delete-card {
+        background-color: rgb(255, 109, 106);
+        box-shadow: none;
+        border-radius: inherit;
+    }
+    .card-controls {
+        gap: .5em;
+        width: 90%!important;
+        max-width: auto;
+    }
     .user-card-delete-card {
         transform: none;
-        background: indianred;
-        box-shadow: 0px 0px .5em indianred;
     }
     .user-card-price {
         transform: none;
@@ -153,18 +222,18 @@
 }
 
 @media(aspect-ratio<=565/800) {
-    .account-body {
+    .long-account-body {
         margin-top: 5em;
     }
 }
 
 @media(aspect-ratio<415/800) {
-    .account-body {
+    .long-account-body {
         margin-top: 25em;
     }
 }
 
-@media(aspect-ratio < 65/90) {
+@media(aspect-ratio < 4/3) {
     .user-cards {
         grid-template-columns: 1fr;
     }
@@ -172,13 +241,13 @@
         height: 7em;
         grid-template-rows: 1fr 1fr 1fr 1fr;
         grid-template-columns: 1fr 1fr;
-        width: 80vw;
     }
     .user-card-delete-card {
         grid-row-start: 4;
         grid-row-end: 4;
         grid-column-start: 2;
         grid-column-end: 2;
+        max-width: unset;
         width: 80%;
     }
     .user-card-price {
@@ -187,7 +256,8 @@
         grid-row-end: 4;
         grid-column-start: 1;
         grid-column-end: 1;
-        width: 80%;
+        max-width: unset;
+        width: 90%;
     }
     .user-card-title {
         grid-row-start: 2;
@@ -201,7 +271,9 @@
         grid-column-start: 1;
         grid-column-end: 4;
     }
-    .account-body {
+    .card-controls {
+    }
+    .long-account-body {
         margin-top: 46em;
     }
 }

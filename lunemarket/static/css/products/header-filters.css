@@ -27,8 +27,10 @@
 
 .price-interval {
     display: flex;
+    justify-content: space-between;
     padding-inline: 1em;
     flex-direction: column;
+    cursor: pointer;
     width: 100%;
 }
 
@@ -47,11 +49,14 @@ input[type='range']::-webkit-slider-thumb {
     height: 1em;
     width: 1.2em;
     border-radius: .6em;
+    cursor: pointer;
+    z-index: 4;
     box-shadow: 0px 0px .5em rgb(64, 64, 64, 1);
 }
 
 input[type='range']::-webkit-slider-runnable-track {
     height: 1em;
+    cursor: pointer;
     border-radius: 1em;
 }
 

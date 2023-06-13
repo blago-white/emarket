@@ -1,9 +1,14 @@
-<a class="card" href="{% url 'product-card' item.title %}">
+<a class="card"
+   href="{% url 'product-card' item.id %}">
+    <div class="card-hover-field" id="{{ idx }}"></div>
     <div class="card-preview-wrapper">
         <img src="../../../media/{{ item.photo }}" class="card-preview">
     </div>
     <div class="card-content">
         <b>{{ item.title|dashes_to_spaces }}</b>
-        <b>{{ item.price }} $</b>
+        <b>{{ item.price }}$</b>
+        <span
+           style="background: {{ item.color }};width: .8em;height: .8em;border-radius: .2em;display: block;margin-top: 2%;">
+        </span>
     </div>
 </a>

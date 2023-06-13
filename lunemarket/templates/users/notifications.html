@@ -9,8 +9,7 @@
         {% if notifications %}
             {% for idx, notification in notifications|enumerate_ %}
                 <div class="notification">
-                    <div class="notification-title" id="notification-title-{{ idx }}"
-                         style="background: {% if notification.theme == 'pur' %}lightgreen{% elif notification.theme == 'inf' %}lightsteelblue{% endif %}">
+                    <div class="notification-title" id="notification-title-{{ idx }}">
                          <div class="notification-title-start">
                             <span class="theme-marker"
                                   id="theme-marker-{{ idx }}"
@@ -24,8 +23,7 @@
                          </div>
                         <span class="notification-date" id="notification-date-{{ idx }}">{{ notification.time }}</span>
                     </div>
-                    <div class="notification-details" id="notification-{{ idx }}"
-                         style="background: {% if notification.theme == 'pur' %}darkseagreen{% elif notification.theme == 'inf' %}lightslategrey{% endif %}">
+                    <div class="notification-details" id="notification-{{ idx }}">
                         <div class="notification-full-text" id="notification-full-text-{{ idx }}">
                             {% for line in notification.text|wrap:60 %}
                                 {{ line }}<br>
@@ -37,8 +35,4 @@
         {% else %}
             there are no notifications yet
         {% endif %}
-{% endblock %}
-
-{% block scripts %}
-    <script type="text/javascript" src="{% static 'js\users\confirm.js' %}"></script>
 {% endblock %}

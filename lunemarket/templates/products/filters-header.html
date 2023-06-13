@@ -18,16 +18,43 @@
             <img src="{% static 'img\products\ordering-icon.png' %}" class="ordering-icon">
         </a>
         <div class="header-nav-button header-filters header-filter price-interval"
-             title="price should not be lower than {{ min_price }}$">
+             title="price should not be lower than {{ price_lower_bound }}$"
+             id="min-interval">
+            <span
+                    style="font-size: .8em;letter-spacing: .2em;line-height: 1.2em;position: relative;z-index: 1;color: black;">
+                price from
+            </span>
             <input type="range"
                    min="0"
+                   max="{{ price_upper_bound }}"
+                   class="price-input"
+                   list="values-min"
+                   step="1"
+                   value="{{ price_lower_bound  }}"
+                   id="min-interval-input">
+            <datalist id="values-min">
+                {% for price_stage in price_upper_bound|get_prices_range %}
+                    <option value="{{ price_stage }}" label="{{ price_stage }}"></option>
+                {% endfor %}
+            </datalist>
+        </div>
+        <div class="header-nav-button header-filters header-filter price-interval"
+             title="price should not be more than {{ price_upper_bound }}$"
+             id="max-interval">
+            <span
+                    style="font-size: .8em;letter-spacing: .2em;line-height: 1.2em;position: relative;z-index: 1;color: black;">
+                price to
+            </span>
+            <input type="range"
+                   min="{{ price_lower_bound }}"
                    max="{{ max_item_price }}"
                    class="price-input"
-                   list="values"
+                   list="values-max"
                    step="1"
-                   value="{{ min_price }}">
-            <datalist id="values">
-                {% for price_stage in max_item_price|get_prices_range %}
+                   value="{{ price_upper_bound }}"
+                   id="max-interval-input">
+            <datalist id="values-max">
+                {% for price_stage in max_item_price|get_prices_range:price_lower_bound %}
                     <option value="{{ price_stage }}" label="{{ price_stage }}"></option>
                 {% endfor %}
             </datalist>

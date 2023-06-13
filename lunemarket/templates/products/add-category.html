@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block title %}
-    add product
+    {% if form.initial %}Edit category{% else %}Add category{% endif %}
 {% endblock %}
 
 {% block header %}
@@ -43,7 +43,7 @@
                 {% endif %}
             </p>
         {% endfor %}
-        <button type="submit" class="submit-button">Add</button>
+        <button type="submit" class="submit-button">{% if form.initial %}Edit{% else %}Add{% endif %}</button>
     </form>
 </div>
 {% endblock %}

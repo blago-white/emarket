@@ -30,8 +30,16 @@
 .account-sections {
     width: 100%;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-    gap: 0em;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+.account-sections-wrapper {
+    overflow-x: scroll;
+    overflow-y: visible;
+}
+
+.account-sections-wrapper::-webkit-scrollbar {
+    display: none;
 }
 
 .user-card-info {
@@ -50,12 +58,9 @@
     box-shadow: 0px 0px .25em rgb(0, 0, 0, .1);
 }
 
-.one-row {
-    grid-template-columns: 1fr!important;
-}
-
 .user-cards {
     display: grid;
+    justify-items: center;
     grid-template-columns: 1fr 1fr 1fr;
     gap: 1em;
 }
@@ -140,21 +145,18 @@
         width: 40vw;
     }
     .account-sections {
-        grid-template-columns: 1fr 1fr 1fr 1fr;
-        grid-template-rows: 1fr 1fr;
         gap: .5em;
-    }
-}
-
-@media(aspect-ratio < 1/2) {
-    .account-sections {
-        grid-template-columns: 1fr 1fr;
-        grid-template-rows: 1fr 1fr 1fr;
     }
 }
 
 @media(aspect-ratio < 46/80) {
     .form {
         width: 100%;
+    }
+    .account-info {
+        width: 100vw;
+    }
+    .account-sections-wrapper {
+        width: 100vw;
     }
 }

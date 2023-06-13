@@ -37,12 +37,15 @@ INSTALLED_APPS = [
     'home',
     'users',
     'purchasing',
+    'allauth',
+    'allauth.account',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
 ]
 
 MIDDLEWARE = [
@@ -108,6 +111,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTHENTICATION_BACKENDS = (
+    "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
+)
+
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
@@ -136,8 +144,17 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
 MAIN_PAGE_CATEGORIES_BATCH_SIZE = 9
 CATEGORY_PRODUCTS_BATCH_SIZE = 8
 
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+DEFAULT_FROM_EMAIL = 'support@yoursite.ru'
+EMAIL_HOST_USER = "bogdanloginov31@gmail.com"
+EMAIL_HOST_PASSWORD = "gY67KHE6isH2"
 
+EMAIL_HOST = "connect.smtp.bz"
+EMAIL_PORT = 2525
+
+
+SITE_ID = 1

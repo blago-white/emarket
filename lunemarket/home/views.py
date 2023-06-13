@@ -2,11 +2,11 @@ import random
 from django.shortcuts import render
 from django.views.generic import ListView
 from typing import Any
-from products.models.models import Categories
+from products.models.models import Category
 
 
 class HomeView(ListView):
-    model = Categories
+    model = Category
     template_name = 'home/home.html'
     context_object_name = 'categories'
 

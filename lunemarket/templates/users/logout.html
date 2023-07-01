@@ -1,0 +1,33 @@
+{% extends 'warning.html' %}
+{% load static %}
+
+{% block title %}
+sign out
+{% endblock %}
+
+{% block header %}
+{% include 'base-header.html' %}
+{% endblock %}
+
+{% block additional-head %}
+<link rel="stylesheet" href="{% static 'css\users\logout.css' %}" type="text/css" xmlns="http://www.w3.org/1999/html">
+{% endblock %}
+
+{% block warn-title %}
+SIGN
+{% endblock %}
+{% block warn-title-highlighted %}
+OUT
+{% endblock %}
+{% block warn-info %}
+        <p style="font-weight: 100;font-size: .9em;">Are you sure you want to sign out?</p>
+{% endblock %}
+{% block additional-warn-info %}
+<form method="post" action="{% url 'account_logout' %}">
+  {% csrf_token %}
+  {% if redirect_field_value %}
+  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+  {% endif %}
+  <button type="submit" class="submit-button">sign out</button>
+</form>
+{% endblock %}

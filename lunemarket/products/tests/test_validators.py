@@ -21,7 +21,7 @@ class ValidatorsTestCase(TestCase):
     )
     _test_card_names_correct = (
         "Phones",
-        "Phone 11"
+        "Phones 11"
     )
 
     def test_category_title_validator(self) -> None:

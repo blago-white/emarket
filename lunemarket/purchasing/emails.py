@@ -1,33 +1,40 @@
 import django.conf
 from django.core.mail import send_mail
-from . import DEFAULT_PURCHASE_MESSAGE_FOR_ADMIN
+from .models import Phones
+from . import PURCHASE_MESSAGE_FOR_OWNER_TEMPLATE, PURCHASE_MESSAGE_FOR_PURCHASER_TEMPLATE
+
+__all__ = ["EmailPurchaseNotification", "send_notification"]
 
 
-class Email:
-    admin_mail = "bogdanloginov31@gmail.com"
+class _BaseEmailNotification:
+    def __init__(self, recipient_name: str, recipient_mail: str):
+        self._recipient_mail = recipient_mail
+        self._recipient_name = recipient_name
 
 
-class EmailPurchase(Email):
-    _admin_purchase_message_form = DEFAULT_PURCHASE_MESSAGE_FOR_ADMIN
+class EmailPurchaseNotification(_BaseEmailNotification):
+    def __init__(self, purchaser_name: str, purchaser_mail: str):
+        super(EmailPurchaseNotification, self).__init__(recipient_name=purchaser_name, recipient_mail=purchaser_mail)
 
-    def __init__(self, username: str, user_mail: str, fail_silently: str = True):
-        self._user_mail = user_mail
-        self._username = username
-        self._fail_silently = fail_silently
+    def send_notification(self, product: Phones) -> None:
+        self._send_purchase_message(purchase_message_template=PURCHASE_MESSAGE_FOR_OWNER_TEMPLATE,
+                                    product=product,
+                                    recipient_mail=product.author.email)
+        self._send_purchase_message(purchase_message_template=PURCHASE_MESSAGE_FOR_PURCHASER_TEMPLATE,
+                                    product=product,
+                                    recipient_mail=self._recipient_mail)
 
-    def send(self, product_title: str, price: int) -> None:
-        self._send_purchase_message_to_admin(product_title=product_title, price=price)
+    def _send_purchase_message(self, purchase_message_template: str, product: Phones, recipient_mail: str) -> None:
+        message = purchase_message_template.format(username=self._recipient_name,
+                                                   productname=product.title,
+                                                   usermail=self._recipient_mail,
+                                                   price=product.price)
 
-    def _send_purchase_message_to_admin(self, product_title: str, price: int) -> None:
-        message = self._fill_purchase_message_form_to_admin(product_title=product_title, price=price)
-        send_mail(subject="purchase",
-                  from_email=django.conf.settings.DEFAULT_FROM_EMAIL,
-                  message=message,
-                  fail_silently=self._fail_silently,
-                  recipient_list=[self.admin_mail])
+        send_notification(message=message, recipient_mail=recipient_mail, subject="purchase")
 
-    def _fill_purchase_message_form_to_admin(self, product_title: str, price: int) -> str:
-        return self._admin_purchase_message_form.format(username=self._username,
-                                                        productname=product_title,
-                                                        usermail=self._user_mail,
-                                                        price=price)
+
+def send_notification(message: str, recipient_mail: str, subject: str = "info") -> None:
+    send_mail(subject=subject,
+              from_email=django.conf.settings.DEFAULT_FROM_EMAIL,
+              message=message,
+              recipient_list=[recipient_mail])

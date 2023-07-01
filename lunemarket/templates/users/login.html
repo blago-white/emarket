@@ -13,22 +13,100 @@ login
 {% include 'users\login-header.html' %}
 {% endblock %}
 
+{% load account socialaccount %}
+{% load i18n %}
+
 {% block rootcontent %}
 <div class="form">
-    <form method="post" class="register-form {% if form.non_field_errors %}errors{%else%}{%endif%}">
-        {% csrf_token %}
+    <form method="post" class="register-form {% if form.non_field_errors %}errors{%else%}{%endif%}"
+          action="{% url 'account_login' %}" id="floated-element">
+         {% csrf_token %}
+        {% get_providers as socialaccount_providers %}
+        <div style="width: 100%;text-align: center;display: flex;justify-content: center;gap: .5em;">
+            <span style="font-size: 1.5em;font-family: sans-serif;font-weight: 700;">
+                SIGN<span
+                    style="color: indianred;border-radius: .2em;padding-inline: .1em;filter: saturate(0.8);">IN
+            </span>
+            </span>
+            <span style="font-size: 1.5em;">|</span>
+            <div style="text-align: center;display: flex;gap: .75em;">
+                {% for provider in socialaccount_providers %}
+                    {% if provider.id == "openid" %}
+                        {% for brand in provider.get_brands %}
+                          <a title="{{brand.name}}"
+                             href="{% provider_login_url provider.id openid=brand.openid_url process=process %}"
+                             >{{brand.name}}
+                          </a>
+                        {% endfor %}
+                    {% endif %}
+                    <a title="sign in with {{provider.name}}" class="socialaccount_provider {{provider.id}}"
+                       style="height: 100%;display: flex;align-items: center;"
+                       href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}">
+                          <img
+                               src="{% if provider.name == 'VK' %}{% static 'img/users/vk-logo.png' %}{% elif provider.name == 'Google' %}{% static 'img/users/google-logo.png' %}{% endif %}"
+                               class="provider-icon">
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+        {% if socialaccount_providers %}
+<!--        <p>{% blocktrans with site.name as site_name %}Please sign in with one-->
+<!--        of your existing third party accounts. Or, <a href="{{ signup_url }}">sign up</a>-->
+<!--        for a {{ site_name }} account and sign in below:{% endblocktrans %}</p>-->
+
+        {% include "socialaccount/snippets/login_extra.html" %}
+
+        {% else %}
+        <p>{% blocktrans %}If you have not created an account yet, then please
+        <a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}</p>
+        {% endif %}
+
         {% for field in form %}
             <p class="data-input">
-                <label for="{{ field.id_for_label }}">{{ field.label|lower }}</label>
+                <label for="{{ field.id_for_label }}"
+                       id="{% if field.name == 'remember' %}checkbox-label{% endif %}"
+                       style="{% if field.name == 'remember' %}display: flex;align-items: center;cursor: pointer;font-size: .9em;height: 1.77em;width: 6.5em;{% endif %}">
+                    {{ field.label|lower }}
+                    {% if field.name == 'remember' %}
+                        <span class="checkbox-remember" >
+                            <img src="{% static 'img/users/check-mark.png' %}"
+                                 style="transform: translateX(0%) rotate(-45deg) scale(0);filter: drop-shadow(0px 0px .2em seagreen) drop-shadow(0px 0px .2em seagreen);width: 1.25em;height: 1.25em;"
+                                 id="check-mark">
+                        </span>
+                    {% endif %}
+                </label>
+                {% if field.name == 'password' %}
+                <input type="password" name="password" autocomplete="current-password" required="" id="id_password"
+                       onkeypress="addCursor(this)">
+                {% else %}
                 {{ field }}
+                {% endif %}
+                {% include 'field-error.html' %}
             </p>
         {% endfor %}
-        <div class="form-error" style="display: {% if form.non_field_errors %}unset{% else %}none{% endif %}">
-            {% for form_error in form.non_field_errors %}
-            {{ form_error }}<br>
-            {% endfor %}
+        {% if redirect_field_value %}
+            <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+        {% endif %}
+        <div style="display: flex;justify-content: center;gap: .5em;">
+            <button class="submit-button" type="submit">{% trans "Sign In" %}</button>
+            <div class="submit-button sign-in-issue" id="issues-button" style="width: 1.6em;">
+                <span style="padding-inline: .54em;">?</span>
+                <div class="sign-in-issues"
+                     style="width: 0px;font-size: 0em;;"
+                       id="issues">
+                    <a class=""
+                       style="white-space: nowrap;font-size: .9em;text-decoration: none;color: white;"
+                       href="{% url 'account_reset_password' %}">
+                        forgot password
+                    </a>
+                </div>
+            </div>
         </div>
-        <button type="submit" class="submit-button">login</button>
     </form>
 </div>
+{% endblock %}
+{% block scripts %}
+    <script type="text/javascript" src="{% static 'js\users\login.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js\users\issues-window.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js\users\warns.js' %}"></script>
 {% endblock %}

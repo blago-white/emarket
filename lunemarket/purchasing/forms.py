@@ -1,5 +1,8 @@
-from products.models.models import Phone
+from products.models.models import Phones
 from django.forms import ModelForm, TextInput, ModelChoiceField, FileInput, NumberInput, URLField, IntegerField
+
+
+__all__ = ["DeleteProductForm"]
 
 
 class DeleteProductForm(ModelForm):
@@ -8,7 +11,7 @@ class DeleteProductForm(ModelForm):
                                 required=True)
 
     class Meta:
-        model = Phone
+        model = Phones
         fields = ["title", "category", "photo", "price"]
         widgets = {
             "title": TextInput(attrs={

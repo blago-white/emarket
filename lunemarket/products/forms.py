@@ -1,21 +1,26 @@
-from .models.models import Category, Phone
-from django.forms import ModelForm, TextInput, ModelChoiceField, FileInput, NumberInput, URLField, IntegerField, \
-    ChoiceField
+from django.forms import ModelForm, TextInput, ModelChoiceField, FileInput, NumberInput, ChoiceField
+
+from .models.models import Category, Phones
+
+
+__all__ = ["AddProductForm", "EditProductForm"]
 
 
 class AddProductForm(ModelForm):
-    category = ModelChoiceField(queryset=Category.objects.all(),
-                                empty_label=None,
-                                required=True)
-    color = ChoiceField(choices=Phone.BASE_COLORS,
+    category = ModelChoiceField(
+        queryset=Category.objects.exclude(title__in=Phones.objects.select_related("category").values("title")),
+        empty_label=None,
+        required=True
+    )
+    color = ChoiceField(choices=Phones.BASE_COLORS,
                         required=True,
                         initial="red")
-    stortage = ChoiceField(choices=Phone.STORTAGE_SIZES,
+    stortage = ChoiceField(choices=Phones.STORTAGE_SIZES,
                            required=True,
                            initial="128")
 
     class Meta:
-        model = Phone
+        model = Phones
         fields = ["title", "category", "photo", "price", "color", "stortage", "products_count"]
         widgets = {
             "title": TextInput(attrs={
@@ -30,15 +35,12 @@ class AddProductForm(ModelForm):
         }
 
 
-class AddCategoryForm(ModelForm):
-    parent = ModelChoiceField(queryset=Category.objects.all(),
-                              empty_label="",
-                              required=False)
+class EditProductForm(AddProductForm):
+    category = None
 
     class Meta:
-        model = Category
-        fields = ["title", "parent", "photo"]
-
+        model = Phones
+        fields = ["title", "photo", "price", "color", "stortage", "products_count"]
         widgets = {
             "title": TextInput(attrs={
                 "required": True
@@ -47,6 +49,6 @@ class AddCategoryForm(ModelForm):
                 "id": "upload-photo",
                 "accept": "image/*",
                 "style": "display: none",
-                "required": True
             }),
+            "price": NumberInput(attrs={"required": True, "min": 1, "max": 5000, "value": 100}),
         }

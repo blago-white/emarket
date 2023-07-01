@@ -1,0 +1,44 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block head %}
+<link rel="stylesheet"
+      href="{% static 'css\users\email-verification.css' %}"
+      type="text/css"
+      xmlns="http://www.w3.org/1999/html">
+{% block additional-head %}
+{% endblock %}
+{% endblock %}
+
+{% block warn-head %}
+{% endblock %}
+
+{% block header %}
+{% include 'base-header.html' %}
+{% endblock %}
+
+{% block rootcontent %}
+<div class="form">
+    <div class="register-form verification-info" style="overflow: hidden;" id="floated-element">
+        <div
+                style="left: -30%;display: flex;justify-content: center;align-items: center;z-index: -1;">
+            <img src="{% static 'img/users/info.png' %}"
+                 style="position: fixed;left: -20%;height: 15em;width: 15em;opacity: .05;">
+        </div>
+        <div style="width: 100%;text-align: center;display: flex;flex-direction: column;justify-content: center;gap: .5em;">
+            <div style="display: flex;align-items: center;justify-content: center;gap: .5em;">
+                <div
+                        style="font-size: 1.5em;font-family: sans-serif;font-weight: 700;color: rgb(40, 40, 40);white-space: nowrap;">{% block warn-title %}{% endblock %}
+                </div>
+                <div class="logo-selected-text">
+                    {% block warn-title-highlighted %}
+                    {% endblock %}
+                </div>
+            </div>
+            <span style="color: rgb(40, 40, 40);">{% block warn-info %}{% endblock %}</span>
+            {% block additional-warn-info %}
+            {% endblock %}
+        </div>
+    </div>
+</div>
+{% endblock %}

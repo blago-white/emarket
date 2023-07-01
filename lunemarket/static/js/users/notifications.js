@@ -1,28 +1,16 @@
-let VisibleNotifications = [];
+let visibleNotificationsDictIds = new Map();
+let currentNotificationDetails;
+let newDisplayValue;
 
-function NotificationView(event) {
-    const CurrentNotificationLabel = document.getElementById("notification-" + event.target.id.split("-")[event.target.id.split("-").length-1]);
+const changeDisplayButtonImage = document.getElementById("change-display-button-img");
 
-    CurrentNotificationLabel.animate(
-        [{"transform": CurrentNotificationLabel.style.transform == "scaleX(0)" ? "scaleX(1)" : "scaleX(0)"}],
-        {duration: 200}
-    )
+function changeNotificationDetails(event, notificationId) {
+    newDisplayValue = !(typeof visibleNotificationsDictIds.get(notificationId)=="boolean" ? visibleNotificationsDictIds.get(notificationId) : false);
+    visibleNotificationsDictIds.set(notificationId, newDisplayValue);
 
-    setTimeout(() => {
-        CurrentNotificationLabel.style.transform = CurrentNotificationLabel.style.transform == "scaleX(0)" ? "scaleX(1)" : "scaleX(0)"
-    }, 200)
+    currentNotificationDetails = document.getElementById("notification-"+notificationId);
+    currentNotificationDetails.style.height = newDisplayValue ? "auto" : "0em";
+    currentNotificationDetails.style.padding = newDisplayValue ? ".5em" : "0em";
 
+    document.getElementById("change-display-button-img-"+notificationId).style.transform = newDisplayValue ? "rotate(-90deg)" : "rotate(90deg)";
 }
-
-function RergisterButtonsHandlers() {
-    const NotificationLabels = document.getElementsByClassName("notification");
-
-    for (notification in NotificationLabels) {
-        try {
-            NotificationLabels[notification].addEventListener("click", NotificationView);
-        } catch {
-        }
-    }
-}
-
-RergisterButtonsHandlers()

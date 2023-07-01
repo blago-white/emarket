@@ -6,7 +6,13 @@
 {% endblock %}
 
 {% block navigation %}
-    <a class="header-nav-button" href="{% url 'home' %}">home</a>
-    <a class="header-nav-button" href="{% url 'logout' %}">logout</a>
-    <a class="header-nav-button" href="{% url 'add-product' %}">add product</a>
+    <a class="header-nav-button" href="{% url 'home' %}">
+        <img src="{% static 'img/home.png' %}" class="button-icon"> home
+    </a>
+    <a class="header-nav-button" href="{% url 'logout' %}">
+        <img src="{% static 'img/logout.png' %}" style="height: .8em;aspect-ratio: 1/1;margin-right: .2em;">sign out
+    </a>
+    <a class="header-nav-button" href="{% url 'add-product' %}">
+        <img src="{% static 'img/add.png' %}" class="button-icon">add product
+    </a>
 {% endblock %}

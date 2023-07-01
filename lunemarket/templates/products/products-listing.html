@@ -3,7 +3,7 @@
 {% load static %}
 
 {% block head %}
-    {% if filters_required %}
+    {% if items %}
         <link rel="stylesheet" href="{% static 'css\products\products-listing.css' %}" type="text/css">
     {% else %}
         <link rel="stylesheet" href="{% static 'css\products\warns.css' %}" type="text/css">
@@ -11,11 +11,20 @@
 {% endblock %}
 
 {% block title %}
-    products
+    products {% if selected_color_values %}with colors -
+        {% for i in selected_color_values %}
+            {{ i }}
+        {% endfor %}
+    {% endif %}
+    {% if selected_stortage_values %}{% if selected_color_values %}and {% endif %}with stortages -
+        {% for i in selected_stortage_values %}
+            {{ i }}gb
+        {% endfor %}
+    {%endif %}
 {% endblock %}
 
 {% block header %}
-    {% if filters_required %}
+    {% if items %}
         {% include 'products/filters-header.html' %}
     {% else %}
         {% include 'main-header.html' %}
@@ -23,14 +32,15 @@
 {% endblock %}
 
 {% block rootcontent %}
-    {% if filters_required %}
-        {% if items.count < 3 %}
-            <div class="cards" style="height: 100vmin;">
+    {% if items %}
+        {% if items.count <= 4 %}
+            <div class="cards"
+                 style="height: 100%;grid-template-columns: repeat({{items.count}}, 1fr);grid-template-rows: 1fr;align-items: center;justify-items: stretch;">
         {% else %}
             <div class="cards">
         {% endif %}
             {% for idx, item in items|enumerate_ %}
-                {% if item.is_category %}
+                {% if not item.id %}
                     {% include "products/cards-templates/category-card.html" %}
                 {% else %}
                     {% include "products/cards-templates/product-card.html" %}
@@ -48,7 +58,6 @@
 {% endblock %}
 {% block scripts %}
     <script type="text/javascript" src="{% static 'js\products\interval-setter.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js\products\products-listing.js' %}"></script>
     <script type="text/javascript" src="{% static 'js\products\filters-window.js' %}"></script>
     {% block products-listing-scripts %}
     {% endblock %}

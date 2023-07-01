@@ -1,0 +1,16 @@
+{% extends 'warning.html' %}
+{% load static %}
+
+{% block title %}
+something went wrong(
+{% endblock %}
+
+{% block warn-title %}
+ERROR
+{% endblock %}
+{% block warn-title-highlighted %}
+500
+{% endblock %}
+{% block warn-info %}
+something broke on the server, back to the <a href="/" style="text-decoration: none;color: indianred;">home page</a>
+{% endblock %}

@@ -1,7 +1,5 @@
-import random
-from django.shortcuts import render
 from django.views.generic import ListView
-from typing import Any
+
 from products.models.models import Category
 
 

@@ -1,0 +1,29 @@
+{% extends 'warning.html' %}
+{% block header %}
+{% include 'base-header.html' %}
+{% endblock %}
+
+{% load static %}
+
+{% block title %}
+change password
+{% endblock %}
+
+{% load account socialaccount %}
+{% load i18n %}
+
+{% block warn-title %}
+VERIFY YOUR
+{% endblock %}
+{% block warn-title-highlighted %}
+E-MAIL
+{% endblock %}
+{% block warn-info %}
+we have sent an e-mail to you for verification
+{% endblock %}
+{% block additional-warn-info %}
+<span style="color: rgb(68, 68, 68);font-size: .8em;">
+    if you do not see the verification e-mail in your main inbox, check your spam folder. Please
+    contact us if you do not receive the verification e-mail within a few minutes.
+</span>
+{% endblock %}

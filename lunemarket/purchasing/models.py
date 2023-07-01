@@ -4,13 +4,14 @@ from products import validators
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.contrib.auth.models import User
-from products.models.models import Phone
+from products.models.models import Phones
+
+__all__ = ["ShoppingBasket"]
 
 
 class ShoppingBasket(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=False, unique=False)
-
-    product = models.ForeignKey(Phone, on_delete=models.CASCADE, null=False, unique=False)
+    product = models.ForeignKey(Phones, on_delete=models.CASCADE, null=False, unique=False, default=1)
 
     def __str__(self):
         return str(self.id)

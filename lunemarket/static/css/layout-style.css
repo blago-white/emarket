@@ -1,4 +1,4 @@
-@-webkit-keyframes background-animation {
+/*@-webkit-keyframes background-animation {
     0%{background-position:0% 4%}
     50%{background-position:100% 97%}
     100%{background-position:0% 4%}
@@ -12,6 +12,22 @@
     0%{background-position:0% 4%}
     50%{background-position:100% 97%}
     100%{background-position:0% 4%}
+}*/
+
+@-webkit-keyframes background-animation {
+    0%{background-position:0% 0%}
+    50%{background-position:100% 100%}
+    100%{background-position:0% 0%}
+}
+@-moz-keyframes background-animation {
+    0%{background-position:0% 0%}
+    50%{background-position:100% 100%}
+    100%{background-position:0% 0%}
+}
+@keyframes background-animation {
+    0%{background-position:0% 0%}
+    50%{background-position:100% 100%}
+    100%{background-position:0% 0%}
 }
 
 .page-content  {
@@ -21,11 +37,12 @@
     font-family: monospace!important;
     user-select: none;
     height: 100vh;
-    background: linear-gradient(48deg, #ffffff, #000000);
+/*    background: linear-gradient(90deg, rgba(238,174,202,0.5) 0%, rgba(148,187,233,0.5) 100%);
     background-size: 400% 400%;
-    -webkit-animation: background-animation 20s ease infinite;
-    -moz-animation: background-animation 20s ease infinite;
-    animation: background-animation 20s ease infinite;
+    -webkit-animation: background-animation 40s ease infinite;
+    -moz-animation: background-animation 40s ease infinite;
+    animation: background-animation 40s ease infinite;
+*/
 }
 
 .page-content::-webkit-scrollbar {
@@ -41,4 +58,16 @@
 
 .small-text {
     font-size: .7em;
+}
+
+::selection {
+    color: white;
+    background: rgb(68, 68, 68, .25);
+    border-radius: .2em;
+}
+
+::-moz-selection {
+    color: white;
+    background: rgb(68, 68, 68, .25);
+    border-radius: .2em;
 }

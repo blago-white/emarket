@@ -1,7 +1,11 @@
 @import "register.css";
 
 input {
-    width: 100%;
+    width: auto;
+}
+
+input[type="checkbox"] {
+    display: none;
 }
 
 p {
@@ -9,8 +13,72 @@ p {
     display: unset;
 }
 
+.checkbox-remember {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 0em;
+    height: 1.25em;
+/*    background: rgb(0, 0, 0, .5);
+    border-radius: .2em; */
+    overflow: visible;
+    transition: all .1s ease;
+}
+
+#checkbox-label {
+    padding-inline: .1em;
+    border-radius: .2em;
+    white-space: nowrap;
+    border: .1em solid transparent;
+    transition: all .2s ease;
+}
+
+#checkbox-label:hover {
+    background: rgb(2, 188, 125, .05);
+    border: .1em solid rgb(2, 188, 125, .5);
+}
+
+.checkbox-remember:hover {
+/*    background: seagreen; */
+}
+
+.checkbox-remember-active {
+    margin-inline: .2em;
+}
+
+.submit-button {
+    margin: 0px;
+    padding-inline: 0px;
+}
+
+.sign-in-issue {
+    width: auto;
+    cursor: pointer;
+    aspect-ratio: 1/1;
+    display: flex;
+    justify-content: space-between;
+    background: indianred;
+}
+
+.sign-in-issues {
+    width: max-content;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    overflow: hidden;
+    background: rgb(170,92,92);
+    border-radius: inherit;
+    padding-inline: .2em;
+    transition: width .2s ease;
+}
+
+.sign-in-issue:hover {
+    background: indianred;
+    color: white;
+    box-shadow: 0px 0px .5em indianred;
+}
+
 .register-form {
-    grid-template-rows: repeat(3, 1fr);
     width: 25%;
     min-width: 15em;
     padding-inline: 1em;
@@ -24,6 +92,10 @@ p {
 .form-error {
     display: none;
     color: red;
+}
+
+#check-mark {
+    transition: all .2s ease;
 }
 
 @media(max-width: 775px) and (aspect-ratio<1/1) {

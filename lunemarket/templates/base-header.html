@@ -6,10 +6,14 @@
 {% endblock %}
 
 {% block navigation %}
-    {% if request.user %}
-        <a class="header-nav-button" href="{% url 'account-info' user.id %}">account</a>
+    {% if request.user.id %}
+        <a class="header-nav-button" href="{% url 'account-info' user.id %}">
+            <img src="{% static 'img/account-icon.png' %}" class="button-icon">account
+        </a>
     {% else %}
         <a class="header-nav-button" href="{% url 'register' %}">registrate</a>
     {% endif %}
-    <a class="header-nav-button" href="{% url 'home' %}">home</a>
+    <a class="header-nav-button" href="{% url 'home' %}">
+        <img src="{% static 'img/home.png' %}" class="button-icon"> home
+    </a>
 {% endblock %}

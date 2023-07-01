@@ -1,8 +1,23 @@
 from typing import Iterable
+
 import django.db.models
-from django.template.defaulttags import register
 from django.conf import settings
-from django.db.models import Max
+from django.template.defaulttags import register
+
+
+__all__ = ["get_categories_batches",
+           "get_prices_range",
+           "spaces_to_dashes",
+           "dashes_to_spaces",
+           "underlines_to_spaces",
+           "get_url_arg_from_bool",
+           "get_url_arg_from_ordering_field",
+           "get_ordering_field_from_url_arg",
+           "get_element_by_index",
+           "compile_url_args_for_pagination",
+           "invert_sorting",
+           "truncate",
+           "round_"]
 
 
 @register.filter
@@ -16,7 +31,6 @@ def get_categories_batches(categories: django.db.models.QuerySet):
 @register.filter
 def get_prices_range(max_item_price: float | int, min_item_price: float | int = 0) -> list:
     max_item_price, min_item_price = int(max_item_price), int(min_item_price)
-    print(max_item_price)
     price_range = list(range(min_item_price, max_item_price, (1000 if max_item_price > 1500 else 300)))
 
     if price_range:
@@ -40,13 +54,17 @@ def dashes_to_spaces(string: str) -> str:
 
 
 @register.filter
+def underlines_to_spaces(string: str) -> str:
+    return string.replace("_", " ")
+
+
+@register.filter
 def get_url_arg_from_bool(value: bool, name: str) -> str:
     return name if value else ""
 
 
 @register.filter
 def invert_sorting(sorting: str) -> str:
-    print(sorting, '--------------')
     try:
         return str(int(not bool(int(sorting))))
     except:
@@ -54,11 +72,16 @@ def invert_sorting(sorting: str) -> str:
 
 
 @register.filter
-def products_in(sequence: Iterable) -> bool:
-    for elem in sequence:
-        if "price" in elem.__dict__:
-            return True
-    return False
+def round_(number: float, round_factor: int):
+    try:
+        return round(number=float(number), ndigits=int(round_factor))
+    except:
+        return number
+
+
+@register.filter
+def truncate(string: str, bound: int):
+    return str(string)[:int(bound)]
 
 
 @register.filter
@@ -70,7 +93,11 @@ def compile_url_args_for_pagination(**url_kwargs) -> str:
     url_args = str()
 
     for arg_name in url_kwargs:
-        url_args += f"&{arg_name.replace('_', '')}={url_kwargs[arg_name]}" if url_kwargs[arg_name] is not None else ""
+        if type(url_kwargs[arg_name]) in (list, set, frozenset, tuple):
+            for value in url_kwargs[arg_name]:
+                url_args += f"&{arg_name.replace('_', '')}={value}" if value is not None else ""
+        else:
+            url_args += f"&{arg_name.replace('_', '')}={url_kwargs[arg_name]}" if url_kwargs[arg_name] is not None else ""
 
     return url_args
 

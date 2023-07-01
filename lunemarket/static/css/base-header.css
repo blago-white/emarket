@@ -14,7 +14,7 @@
     display: flex;
     flex-wrap: wrap;
     padding-inline: .2em;
-    height: 7vh;
+    height: 6vh;
     backdrop-filter: blur(.3em);
     justify-content: center;
     top: 1vh;
@@ -22,6 +22,13 @@
     border-radius: .2em;
     width: 35vw;
     transition: all .2s ease;
+}
+
+.button-icon {
+    height: .8em;
+    aspect-ratio: 1/1;
+    margin-right: .2em;
+    filter: contrast(.8);
 }
 
 .main-header:hover {
@@ -34,13 +41,13 @@
     vertical-align: middle;
     gap: .2em;
     width: inherit;
-    height: 7vh;
+    height: 6vh;
 }
 
 .header-nav-button {
     font-weight: 900;
     margin: auto auto auto;
-    height: 6vh;
+    height: 5vh;
     font-size: 1.75vh;
     line-height: 1.75vh;
     display: flex;
@@ -54,7 +61,7 @@
     color: black;
     text-decoration: none;
     width: 100%;
-    background: rgb(255, 255, 255, .4);
+    background: rgb(255, 255, 255, .3);
     border-radius: .2em;
     transition: all .2s;
 }

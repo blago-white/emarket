@@ -2,8 +2,11 @@ import hashlib
 import random
 
 from django.db import models
+from django.db.models import F
 
 from .. import filters
+
+__all__ = ["get_image_path", "decrease_phones_count", "delete_photo", "increment_product_views"]
 
 
 def get_image_path(self: models.Model, filename: str) -> str:
@@ -11,6 +14,20 @@ def get_image_path(self: models.Model, filename: str) -> str:
                                     img_hash=_get_image_name(filename=filename),
                                     img_extension=_get_file_extension(filename=filename),
                                     object_title=self.title)
+
+
+def decrease_phones_count(phone: models.Model) -> None:
+    phone.products_count = F("products_count") - 1
+    phone.save()
+
+
+def increment_product_views(phone: models.Model) -> None:
+    phone.views = F("views") + 1
+    phone.save()
+
+
+def delete_photo(model: models.Model):
+    model.photo.delete(save=True)
 
 
 def _form_load_path_to_image(**path_parts: dict) -> str:

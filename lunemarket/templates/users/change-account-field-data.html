@@ -1,0 +1,46 @@
+{% load static %}
+
+<form method="POST"
+      class="account-info-string"
+      style="display: {% if not error_field == field_name %}none{% else %}unset{% endif %}"
+      id="change-{{ field_name }}-form"
+      action="{% url 'change-account-field' %}">
+    {% csrf_token %}
+    <div style="display: flex;align-items: center;justify-content: center;gap: .2em;">
+        {% for field in form %}
+            {%  if field.name == field_name %}
+                <input type="{% if field_name == 'email' %}email{% else %}text{% endif %}"
+                        name="{{ field_name }}"
+                        style="text-align: center;width: auto;"
+                        class="username-input"
+                        value="{% if field_name == 'email' %}{{ user.user.email }}{{ user.email }}{% elif field_name == 'username' %}{{ user.user.username }}{{ user.username }}{% endif %}"
+                        required
+                        id="id_{{ field_name }}">
+            {% else %}
+                {{ field }}
+            {% endif %}
+        {% endfor %}
+    <!--    <input type="text" style="text-align: center;" value="{{ user.user.username }}{{ user.username }}"-->
+    <!--           class="username-input">-->
+
+        <button class="submit-button-account-info" type="submit">
+            <img src="{% static 'img/products/arrow.png' %}" style="width: .6em;height: .6em;">
+        </button>
+
+        <a class="submit-button-account-info"
+           onclick="expandInput(this)"
+           id="{{ field_name }}-input-hide"
+           style="background: lightcoral;cursor: pointer;">
+            <img src="{% static 'img/users/cross.png' %}"
+                 style="width: .6em;height: .6em;filter: contrast(0) brightness(200%);">
+        </a>
+
+        {% if error_field == field_name %}
+            <div class="submit-button-account-info"
+                 style="background: orange;cursor: help;"
+                 title="{% if error_name == 'exist' %}this {{ field_name }} already exist{% elif error_name == 'uncorrect' %}this {{ field_name }} is not correct{% else %}unexpected error occured, try later{% endif %}">
+                <img src="{% static 'img/users/issue.png' %}" style="width: 1em;height: 1em;">
+            </div>
+        {% endif %}
+    </div>
+</form>

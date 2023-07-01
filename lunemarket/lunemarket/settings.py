@@ -39,6 +39,9 @@ INSTALLED_APPS = [
     'purchasing',
     'allauth',
     'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.vk',
+    'allauth.socialaccount.providers.google',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -134,7 +137,7 @@ STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
 
-STATIC_URL = 'static/'
+STATIC_URL = 'files/'
 STATIC_ROOT = 'static'
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
@@ -146,15 +149,30 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
+LOGIN_REDIRECT_URL = "/"
+
 MAIN_PAGE_CATEGORIES_BATCH_SIZE = 9
 CATEGORY_PRODUCTS_BATCH_SIZE = 8
 
-DEFAULT_FROM_EMAIL = 'support@yoursite.ru'
-EMAIL_HOST_USER = "bogdanloginov31@gmail.com"
-EMAIL_HOST_PASSWORD = "gY67KHE6isH2"
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
+
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+SOCIALACCOUNT_EMAIL_VERIFICATION = 'none'
+
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+
+ACCOUNT_CONFIRM_EMAIL_ON_GET = True
+
+ACCOUNT_LOGIN_ON_PASSWORD_RESET = True
 
 EMAIL_HOST = "connect.smtp.bz"
 EMAIL_PORT = 2525
 
+ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 1
+
+SOCIALACCOUNT_LOGIN_ON_GET = True
+ACCOUNT_LOGIN_ON_GET = True
 
 SITE_ID = 1

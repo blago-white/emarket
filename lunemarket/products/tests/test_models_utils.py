@@ -1,7 +1,7 @@
 from django.test import TestCase
 
-from products.models import models_utils
 from products.models import models
+from products.models import models_utils
 
 
 class ModelsUtilitsTestCase(TestCase):

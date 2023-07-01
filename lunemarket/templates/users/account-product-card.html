@@ -14,25 +14,32 @@
 
 <div class="account-info-string user-card-info"
     style="color: black;text-decoration: none;"
-    title="{{ item.title|dashes_to_spaces }}">
+    title="{{ item.readable_title }}">
     {% if is_self_account %}
     <div class="card-views-wrapper">
-        <span class="card-views" title="{{ item.views }} views for this card">{{ item.views }}</span>
+        <span class="card-views"
+              title="{{ item.views }} views for this card"
+              style="{% if not item.products_count %}border: 0.15em solid #F44336;{% endif %}">
+            <img src="{% static 'img/users/eye.png' %}" style="width: 1em;height: auto;margin-right: .1em">{{ item.views }}
+        </span>
     </div>
     {% endif %}
     <div class="user-card-bg"  style="background: url({% static item.photo.name|get_media_path %})"></div>
      <a class="user-card-title"
         href="{% url 'product-card' item.id %}"
         style="{% if not item.price and not is_self_account %}grid-row-start: 1;grid-row-end: 4;transform: none;{% endif %}">
-         {% if item.category.parent %}{{ item.category.parent }}{% else %}{{ item.category }}{% endif %} {{item.title|dashes_to_spaces }}
+         {{ item.readable_title }}
      </a>
-        <div class="user-card-price {% if not is_self_account %}static-price{% endif %}">
+        <div class="user-card-price {% if not is_self_account %}static-price{% endif %}"
+             style="{% if not item.products_count %}color: #fd5757;{% endif %}">
             {{ item.price }}$
         </div>
          {% if is_self_account %}
              <div class="user-card-delete-card card-controls">
-                <button class="user-card-delete-card control-button delete-card" id="{{ item.id }}">delete</button>
-                <a class="user-card-delete-card control-button edit-card" href="{% url 'edit-product' item.id %}">
+                <button class="user-card-delete-card control-button delete-card"
+                        id="{{ item.id }}">delete</button>
+                <a class="user-card-delete-card control-button edit-card"
+                   href="{% url 'edit-product' item.id %}">
                     edit
                 </a>
              </div>

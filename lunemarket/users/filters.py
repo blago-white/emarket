@@ -1,8 +1,12 @@
-import django.db.models
-from django.template.defaulttags import register
-from django.conf import settings
-from .models import Notifications
 import textwrap
+
+from django.template.defaulttags import register
+
+from .models.models import Notifications
+
+__all__ = ["enumerate_",
+           "wrap",
+           "get_title_theme"]
 
 
 @register.filter

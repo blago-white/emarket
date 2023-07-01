@@ -11,14 +11,15 @@
     {% endblock %}
 </head>
 <body class="page-content">
+    <div
+            style="position: fixed;width: 100vw;height: 100vh;overflow: hidden;background: url({% static 'img/site-background.jpeg' %});background-position: 0 0;background-size: cover;filter: brightness(.7) contrast(.7);z-index: -1;">
+    </div>
     {% block header %}
     {% endblock %}
     {% block rootcontent %}
     {% endblock %}
-    {% if error %}
-        {% include "error-message.html" %}
-    {% endif %}
     <script type="text/javascript" src="{% static 'js\main-bg-switch.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js\floated-element.js' %}"></script>
     {% block scripts %}
     {% endblock %}
 </body>

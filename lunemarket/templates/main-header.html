@@ -5,26 +5,31 @@
 {% endblock %}
 
 <header class="main-header-wrapper">
-    <div class="main-header" style="{% if filters %}height: 13.5vh;{% else %}height: 7vh;{% endif %}">
+    <div class="main-header" style="{% if filters %}height: 16.9vh;{% else %}height: 6vh;{% endif %}">
         <nav class="header-nav">
-            <a class="header-nav-button square-button" href="{{ request.META.HTTP_REFERER|escape }}">B</a>
+            <a class="header-nav-button square-button" href="{{ request.META.HTTP_REFERER|escape }}">
+                <img src="{% static 'img/back-arrow.png' %}" style="width: 50%;height: 50%;">
+            </a>
             {% block navigation %}
             {% if request.user.is_authenticated %}
                 <a
                 class="header-nav-button"
                 href="{% url 'account-info' user.id %}">
-                    account
+                    <img src="{% static 'img/account-icon.png' %}" class="button-icon">account
                 </a>
-                <a class="header-nav-button" href="{% url 'add-product' %}">add product</a>
+                <a class="header-nav-button" href="{% url 'add-product' %}">
+                    <img src="{% static 'img/add.png' %}" class="button-icon">add product
+                </a>
             {% else %}
                 <a
                 class="header-nav-button"
                 href="{% url 'register' %}">
-                    registrate
+                    <img src="{% static 'img/signup.png' %}"
+                         class="button-icon">registrate
                 </a>
                 <a class="header-nav-button"
                    href="{% url 'login' %}">
-                    login
+                    <img src="{% static 'img/logout.png' %}" class="button-icon">login
                 </a>
             {% endif %}
             {% block extension-navigation %}
@@ -35,3 +40,5 @@
         {% endblock %}
     </div>
 </header>
+{% block scripts %}
+{% endblock %}

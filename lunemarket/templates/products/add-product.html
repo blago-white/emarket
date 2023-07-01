@@ -17,20 +17,36 @@
 
 {% block rootcontent %}
 <div class="form">
-    <form enctype="multipart/form-data" method="post" class="register-form">
+    <form enctype="multipart/form-data" method="post" class="register-form" id="floated-element">
         {% csrf_token %}
+        <span style="font-size: 1.5em;font-family: sans-serif;font-weight: 700;color: rgb(40, 40, 40);white-space: nowrap;">ADD NEW PRODUCT</span>
         {% for field in form %}
             {% if field.name != "author" %}
                 <p class="data-input">
             {% else %}
                 <p class="data-input" style="display:none;">
             {% endif %}
-                <label title="{{ field.label|lower }}">{{ field.label|lower }}</label>
+                <label title="{{ field.label|lower }}" class="full-title">{{ field.label|lower }}</label>
+                <label title="{{ field.label|lower }}"
+                       class="abbreviated-title {% if field.name == 'products_count' %}products-count-abbreviated-label{% endif %}">
+                    {{ field.name|lower|underlines_to_spaces }}
+                </label>
                 {% if field.name == "photo" %}
                     {{ field }}
                     <label class="drop" for="{{ field.id_for_label }}">drop file</label>
                 {% else %}
-                    {{ field }}{% if field.name == "price" %}${% endif %}
+                    {% if field.name == "price" or field.name == "stortage" %}
+                    <span style="display: flex;justify-content: flex-start;"
+                          class="price-product-input">
+                        {{ field }}
+                            <span
+                                    style="background-color: rgb(0, 0, 0, .5);color: white;border-radius: .2em;padding-inline: .2em;margin-left: .2em;">
+                                {% if field.name == "price" %}${% elif field.name == "stortage" %}gb{% endif %}
+                            </span>
+                    </span>
+                    {% else %}
+                        {{ field }}
+                    {% endif %}
                 {% endif %}
                 {% if field.errors %}
                     <span class="warnings" id="{{ field_id }}">

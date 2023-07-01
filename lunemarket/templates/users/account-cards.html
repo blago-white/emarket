@@ -11,18 +11,11 @@
 
 {% block profile-content %}
     <div class="user-cards"
-         style="{% if items|length < 4 %}grid-template-columns: repeat({{ items|length }}, 1fr);{% endif %}">
+         style="{% if items|length < 4 %}{% if items|length > 0 %}grid-template-columns: repeat({{ items|length }}, 1fr);{% else %}grid-template-columns: repeat(1, 1fr);{% endif %}{% endif %}">
     {% if items %}
-        {% if current_section == "categories" %}
-            {% for item in items %}
-                {% include 'users/account-category-card.html' %}
-            {% endfor %}
-        {% elif current_section == "products" %}
-            {% for idx, item in items|enumerate_ %}
-                {% include 'users/account-product-card.html' %}
-            {% endfor %}
-        {% endif %}
-        {% include 'users/confirm-delete-card.html' %}
+        {% for idx, item in items|enumerate_ %}
+            {% include 'users/account-product-card.html' %}
+        {% endfor %}
     {% else %}
         you have not published products
     {% endif %}
@@ -30,5 +23,6 @@
 {% endblock %}
 
 {% block scripts %}
+    {% include 'users/confirm-delete-card.html' %}
     <script type="text/javascript" src="{% static 'js\users\confirm.js' %}"></script>
 {% endblock %}

@@ -1,15 +1,13 @@
 @import "account.css";
 
-.account-info {
-    margin-bottom: 2em;
-}
-
 .notifications-body-long {
     margin-top: 10em;
+    position: absolute;
+    top: -16vh;
 }
 
 .notification {
-    background: rgb(128, 128, 128, .5);
+    background: rgb(33, 33, 33, .1);
     border-radius: .5em;
     width: 100%;
 }
@@ -33,6 +31,8 @@
 .notification-title-start {
     display: flex;
     gap: .2em;
+    align-items: center;
+    height: 1.5em;
 }
 
 .theme-marker {
@@ -42,7 +42,40 @@
     margin-bottom: .2em;
     margin-top: .2em;
     border-radius: .5em;
+    height: 1.2em;
     transition: all .2s ease;
+}
+
+.details-view-type-change-button {
+    background: rgb(255, 255, 255, .1);
+    border: 0px;
+    display: flex;
+    width: 1.2em;
+    height: 1.2em;
+    align-items: center;
+    border-radius: 50%;
+    aspect-ratio: 1/1;
+    box-shadow: none!important;
+}
+
+.sender-icon {
+    text-decoration: none;
+    width: min-content;
+    background: cornflowerblue;
+}
+
+.sender-icon:hover {
+    box-shadow: 0px 0px .5em cornflowerblue!important;
+}
+
+.sender-icon:hover img {
+    transform: scale(.9);
+}
+
+.change-display-button-img {
+    height: .8em;
+    width: .8em;
+    transition: all .2s ease-in-out;
 }
 
 .theme-marker:hover {
@@ -54,10 +87,11 @@
 }
 
 .notification-details {
-    background: rgb(128, 128, 128, .5);
+    background: rgb(33, 33, 33, .1);
     border-radius: .5em;
     overflow: hidden;
     padding: .5em;
+    font-weight: 100;
 }
 
 .notification-full-text {

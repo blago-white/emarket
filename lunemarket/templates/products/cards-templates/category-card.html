@@ -1,9 +1,16 @@
-<a class="card" href="{% url 'category-products' item.title|spaces_to_dashes %}?{{ url_args }}">
+<a class="card"
+   style="{% if items.count < 4 %}height: 50%;{% else %}height: 50%;{% endif %}{% if items.count == 1 %}margin-inline: auto;width: 50%;{% endif %}"
+   href="{% url 'category-products' item.title|spaces_to_dashes %}?{{ url_args }}">
     <div class="card-preview-wrapper">
         <img src="../../../media/{{ item.photo }}" class="card-preview">
     </div>
     <div class="card-content">
-        <b>{{ item.title|dashes_to_spaces }}</b>
-        average: <b style="display: contents;">{{ item.price }}$</b>
+        <div class="card-specs">
+            <b>{{ item.title|dashes_to_spaces }}</b>
+            ~<b style="display: contents;">{{ item.price|round_:2 }}$</b>
+        </div>
+        <span class="products-count">
+            {{ item.count_products_in }} products
+        </span>
     </div>
 </a>

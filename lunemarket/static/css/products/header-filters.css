@@ -5,6 +5,8 @@
 
 .header-filter {
     display: flex;
+
+    flex-direction: column;
     aspect-ratio: 2 / 1;
     margin: 0px;
     justify-content: center;
@@ -16,8 +18,80 @@
 
 .filters {
     width: 100%;
+    flex-wrap: wrap;
+    height: 65%;
+}
+
+.choices {
+    height: 6vh;
+    width: 100%;
+    background: rgb(255, 255, 255, .1);
+    border-radius: inherit;
+    display: flex;
+    transform: translateY(100%);
+    justify-content: space-between;
+    overflow: hidden;
     gap: .2em;
-    height: 63%;
+    z-index: 1;
+    overflow-x: scroll;
+    padding: .2em;
+    transition: all .2s ease;
+}
+
+.choices::-webkit-scrollbar {
+    display: none;
+}
+
+.setter-text {
+    width: 100%;
+    font-size: .9em;
+    display: flex;
+    justify-content: center;
+    transition: all .2s ease;
+}
+
+.setter-button {
+    overflow: hidden;
+    cursor: pointer;
+    justify-content: flex-start;
+    transition: all .2s ease;
+}
+
+.choice {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: inherit;
+    padding-inline: .2em;
+    color: inherit;
+    background: rgb(240, 240, 240, .4);
+    cursor: pointer;
+    width: 7em;
+    transition: all .2s ease;
+}
+
+.color-choice {
+    width: 3.25em;
+}
+
+.choice:hover {
+    color: beige;
+    width: 10em;
+    background: rgb(68, 68, 68, 1);
+    text-shadow: 0px 0px .2em rgb(255, 255, 255, .5);
+    box-shadow: 0px 0px .2em rgb(68, 68, 68);
+}
+
+.color-choice:hover {
+    width: 10em;
+}
+
+.choice-active {
+    color: beige;
+    background: rgb(68, 68, 68, 1);
+    text-shadow: 0px 0px .2em rgb(255, 255, 255, .5);
+    box-shadow: 0px 0px .2em rgb(68, 68, 68);
 }
 
 .ordering-icon {
@@ -32,6 +106,12 @@
     flex-direction: column;
     cursor: pointer;
     width: 100%;
+}
+
+.filters-line {
+    display: flex;
+    width: 100%;
+    gap: .2em;
 }
 
 datalist {

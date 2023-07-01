@@ -1,0 +1,168 @@
+.provider-icon {
+    height: 1em;
+    width: 1em;
+    filter: none!important;
+    transform: none!important;
+}
+
+.submit-button-account-info {
+    height: 1em;
+    line-height: 1em;
+    aspect-ratio: 1/1;
+    border-radius: 50%;
+    background: #34b76f;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 0px;
+}
+
+.username-input {
+    background: rgb(0, 0, 0, .1)!important;
+    box-shadow: none!important;
+    color: inherit!important;
+
+}
+
+.account-info-string:hover .username-input {
+    background: transparent!important;
+}
+
+.account-info-data {
+    padding-inline: 0em;
+    padding-top: .5em;
+    padding-bottom: .2em;
+    overflow: hidden;
+    grid-template-columns: 1fr;
+    gap: .5em;
+}
+
+.account-info-string {
+    padding-inline: 1em;
+    transition: all .2s ease;
+}
+
+.change-icon {
+    width: 0em;
+    height: 0%;
+    transition: all .1s ease;
+}
+
+.profile-controls {
+    width: 100%;
+    display: flex;
+    gap: .2em;
+    justify-content: center;
+    padding-inline: .2em;
+    background: transparent!important;
+}
+
+.profile-control-button {
+    text-decoration: none;
+    color: rgb(38, 38, 38);
+    padding-inline: .5em;
+    border-radius: 1em;
+    white-space: nowrap;
+    width: 100%;
+    background: rgb(255, 255, 255, .2);
+    transition: all .2s ease;
+}
+
+.drop-photo-form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: .2em;
+}
+
+.change-profile-photo-string:hover .drop-user-profile-photo {
+    height: 1em;
+    width: 1em;
+    font-size: 1em;
+}
+
+.save-photo-button {
+    height: 0em;
+    width: 0em;
+    font-size: 0em;
+    padding: 0px;
+    transition: all .1s ease;
+}
+
+.change-profile-photo-string:hover .save-photo-button {
+    height: 1em;
+    width: 1em;
+    font-size: 1em;
+}
+
+.drop-user-profile-photo {
+    height: 0em;
+    width: 0em;
+    font-size: 0em;
+    display: grid;
+    grid-template-rows: 1fr;
+    grid-template-columns: 1fr;
+    justify-items: center;
+    align-items: center;
+    background-position: center!important;
+    background-size: cover!important;
+    transition: all .1s ease;
+}
+
+.profile-control-button:hover {
+    border-radius: .7em;
+    box-shadow: 0px 0px 1em rgb(52, 183, 111, .42);
+    background: rgb(52, 183, 111, .7);
+}
+
+.account-info-string:hover {
+    text-shadow: none;
+    background: rgb(0, 0, 0, .2);
+}
+
+.account-info-string:hover .change-icon {
+    margin-left: .25em;
+    width: 1em;
+    height: 1em;
+}
+
+@media (max-width: 775px) and (aspect-ratio < 1 / 1) {
+    .register-form {
+        overflow-x: scroll;
+    }
+}
+
+@media (aspect-ratio < 1/1) {
+    .change-icon {
+        width: 1em;
+        height: 1em;
+        margin-left: .25em;
+    }
+    .drop-user-profile-photo {
+        width: 1em;
+        height: 1em;
+        font-size: 1em;
+    }
+}
+
+@media (aspect-ratio < 3 / 4) {
+    .account-info-data {
+        left: 0px;
+        width: 96vw;
+        max-width: 100%;
+        bottom: 6vh;
+        margin: 0px;
+    }
+    .profile-avatar {
+        left: 0px;
+        width: 95vw;
+        height: auto;
+        max-height: 60vh;
+    }
+    .profile-body {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+    }
+}

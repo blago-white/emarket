@@ -19,11 +19,27 @@
                             <form method="post" action="{% url 'account-notification-delete' notification.id %}">
                                 {% csrf_token %}
                                 <button type="submit" class="theme-marker delete-notification">delete</button>
+                                <span class="somewere-span"></span>
                             </form>
+                             {% if notification.theme != 'inf' %}
+                                 <a class="theme-marker delete-notification sender-icon"
+                                    title="{{notification.sender}}"
+                                    href="{% url 'account-info' notification.sender.id %}">
+                                     <img src="{% static 'img/account-icon.png' %}"
+                                          style="height: .8em;aspect-ratio: 1/1;filter: invert(1);transition: all .2s ease;">
+                                 </a>
+                             {% endif %}
+                             <button class="theme-marker details-view-type-change-button"
+                                     onclick="changeNotificationDetails(event, {{ idx }})">
+                                <img src="{% static 'img\products\arrow.png' %}"
+                                     class="change-display-button-img"
+                                     id="change-display-button-img-{{ idx }}"
+                                     style="transform: rotate(90deg);">
+                             </button>
                          </div>
                         <span class="notification-date" id="notification-date-{{ idx }}">{{ notification.time }}</span>
                     </div>
-                    <div class="notification-details" id="notification-{{ idx }}">
+                    <div class="notification-details" id="notification-{{ idx }}" style="height: 0px;padding: 0px;">
                         <div class="notification-full-text" id="notification-full-text-{{ idx }}">
                             {% for line in notification.text|wrap:60 %}
                                 {{ line }}<br>
@@ -35,4 +51,7 @@
         {% else %}
             there are no notifications yet
         {% endif %}
+{% endblock %}
+{% block scripts %}
+    <script type="text/javascript" src="{% static 'js\users\notifications.js' %}"></script>
 {% endblock %}

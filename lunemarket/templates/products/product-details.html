@@ -12,7 +12,7 @@
 {% endblock %}
 
 {% block title %}
-{{ item_info.title|dashes_to_spaces }}
+{{ item_info.readable_title }}
 {% endblock %}
 
 {% block header %}
@@ -22,8 +22,8 @@
 {% block rootcontent %}
     <div class="page-bg">
             <img src="../../../media/{{ item_info.photo.name }}" class="card-photo">
-            <div class="card-info">
-                <div class="prod-info">
+            <div class="card-info card-info-shrink" id="floated-element">
+                <div class="prod-info prod-info-shrink">
                     <header class="card-title">
                         <span class="card-product-title">
                             <span
@@ -33,11 +33,16 @@
                             </span>
                             <span class="card-info-splitter"></span>
                             <span style="display: flex;flex-direction: column;align-items: flex-start;">
-                                {{ item_info.title|dashes_to_spaces }}<br>
+                                {{ item_info.readable_title }}<br>
+                                <span style="font-size: .8em;color: rgb(240, 240, 240);">
+                                    {{ stortage }}GB
+                                </span>
+                                {% if viewer_is_author %}
                                 <span
                                     style="font-size: .8em;background: rgb(150, 150, 150, .5);border-radius: .2em;padding-inline: .2em;">
                                     {{ item_info.products_count }} items
                                 </span>
+                                {% endif %}
                             </span>
                         </span>
                         <a href="{% url 'account-info' item_info.author.id %}"
@@ -46,18 +51,7 @@
                         </a>
                     </header>
                 </div>
-<!--                <div class="cards-list">-->
-<!--                    {% for i in items %}-->
-<!--                        <div>-->
-<!--                            <a href="{% url 'account-info' 'test' %}"-->
-<!--                               style="text-decoration: none;color: white">-->
-<!--                                author: {{ i.author }}-->
-<!--                            </a>-->
-<!--                            {{ i.price }}-->
-<!--                        </div>-->
-<!--                    {% endfor %}-->
-<!--                </div>-->
-                <div class="purchase" style="{% if viewer_is_author %}grid-template-columns: 1fr;{% endif %}">
+                <div class="purchase purchase-on-shrink">
                     {% if not viewer_is_author %}
                     <form class="save-form" method="POST"
                           action="{% url 'save-product' item_info.id %}">
@@ -71,14 +65,21 @@
                                 login if you like this
                             </button>
                         {% endif %}
+                    {% else %}
+                        <div class="price">{{views}} views</div>
                     {% endif %}
                     </form>
                     <div class="price">{{ item_info.price }} $</div>
+                    <button class="expand-card-info" onclick="expandProductInfo()">
+                        <img src="{% static 'img/products/arrow.png' %}"
+                             id="expand-button-img"
+                             class="expand-button-img">
+                    </button>
                 </div>
             </div>
     </div>
 {% endblock %}
 {% block scripts %}
+        <script type="text/javascript" src="{% static 'js\products\expand-product-info.js' %}"></script>
         <script type="text/javascript" src="{% static 'js\products\products-listing.js' %}"></script>
-        <script type="text/javascript" src="{% static 'js\products\floated-elements.js' %}"></script>
 {% endblock %}

@@ -3,61 +3,122 @@
 
 {% block head %}
     <link rel="stylesheet" href="{% static 'css\products\header-filters.css' %}" type="text/css">
+    <style>
+        {% for idx, color in supported_colors|enumerate_ %}
+            .color-choice-{{ color }}:hover {
+                color: {{ supported_color_codes|get_element_by_index:idx }};
+                text-shadow: 0px 0px 0px transparent;
+            }
+            .color-choice-active-{{ color }} {
+                color: {{ supported_color_codes|get_element_by_index:idx }};
+            }
+        {% endfor %}
+    </style>
 {% endblock %}
 
 {% block extension-navigation %}
-    <button class="header-nav-button header-filters" onclick="Filters()">F</button>
+    <button class="header-nav-button header-filters" onclick="Filters()">
+        <img src="{% static 'img/products/filters-open-icon.png' %}" style="width: 50%;height: 50%;">
+    </button>
 {% endblock %}
 
 {% block extension-window %}
     <div class="filters" style="{% if filters %}display: flex;{% else %}display: none;{% endif %}">
-        <a class="header-nav-button header-filters header-filter"
-           id="change-order"
-           href="?page={{ page_obj.number }}{{ url_args_invert_sorting }}"
-           title="{% if sorting|invert_sorting == '1' %}from expensive to cheap{% else %} from cheap to expensive {% endif %}">
-            <img src="{% static 'img\products\ordering-icon.png' %}" class="ordering-icon">
-        </a>
-        <div class="header-nav-button header-filters header-filter price-interval"
-             title="price should not be lower than {{ price_lower_bound }}$"
-             id="min-interval">
-            <span
-                    style="font-size: .8em;letter-spacing: .2em;line-height: 1.2em;position: relative;z-index: 1;color: black;">
-                price from
-            </span>
-            <input type="range"
-                   min="0"
-                   max="{{ price_upper_bound }}"
-                   class="price-input"
-                   list="values-min"
-                   step="1"
-                   value="{{ price_lower_bound  }}"
-                   id="min-interval-input">
-            <datalist id="values-min">
-                {% for price_stage in price_upper_bound|get_prices_range %}
-                    <option value="{{ price_stage }}" label="{{ price_stage }}"></option>
-                {% endfor %}
-            </datalist>
+        <div class="filters-line">
+            <a class="header-nav-button header-filters header-filter"
+               id="change-order"
+               href="?page={{ page_obj.number }}{{ url_args_invert_sorting }}">
+                <img src="{% static 'img\products\ordering-icon.png' %}" class="ordering-icon">
+            </a>
+            <div class="header-nav-button header-filters header-filter price-interval"
+                 title="price should not be lower than {{ price_lower_bound }}$"
+                 id="min-interval">
+                <span
+                        style="font-size: .8em;letter-spacing: .2em;line-height: 1.2em;position: relative;z-index: 1;color: black;">
+                    price from
+                </span>
+                <input type="range"
+                       min="0"
+                       max="{{ price_upper_bound }}"
+                       class="price-input"
+                       list="values-min"
+                       step="1"
+                       value="{{ price_lower_bound  }}"
+                       id="min-interval-input">
+                <datalist id="values-min">
+                    {% for price_stage in price_upper_bound|get_prices_range %}
+                        <option value="{{ price_stage }}" label="{{ price_stage }}"></option>
+                    {% endfor %}
+                </datalist>
+            </div>
+            <div class="header-nav-button header-filters header-filter price-interval"
+                 title="price should not be more than {{ price_upper_bound }}$"
+                 id="max-interval">
+                <span
+                        style="font-size: .8em;letter-spacing: .2em;line-height: 1.2em;position: relative;z-index: 1;color: black;">
+                    price to
+                </span>
+                <input type="range"
+                       min="{{ price_lower_bound }}"
+                       max="{{ max_item_price }}"
+                       class="price-input"
+                       list="values-max"
+                       step="1"
+                       value="{{ price_upper_bound }}"
+                       id="max-interval-input">
+                <datalist id="values-max">
+                    {% for price_stage in max_item_price|get_prices_range:price_lower_bound %}
+                        <option value="{{ price_stage }}" label="{{ price_stage }}"></option>
+                    {% endfor %}
+                </datalist>
+            </div>
         </div>
-        <div class="header-nav-button header-filters header-filter price-interval"
-             title="price should not be more than {{ price_upper_bound }}$"
-             id="max-interval">
-            <span
-                    style="font-size: .8em;letter-spacing: .2em;line-height: 1.2em;position: relative;z-index: 1;color: black;">
-                price to
-            </span>
-            <input type="range"
-                   min="{{ price_lower_bound }}"
-                   max="{{ max_item_price }}"
-                   class="price-input"
-                   list="values-max"
-                   step="1"
-                   value="{{ price_upper_bound }}"
-                   id="max-interval-input">
-            <datalist id="values-max">
-                {% for price_stage in max_item_price|get_prices_range:price_lower_bound %}
-                    <option value="{{ price_stage }}" label="{{ price_stage }}"></option>
-                {% endfor %}
-            </datalist>
+        <div class="filters-line">
+                <a class="header-nav-button header-filters header-filter setter-button"
+                   id="stortage-setter"
+                    style="width: 40%;">
+                    <div id="setter-text"
+                         class="setter-text"
+                        style="{% if selected_stortage_values %}transform: translateY(0%){% else %}transform: translateY(100%){% endif %}">
+                    stortage
+                    </div>
+                <div id="stortage-setter-choices-expand"
+                     style="{% if selected_stortage_values %}transform: translateY(0%){% else %}transform: translateY(100%){% endif %}"
+                     class="choices">
+                    {% for stortage_size in supported_stortage_sizes %}
+                        <span class="choice {% if stortage_size in selected_stortage_values %}choice-active{% endif %}"
+                              onclick="choiceActivate({{ stortage_size }})">
+                            {{ stortage_size }}
+                        </span>
+                    {% endfor %}
+                </div>
+                </a>
+                <a class="header-nav-button header-filters header-filter setter-button"
+                   id="color-setter"
+                   title="{% if sorting|invert_sorting == '1' %}from expensive to cheap{% else %} from cheap to expensive {% endif %}"
+                    style="width: 60%;">
+                    <div id="color-setter-text"
+                         class="setter-text"
+                        style="{% if selected_color_values %}transform: translateY(0%){% else %}transform: translateY(100%){% endif %}">
+                    colors
+                    </div>
+                <div id="color-setter-choices-expand"
+                     style="{% if selected_color_values %}transform: translateY(0%){% else %}transform: translateY(100%){% endif %}"
+                     class="choices">
+                    {% for color in supported_colors %}
+                        <span
+                              class="choice color-choice {% if color in selected_color_values %}choice-active color-choice-active-{{ color }}{% endif %} color-choice-{{ color }}"
+                              onclick="choiceActivateColor('{{ color }}')">
+                            {{ color|truncate:2 }}
+                        </span>
+                    {% endfor %}
+                </div>
+                </a>
         </div>
     </div>
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript" src="{% static 'js\products\stortage-setter.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js\products\color-setter.js' %}"></script>
 {% endblock %}

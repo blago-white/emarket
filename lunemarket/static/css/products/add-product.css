@@ -5,6 +5,7 @@ select {
     height: 1.5em;
     color: white;
     text-align: center;
+    cursor: pointer;
     transition: all .2s ease;
 }
 
@@ -21,13 +22,34 @@ option:checked {
     box-shadow: 0px 0px 1em white;
 }
 
+input {
+    background: rgb(0, 0, 0, .5);
+}
+
 input[type="file"] {
     border-radius: .2em;
     background: rgb(0, 0, 0, .5);
 }
 
 input[type="number"] {
-    width: 2.6em;
+    width: 3em;
+    text-align: center;
+}
+
+input[name="products_count"] {
+    width: 2em;
+}
+
+.register-form {
+    min-width: 485px;
+}
+
+.abbreviated-title {
+    border-radius: .2em;
+    padding-inline: .2em;
+    display: none;
+    width: 48%;
+    color: rgb(185, 185, 185);
 }
 
 .drop {
@@ -36,6 +58,7 @@ input[type="number"] {
     background: rgb(0, 0, 0, .5);
     padding-inline: .2em;
     border-radius: .2em;
+    cursor: pointer;
     transition: all .2s ease;
 }
 
@@ -52,4 +75,52 @@ input[type=number]::-webkit-outer-spin-button {
 
 select:focus-visible {
     outline: none;
+}
+
+@media(max-width: 575px) and (aspect-ratio < 1 / 1) {
+    .data-input {
+        justify-content: space-between;
+        flex-direction: row;
+    }
+    .abbreviated-title {
+        display: initial;
+    }
+    .full-title {
+        display: none;
+    }
+    .register-form {
+        min-width: unset;
+    }
+    .drop {
+        width: 48%;
+    }
+    input {
+        width: 48%!important;
+    }
+    select {
+        width: 48%;
+    }
+    .price-product-input {
+        width: 48%;
+        justify-content: space-between!important;
+    }
+    input[type="number"] {
+        width: 85%!important;
+    }
+    input[name="products_count"] {
+        width: 48%!important;
+    }
+    #id_products_count {
+        width: 41%!important;
+    }
+    .products-count-abbreviated-label {
+        width: 55%;
+    }
+    #id_stortage {
+        width: 100%;
+    }
+    .data-input {
+        background: rgb(0, 0, 0, 0.2);
+        border-radius: .2em;
+    }
 }

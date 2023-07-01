@@ -1,5 +1,5 @@
 from django.test import TestCase
-from ..filters import enumerate_, wrap
+from ..filters import *
 
 
 class FiltersTestCase(TestCase):
@@ -20,3 +20,8 @@ class FiltersTestCase(TestCase):
     def test_enumerate_(self) -> None:
         for test_sequence in self._test_enumerate_sequences:
             self.assertEqual(tuple(enumerate_(test_sequence)), tuple(enumerate(test_sequence)))
+
+    def test_get_title_theme(self) -> None:
+        self.assertEqual(get_title_theme(name="inf"), "info")
+        self.assertEqual(get_title_theme(name="pur"), "purchase")
+        self.assertEqual(get_title_theme(name="none"), None)

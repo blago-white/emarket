@@ -17,6 +17,32 @@
     color: white;
     width: auto;
     grid-template-rows: 1fr;
+    backdrop-filter: blur(.25em);
+    text-align: center;
+    z-index: 2;
+    padding: .5em;
+    transition: all .2s ease;
+}
+
+.profile-avatar {
+    position: relative;
+    z-index: 1;
+    left: -10%;
+    height: 60vh;
+    max-width: 33em;
+    border-radius: 2em;
+    transition: all .2s ease;
+}
+
+.account-info-data {
+    position: relative;
+    left: 45%;
+    bottom: 25vh;
+    width: fit-content;
+}
+
+.profile-avatar:hover {
+    transform: scale(1.05);
 }
 
 .account-info-string {
@@ -30,12 +56,18 @@
 .account-sections {
     width: 100%;
     display: grid;
+    overflow-y: visible;
     grid-template-columns: 1fr 1fr 1fr 1fr;
 }
 
 .account-sections-wrapper {
     overflow-x: scroll;
     overflow-y: visible;
+    z-index: 2;
+}
+
+.account-sections-wrapper-small {
+    overflow-x: visible;
 }
 
 .account-sections-wrapper::-webkit-scrollbar {
@@ -62,7 +94,7 @@
     display: grid;
     justify-items: center;
     grid-template-columns: 1fr 1fr 1fr;
-    gap: 1em;
+    gap: .5em;
 }
 
 .user-card-price {
@@ -93,7 +125,7 @@
 }
 
 .section-underline {
-    width: 20%;
+    width: 3vw;
     position: relative;
     margin-inline: auto;
     display: flex;
@@ -110,8 +142,8 @@
     transition: all .2s ease-out;
 }
 
-.active {
-    width: 30%;
+.active-section i {
+    width: 4vw;
     box-shadow: 0px 0px .5em white;
 }
 
@@ -128,13 +160,32 @@
 }
 
 .section:hover .section-underline {
-    width: 80%;
+    width: 5vw;
     box-shadow: 0px 0px 1em white, 0px -.2em .5em white;
 }
 
 .section-underline:hover {
     width: 80%;
     box-shadow: 0px 0px 1em white, 0px -.2em .5em white;
+}
+
+@media (aspect-ratio < 1 / 1) {
+    .section-underline {
+        display: none;
+    }
+    .account-sections-wrapper {
+        padding-block: .2em;
+        background: rgb(33, 33, 33, .1);
+        border-radius: .3em;
+    }
+    .account-sections {
+        gap: .2em;
+        padding-inline: 0.2em;
+    }
+    .active-section {
+        background: rgb(200, 200, 200, .4);
+        border-radius: .2em;
+    }
 }
 
 @media(aspect-ratio < 75/90) {
@@ -152,6 +203,7 @@
 @media(aspect-ratio < 46/80) {
     .form {
         width: 100%;
+        overflow: hidden;
     }
     .account-info {
         width: 100vw;

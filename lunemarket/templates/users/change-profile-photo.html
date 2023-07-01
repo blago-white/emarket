@@ -1,0 +1,32 @@
+{% load static %}
+
+<form enctype="multipart/form-data" method="post" action="{% url 'change-account-field' %}" class="drop-photo-form">
+    {% csrf_token %}
+    {% if user.avatar.name %}
+    <img src="../../../media/{{ user.avatar.name }}" style="height: 1em;border-radius: .2em;">
+    {% elif user.socialaccount_set.all.0.get_avatar_url %}
+    <img src="{{ user.socialaccount_set.all.0.get_avatar_url }}" style="height: 1em;border-radius: .2em;">
+    {% endif %}
+    <label title="{{ field.label|lower }}" id="change-photo-label">profile photo</label>
+    <input type="file"
+           name="avatar"
+           id="upload-photo"
+           accept="image/*"
+           style="display: none"
+           required
+           onchange="uploadNewPhoto(event)">
+    <label class="drop-user-profile-photo"
+           id="upload-controls"
+           for="upload-photo">
+            <img
+                src="{% static 'img/users/change.png' %}"
+                class="change-icon"
+                style="margin-left: 0em;display: flex;align-items: center;justify-content: center;cursor: pointer;">
+    </label>
+    <button class="submit-button-account-info save-photo-button"
+            type="submit"
+            style="display: none;"
+            id="save-photo">
+        <img src="{% static 'img/products/arrow.png' %}" style="width: .6em;height: .6em;">
+    </button>
+</form>

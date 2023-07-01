@@ -13,9 +13,9 @@ function Filters() {
             }
         }
 
-        header.animate([{height: "13.5vh"}], {duration: 200, easing: "ease"});
+        header.animate([{height: "16.9vh"}], {duration: 200, easing: "ease"});
         setTimeout(e => {
-            header.style.height = "13.5vh";
+            header.style.height = "16.9vh";
         }, 200);
         filters_window.style.display = "flex";
     } else {
@@ -33,9 +33,9 @@ function Filters() {
             }
         }
 
-        header.animate([{height: "7vh"}], {duration: 200, easing: "ease"});
+        header.animate([{height: "6vh"}], {duration: 200, easing: "ease"});
         setTimeout(e => {
-            header.style.height = "7vh";
+            header.style.height = "6vh";
             filters_window.style.display = "none"
         }, 200);
     }

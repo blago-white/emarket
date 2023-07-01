@@ -1,0 +1,22 @@
+@import "change-password.css";
+
+.logo-selected-text {
+    font-size: 1.5em;
+    font-family: sans-serif;
+    font-weight: 700;
+    color: rgb(205,92,92);
+    white-space: nowrap;
+    transition: all .2s ease;
+}
+
+.logo-selected-text:hover {
+    transform: scale(1.1);
+}
+
+.verification-info {
+    width: 35%;
+    overflow: hidden;
+    grid-template-columns: 0em auto;
+    gap: .5em;
+
+}

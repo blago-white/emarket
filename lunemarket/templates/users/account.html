@@ -3,10 +3,15 @@
 
 {% block head %}
     <link rel="stylesheet" href="{% static 'css\users\account.css' %}" type="text/css" xmlns="http://www.w3.org/1999/html">
+    {% if current_section == 'info' %}
+        <link rel="stylesheet" href="{% static 'css\users\account-info.css' %}"
+              type="text/css"
+              xmlns="http://www.w3.org/1999/html">
+    {% endif %}
 {% endblock %}
 
 {% block title %}
-Hi, {{ user.username }}
+Hi, {{ user.user.username }}{{ user.socialaccount_set.all.0.extra_data.screen_name }}
 {% endblock %}
 
 {% block header %}
@@ -17,45 +22,69 @@ Hi, {{ user.username }}
 <link rel="stylesheet" href="{% static 'css\users\account-sections.css' %}" type="text/css"
       xmlns="http://www.w3.org/1999/html">
     <div class="form {% if products|length < 7 %}{% else %}big{% endif %}">
-        <div
+        <div style="{% if current_section == 'info' %}gap: .5em;{% endif %}"
             class="account-body {% if current_section == 'notifications' and notifications|length > 5 %}notifications-body-long{% endif %}{% if items|length > 6 %}long-account-body{% endif %}">
-            <div class="account-sections-wrapper">
+            <div class="account-sections-wrapper{% if not is_self_account %} account-sections-wrapper-small{% endif %}">
                 <nav class="account-sections"
-                     style="{% if is_self_account %}{% else %}grid-template-columns: 1fr 1fr 1fr;{% endif %}">
-                    <a class="section" id="section-1" href="{% url 'account-info' current_user_account_pk %}">
+                     style="{% if is_self_account %}{% else %}grid-template-columns: 1fr 1fr;gap: .5em;{% endif %}">
+                    <a class="section {% if current_section == 'info' %}active-section{% endif %}" id="section-1"
+                       href="{% url 'account-info' current_user_account_pk %}">
                         <div class="section-text">info</div>
-                        <i class="section-underline {% if current_section == 'info' %}active{% endif %}"
+                        <i class="section-underline"
                            id="section-1-underline"
                         ></i>
                     </a>
-                    <a class="section" id="section-2" href="{% url 'account-products' current_user_account_pk %}">
-                        <div class="section-text">cards</div>
-                        <i class="section-underline {% if current_section == 'products' %}active{% endif %}"
-                           id="section-2-underline"
-                        ></i>
-                    </a>
                     {% if is_self_account %}
-                        <a class="section" id="section-4" href="{% url 'basket' %}">
+                        <a class="section {% if current_section == 'basket' %}active-section{% endif %}"
+                           id="section-4"
+                           href="{% url 'basket' %}">
                             <div class="section-text">basket</div>
-                            <i class="section-underline {% if current_section == 'basket' %}active{% endif %}"
+                            <i class="section-underline"
                                id="section-4-underline"
                             ></i>
                         </a>
-                        <a class="section" id="section-5"
+                        <a class="section {% if current_section == 'notifications' %}active-section{% endif %}"
+                           id="section-5"
                            href="{% url 'account-notifications' %}">
                             <div class="section-text">notifications</div>
-                            <i class="section-underline {% if current_section == 'notifications' %}active{% endif %}"
+                            <i class="section-underline"
                                id="section-5-underline"
                             ></i>
                         </a>
                     {% endif %}
+                    <a class="section {% if current_section == 'products' %}active-section{% endif %}" id="section-2"
+                       href="{% url 'account-products' current_user_account_pk %}">
+                        <div class="section-text">cards</div>
+                        <i class="section-underline"
+                           id="section-2-underline"
+                        ></i>
+                    </a>
                 </nav>
             </div>
+            {% if current_section == 'info' %}
             <div
-                class="register-form account-info">
+                 style="{% if user.avatar.name or user.socialaccount_set.all.0.get_avatar_url %}height: 60vh;{% endif %}"
+                 class="profile-body">
+                {% if user.avatar.name %}
+                <img src="../../../media/{{ user.avatar.name }}"
+                     class="profile-avatar"
+                     id="account-avatar">
+                {% elif user.socialaccount_set.all.0.get_avatar_url %}
+                <img src="{{ user.socialaccount_set.all.0.get_avatar_url }}"
+                     class="profile-avatar"
+                     id="account-avatar">
+                {% endif %}
+            {% endif %}
+            <div
+                class="register-form account-info {%  if current_section == 'info' %}account-info-data{% endif %}"
+                id="{% if current_section == 'info' %}floated-element{% endif %}"
+                style="{% if not user.avatar.name and not user.socialaccount_set.all.0.get_avatar_url %}position: initial;{% endif %}">
                 {% block profile-content %}
                 {% endblock %}
             </div>
+            {% if current_section == 'info' %}
+            </div>
+            {% endif %}
         </div>
     </div>
 {% endblock %}

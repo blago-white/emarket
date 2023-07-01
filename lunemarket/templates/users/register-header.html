@@ -2,6 +2,10 @@
 {% load static %}
 
 {% block navigation %}
-    <a class="header-nav-button" href="{% url 'login' %}">login</a>
-    <a class="header-nav-button" href="{% url 'home' %}">home</a>
+    <a class="header-nav-button" href="{% url 'login' %}">
+        <img src="{% static 'img/signup.png' %}" class="button-icon">login
+    </a>
+    <a class="header-nav-button" href="{% url 'home' %}">
+        <img src="{% static 'img/home.png' %}" class="button-icon"> home
+    </a>
 {% endblock %}

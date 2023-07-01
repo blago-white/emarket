@@ -1,0 +1,16 @@
+{% load static %}
+
+{% if field.errors %}
+  <span class="warnings" id="{{ field_id }}">
+      <img src="{% static 'img\users\warn.png' %}" class="warn-icon">
+      <span class="warn-info" style="opacity: 0;display: none" id="warn-window-{{ field_id }}">
+      <span class="warn">
+      {% for err in field.errors %}
+          {% for part in err|wrap %}
+          {{ part }}<br>
+          {% endfor %}
+      {% endfor %}
+      </span>
+      </span>
+  </span>
+{% endif %}

@@ -11,7 +11,7 @@
 {% endblock %}
 
 {% block title %}
-    products {% if selected_color_values %}with colors -
+    {{ category_name }} {% if selected_color_values %}with colors -
         {% for i in selected_color_values %}
             {{ i }}
         {% endfor %}

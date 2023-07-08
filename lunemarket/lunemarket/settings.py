@@ -34,7 +34,6 @@ ALLOWED_HOSTS = ["*"]
 
 INSTALLED_APPS = [
     'products',
-    'home',
     'users',
     'purchasing',
     'allauth',

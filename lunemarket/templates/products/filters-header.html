@@ -23,7 +23,7 @@
 {% endblock %}
 
 {% block extension-window %}
-    <div class="filters" style="{% if filters %}display: flex;{% else %}display: none;{% endif %}">
+    <div class="filters" style="{% if filters and items %}display: flex;{% else %}display: none;{% endif %}">
         <div class="filters-line">
             <a class="header-nav-button header-filters header-filter"
                id="change-order"
@@ -33,8 +33,7 @@
             <div class="header-nav-button header-filters header-filter price-interval"
                  title="price should not be lower than {{ price_lower_bound }}$"
                  id="min-interval">
-                <span
-                        style="font-size: .8em;letter-spacing: .2em;line-height: 1.2em;position: relative;z-index: 1;color: black;">
+                <span style="font-size: .8em;letter-spacing: .2em;line-height: 1.2em;position: relative;z-index: 1;color: black;">
                     price from
                 </span>
                 <input type="range"

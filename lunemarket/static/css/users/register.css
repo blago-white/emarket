@@ -23,7 +23,6 @@
     text-align: center;
     border-radius: 1em;
     color: rgb(40, 40, 40);
-    box-shadow: 0px 0px .1em gray;
     backdrop-filter: blur(1em);
     overflow: visible;
     transition: all .2s ease;
@@ -72,6 +71,7 @@ p {
     height: 1.6em;
     border: 0px;
     padding: 0px;
+    font-weight: 900;
     padding-inline: .5em;
     transition: all .2s ease;
 }

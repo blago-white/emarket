@@ -136,11 +136,15 @@ class Phones(BaseProduct):
         return self.title
 
     def delete(self, using=None, keep_parents=False):
-        category = Category.objects.get(title=self.title)
-        products_with_current_category = Phones.objects.filter(category=category)
+        # try:
+        #     category = Category.objects.get(title=self.title)
+        # except:
+        #     category = Category.objects.filter(phones__title=self.title).select_related("parent")[0]
+
+        products_with_current_category = Phones.objects.filter(category=self.category)
 
         if products_with_current_category.count() == 1:
-            category.delete()
+            self.category.delete()
         else:
             super(Phones, self).delete(using=using, keep_parents=keep_parents)
 

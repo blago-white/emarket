@@ -192,6 +192,7 @@ class AccountNotificationsView(UserLoginRequiredMixin, BaseAccountView, ListView
     def get_context_data(self, **kwargs):
         current_context = super().get_context_data(**kwargs)
         current_context.update({"is_self_account": True})
+        current_context.update({"available_themes": (i[0] for i in Notifications.NOTIFICATIONS_THEMES)})
 
         return current_context
 

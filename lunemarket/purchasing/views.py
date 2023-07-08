@@ -45,9 +45,6 @@ class AddProductToBasketView(UserLoginRequiredMixin, CreateView):
     success_url = reverse_lazy("basket")
     fields = []
 
-    def post(self, request, *args, **kwargs):
-        return super().post(*args, request=request, **kwargs)
-
     def form_invalid(self, form):
         return HttpResponseRedirect(self.success_url)
 
@@ -58,10 +55,7 @@ class AddProductToBasketView(UserLoginRequiredMixin, CreateView):
         if form.instance.product.author.id == self.request.user.id:
             return self.form_invalid(form=form)
 
-        try:
-            return super().form_valid(form=form)
-        except:
-            return HttpResponseRedirect(self.success_url)
+        return super().form_valid(form=form)
 
 
 class BuyProductView(UserLoginRequiredMixin, DeleteView):
@@ -80,21 +74,24 @@ class BuyProductView(UserLoginRequiredMixin, DeleteView):
         return self.model.objects.get(user=self._user_data, product=self._product_data)
 
     def form_valid(self, form):
-        try:
-            if int(self._product_data.products_count) == 1:
-                purchase_notification.notify_about_purchase(purchaser=self.request.user,
-                                                            owner=self._product_data.author,
-                                                            product=self._product_data)
-                decrease_phones_count(phone=self._product_data)
-                raise ValueError("Products ended")
+        if not int(self._product_data.products_count):
+            return self._get_product_count_null_redirect()
 
+        purchase_notification.notify_about_purchase(purchaser=self.request.user,
+                                                    owner=self._product_data.author,
+                                                    product=self._product_data)
+
+        if int(self._product_data.products_count) == 1:
             decrease_phones_count(phone=self._product_data)
-        except:
             product_is_over_notification.notify_product_is_over(recipient=self._product_data.author,
                                                                 product=self._product_data)
-        else:
-            purchase_notification.notify_about_purchase(purchaser=self.request.user,
-                                                        owner=self._product_data.author,
-                                                        product=self._product_data)
+
+            return super().form_valid(form=form)
+
+        decrease_phones_count(phone=self._product_data)
 
         return super().form_valid(form=form)
+
+    @staticmethod
+    def _get_product_count_null_redirect() -> HttpResponseRedirect:
+        return HttpResponseRedirect(redirect_to=reverse_lazy("product-not-exist"))

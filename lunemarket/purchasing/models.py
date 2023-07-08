@@ -14,7 +14,7 @@ class ShoppingBasket(models.Model):
     product = models.ForeignKey(Phones, on_delete=models.CASCADE, null=False, unique=False, default=1)
 
     def __str__(self):
-        return str(self.id)
+        return f"{self.user.username}'s {self.product.readable_title()}"
 
     class Meta:
         verbose_name = "ShoppingBasket"

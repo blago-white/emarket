@@ -10,7 +10,7 @@
             ~<b style="display: contents;">{{ item.price|round_:2 }}$</b>
         </div>
         <span class="products-count">
-            {{ item.count_products_in }} products
+            {{ item.count_products_in }} item{% if item.count_products_in > 1 %}s{% endif %}
         </span>
     </div>
 </a>

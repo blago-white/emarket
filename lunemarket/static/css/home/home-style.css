@@ -7,6 +7,13 @@
     background-size: cover!important;
     background-position: center center!important;
     text-decoration: none;
+
+    transition: transform .2s ease-in-out, z-index .2s .0s;
+}
+
+.category-card:hover {
+    z-index: 1;
+    transform: scale(1.1);
 }
 
 .category-card-onhover-filter {
@@ -172,4 +179,5 @@
     width: 100%;
     height: 100vmin;
     min-height: 100vh;
+    overflow: hidden;
 }

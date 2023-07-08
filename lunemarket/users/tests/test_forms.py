@@ -2,6 +2,7 @@ from django.core.exceptions import ValidationError
 from django.test import TestCase
 from django.contrib.auth.models import User
 
+from lunemarket.lunemarket_tests.tests_utils import create_test_user
 from . import *
 from ..forms import RegisterUserForm
 
@@ -19,13 +20,7 @@ class RegisterUserFormTestCase(TestCase):
         self._test_register_user_form.full_clean()
 
         self.assertEqual(self._test_register_user_form.clean_email(), TEST_USER_DEFAULT_EMAIL)
-        _create_default_test_user()
+        create_test_user()
 
         with self.assertRaises(ValidationError):
             self._test_register_user_form.clean_email()
-
-
-def _create_default_test_user():
-    User(username=TEST_USER_DEFAULT_USERNAME,
-         email=TEST_USER_DEFAULT_EMAIL,
-         password=TEST_USER_DEFAULT_PASSWORD).save()

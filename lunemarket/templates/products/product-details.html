@@ -24,6 +24,15 @@
             <img src="../../../media/{{ item_info.photo.name }}" class="card-photo">
             <div class="card-info card-info-shrink" id="floated-element">
                 <div class="prod-info prod-info-shrink">
+                    <a class="top-card-info-marker"
+                       href="{% url 'account-info' item_info.author.id %}"
+                       title="owner of this product is user {{ item_info.author }}">
+                        <span style="font-size: .5em;">
+                            <span class="owner-link-text">{{ item_info.author.username|truncatechars:8 }}</span>
+                            <img src="{% static 'img/products/to-owner.png' %}"
+                                 style="height: 1.5em;filter: contrast(.5);margin-right: 0.75em;margin-bottom: 0.3em;">
+                        </span>
+                    </a>
                     <header class="card-title">
                         <span class="card-product-title">
                             <span
@@ -45,10 +54,6 @@
                                 {% endif %}
                             </span>
                         </span>
-                        <a href="{% url 'account-info' item_info.author.id %}"
-                           style="text-decoration: none;font-size: .75em;color: rgb(230, 230, 230)">
-                            from {{ item_info.author }}
-                        </a>
                     </header>
                 </div>
                 <div class="purchase purchase-on-shrink">

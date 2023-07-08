@@ -17,6 +17,9 @@ def get_image_path(self: models.Model, filename: str) -> str:
 
 
 def decrease_phones_count(phone: models.Model) -> None:
+    if int(phone.products_count) <= 0:
+        raise ValueError
+
     phone.products_count = F("products_count") - 1
     phone.save()
 

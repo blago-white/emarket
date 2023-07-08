@@ -9,6 +9,11 @@
     z-index: 2;
 }
 
+.header-logo {
+    background: transparent!important;
+    box-shadow: none!important;
+}
+
 .main-header {
     position: fixed;
     display: flex;
@@ -32,7 +37,7 @@
 }
 
 .main-header:hover {
-    box-shadow: 0px 0px .5em rgb(68, 68, 68);
+    box-shadow: 0px 0px .5em rgb(68, 68, 68, .5);
 }
 
 .header-nav {
@@ -89,5 +94,8 @@
         border-radius: 0px!important;
         width: 100%!important;
         top: 0px!important;
+    }
+    .header-logo {
+        display: none;
     }
 }

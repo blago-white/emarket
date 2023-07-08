@@ -3,6 +3,13 @@
 
 {% block head %}
 <link rel="stylesheet" href="{% static 'css\users\notifications.css' %}" type="text/css" xmlns="http://www.w3.org/1999/html">
+<style>
+    {% for theme_name in available_themes %}
+        .{{ theme_name }}-marker:hover {
+            box-shadow: 0px 0px .5em {% cycle 'lightblue' 'darkseagreen' %};
+        }
+    {% endfor %}
+</style>
 {% endblock %}
 
 {% block profile-content %}
@@ -11,7 +18,7 @@
                 <div class="notification">
                     <div class="notification-title" id="notification-title-{{ idx }}">
                          <div class="notification-title-start">
-                            <span class="theme-marker"
+                            <span class="theme-marker {{ notification.theme }}-marker"
                                   id="theme-marker-{{ idx }}"
                                   style="background: {% if notification.theme == 'pur' %}darkseagreen{% elif notification.theme == 'inf' %}lightslategrey{% endif %}">
                                 {{ notification.theme|get_title_theme }}

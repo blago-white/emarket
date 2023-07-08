@@ -83,7 +83,6 @@
     backdrop-filter: blur(.5em);
     color: white;
     overflow: hidden;
-    box-shadow: 0px 0px .5em darkgrey;
     transition: transform 0.2s ease;
     transform-style: preserve-3d;
     will-change: transform;
@@ -112,8 +111,41 @@
     grid-column-start: 1;
     grid-column-end: 1;
     text-align: center;
-    text-shadow: 0px 0px 2px white;
     transition: transform 0.2s ease;
+}
+
+.top-card-info-marker {
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    min-width: 2em;
+    height: 2em;
+    position: absolute;
+    top: -1em;
+    left: -.5em;
+    background: black;
+    border-radius: 0.5em;
+    background: rgb(240 240 240 / 20%);
+    text-decoration: none;
+}
+
+.owner-link-text {
+    display: inline-flex;
+    justify-content: flex-end;
+    color: rgb(50, 50, 50);
+    overflow: hidden;
+    min-width: 0em;
+    max-width: 0em;
+    text-overflow: ellipsis;
+    text-align: center;
+    font-weight: bold;
+
+    transition: all .2s ease-in-out;
+}
+
+.top-card-info-marker:hover .owner-link-text {
+    min-width: 6em;
+    max-width: 6em;
 }
 
 .card-title {
@@ -153,7 +185,6 @@
 
 .button-save:hover {
     background-color: rgb(0, 0, 0, .5);
-    text-shadow: 0px 0px 2px white;
     box-shadow: none;
 }
 
@@ -172,7 +203,6 @@
 
 .price:hover {
     background-color: rgb(0, 0, 0, .5);
-    text-shadow: 0px 0px 2px white;
     box-shadow: none;
 }
 
@@ -271,6 +301,21 @@
     }
     .purchase .price {
         width: 100%;
+    }
+    .card-title {
+        font-size: 1.5em;
+    }
+    .top-card-info-marker {
+        font-size: 1.5em;
+        width: 100%;
+        border-radius: 0em;
+        left: 0px;
+        justify-content: center;
+    }
+    .owner-link-text {
+        width: 6em;
+        font-size: 1.5em;
+        max-width: 6em;
     }
     .card-info-shrink {
         height: 6.25vh;

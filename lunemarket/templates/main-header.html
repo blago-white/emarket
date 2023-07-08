@@ -5,11 +5,11 @@
 {% endblock %}
 
 <header class="main-header-wrapper">
-    <div class="main-header" style="{% if filters %}height: 16.9vh;{% else %}height: 6vh;{% endif %}">
+    <div class="main-header" style="{% if filters and items %}height: 16.9vh;{% else %}height: 6vh;{% endif %}">
         <nav class="header-nav">
-            <a class="header-nav-button square-button" href="{{ request.META.HTTP_REFERER|escape }}">
-                <img src="{% static 'img/back-arrow.png' %}" style="width: 50%;height: 50%;">
-            </a>
+            <span class="header-nav-button square-button header-logo">
+                <img src="{% static 'img/emarket-icon.png' %}" style="height: 80%;aspect-ratio: 1/1;">
+            </span>
             {% block navigation %}
             {% if request.user.is_authenticated %}
                 <a

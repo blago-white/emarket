@@ -24,13 +24,13 @@ class ValidatorsTestCase(TestCase):
         "Phones 11"
     )
 
-    def test_category_title_validator(self) -> None:
+    def test_parent_category_title_validator(self):
         for uncorrect_category_name in self._test_category_names_uncorrect:
             with self.assertRaises(ValidationError):
-                validators.category_title_validator(value=uncorrect_category_name)
+                validators.parent_category_title_validator(value=uncorrect_category_name)
 
         for correct_category_name in self._test_category_names_correct:
-            validators.category_title_validator(value=correct_category_name)
+            validators.parent_category_title_validator(value=correct_category_name)
 
     def test_card_title_validator(self) -> None:
         for uncorrect_card_name in self._test_card_names_uncorrect:

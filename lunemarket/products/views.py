@@ -1,18 +1,26 @@
-import django.db.models
-from django.views.generic import ListView, DetailView, CreateView, DeleteView
+from django.http.response import HttpResponseRedirect
 from django.core.exceptions import ValidationError
 from django.db.models import Count, Max, Avg, F, Sum, QuerySet
 from django.shortcuts import redirect
 from django.urls import reverse_lazy, reverse
-from django.views.generic import ListView, DetailView, CreateView, DeleteView
+from django.views.generic import ListView, DetailView, CreateView, DeleteView, TemplateView
 from django.conf import settings
 
 from products.forms import AddProductForm, EditProductForm
 from users.mixins import UserLoginRequiredMixin
 from .models.models import Category, Phones
 from .models.models_utils import increment_product_views
-from .utils import convert_category_filters_to_product_filters
-from products.filters import *
+from .views_utils import convert_category_filters_to_product_filters
+from .filters import *
+
+
+class HomePageProductsView(ListView):
+    model = Category
+    template_name = 'home/home.html'
+    context_object_name = 'categories'
+
+    def get_queryset(self) -> QuerySet:
+        return self.model.objects.filter(parent=None)
 
 
 class ProductsView(ListView):
@@ -85,7 +93,7 @@ class ProductsView(ListView):
 
         return queryset
 
-    def _get_categories_queryset(self, parent_category, **query_filters) -> django.db.models.QuerySet:
+    def _get_categories_queryset(self, parent_category, **query_filters) -> QuerySet:
         return Category.objects.filter(
             parent=parent_category,
         ).values("title").annotate(
@@ -137,6 +145,7 @@ class ProductsView(ListView):
             "supported_stortage_sizes": Phones.STORTAGE_ID_BY_SIZE.keys(),
             "supported_colors": tuple(Phones.COLOR_CODE_BY_NAME.keys()),
             "supported_color_codes": tuple(Phones.COLOR_CODE_BY_NAME.values()),
+            "category_name": self.kwargs.get("category")
         })
 
         if self.request.GET.getlist("stortage") or self.request.GET.getlist("color"):
@@ -182,7 +191,7 @@ class ProductDetailView(DetailView):
         self._product_author_id = card_specs.author.id
         self._product_views = card_specs.views
 
-        if self.request.user != card_specs.author:
+        if not self.request.__dict__.get("user") or self.request.user != card_specs.author:
             increment_product_views(phone=card_specs)
 
         return card_specs
@@ -190,11 +199,19 @@ class ProductDetailView(DetailView):
     def get_context_data(self, **kwargs):
         current_context = super().get_context_data(**kwargs)
 
-        current_context.update({"viewer_is_author": self.request.user.id == self._product_author_id})
+        current_context.update({
+            "viewer_is_author": self.request.__dict__.get("user") and self.request.user.id == self._product_author_id
+        })
         current_context.update({"stortage": current_context["item_info"].get_stortage_display()})
         current_context.update({"views": self._product_views})
 
         return current_context
+
+    def render_to_response(self, context, **response_kwargs):
+        if not context["viewer_is_author"] and self.object.products_count < 1:
+            return HttpResponseRedirect(redirect_to=reverse("product-not-exist"))
+
+        return super().render_to_response(context=context, **response_kwargs)
 
 
 class AddProductView(UserLoginRequiredMixin, CreateView):
@@ -241,11 +258,16 @@ class EditProductView(AddProductView):
         return kwargs
 
 
-class DeleteUserProduct(UserLoginRequiredMixin, DeleteView):
+class DeleteUserProductView(UserLoginRequiredMixin, DeleteView):
     model = Phones
 
     def get_success_url(self):
         return reverse("account-products", kwargs={"pk": self.request.user.id})
 
     def get_object(self, queryset=None):
-        return self.model.objects.get(pk=self.kwargs.get("pk"))
+        return self.model.objects.get(pk=self.kwargs.get("pk"), author=self.request.user)
+
+
+class ProductDoesNotExistWarningView(UserLoginRequiredMixin, TemplateView):
+    template_name = "products\\product-does-not-exist.html"
+

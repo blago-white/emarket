@@ -75,7 +75,7 @@ def invert_sorting(sorting: str) -> str:
 def round_(number: float, round_factor: int):
     try:
         return round(number=float(number), ndigits=int(round_factor))
-    except:
+    except Exception as e:
         return number
 
 

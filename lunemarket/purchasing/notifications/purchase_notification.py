@@ -14,14 +14,14 @@ def notify_about_purchase(purchaser: User, owner: User, product: Phones) -> None
     _add_purchase_notification_for_owner(purchaser=purchaser,
                                          owner=owner,
                                          product=product)
-    _add_purchase_notification_for_purchaser(purchaser=purchaser, product=product)
+    _add_purchase_notification_for_purchaser(purchaser=purchaser, owner=owner, product=product)
     _send_purchase_info_email(user=purchaser, product=product)
 
 
-def _add_purchase_notification_for_purchaser(purchaser: User, product: Phones) -> None:
-    notification_text = PURCHASE_MESSAGE_FOR_PURCHASER_TEMPLATE.format(username=purchaser.username,
+def _add_purchase_notification_for_purchaser(purchaser: User, owner: User, product: Phones) -> None:
+    notification_text = PURCHASE_MESSAGE_FOR_PURCHASER_TEMPLATE.format(username=owner.username,
                                                                        productname=dashes_to_spaces(product.title),
-                                                                       usermail=purchaser.email,
+                                                                       usermail=owner.email,
                                                                        price=product.price)
     notification = Notifications(recipient=purchaser, text=notification_text, theme="inf")
     try_save_notification(notification=notification)
@@ -32,6 +32,7 @@ def _add_purchase_notification_for_owner(purchaser: User, owner: User, product: 
                                                                    productname=dashes_to_spaces(product.title),
                                                                    usermail=purchaser.email,
                                                                    price=product.price)
+
     notification = Notifications(recipient=owner, sender=purchaser, text=notification_text, theme="pur")
     try_save_notification(notification=notification)
 

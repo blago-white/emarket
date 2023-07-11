@@ -1,32 +1,31 @@
 version: '3.11'
 
 services:
-  lunemarketdb:
+  emarketdb:
     restart: always
     image: postgres
-    container_name: lunemarketdb
+    container_name: emarketdb
     volumes:
-      - ~/.pg/pg_data/lunemarketdb:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     env_file:
       - .env
   web:
-    build:
-      dockerfile: Dockerfile
-      context: .
+    build: .
     container_name: web
-    command: python lunemarket/lunemarket/manage.py runserver 0.0.0.0:8000
+    command: /bin/sh /emarket/startdjango.sh
     volumes:
-      - static_volume:/lunemarket/static
-      - media_volume:/lunemarket/media
+      - static_volume:/emarket/emarket/static
+      - media_volume:/emarket/emarket/media
     ports:
       - "8000:8000"
     depends_on:
-      - lunemarketdb
+      - emarketdb
     env_file:
       - .env
 
 volumes:
   static_volume:
   media_volume:
+  postgres_data:

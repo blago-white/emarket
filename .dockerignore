@@ -1,3 +1,8 @@
 .idea
+.coverage
 
 htmlcov
+
+migrations/
+
+venv

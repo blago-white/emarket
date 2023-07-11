@@ -1,0 +1,65 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css\users\register.css' %}" type="text/css" xmlns="http://www.w3.org/1999/html">
+{% endblock %}
+
+{% block title %}
+    sign up
+{% endblock %}
+
+{% block header %}
+    {% include 'users/register-header.html' %}
+{% endblock %}
+
+{% load account socialaccount %}
+{% load i18n %}
+
+
+{% block rootcontent %}
+<div class="form">
+    <form method="post" class="register-form" id="floated-element">
+        {% get_providers as socialaccount_providers %}
+        <div style="width: 100%;text-align: center;display: flex;justify-content: center;gap: .5em;">
+            <span style="font-size: 1.5em;font-family: sans-serif;font-weight: 700;">
+                SIGN<span style="color: rgb(205,92,92);border-radius: .2em;padding-inline: .1em;filter: saturate(0.8);">UP</span>
+            </span>
+            <span style="font-size: 1.5em;">|</span>
+            <div style="text-align: center;display: flex;gap: .75em;">
+                {% for provider in socialaccount_providers %}
+                    {% if provider.id == "openid" %}
+                        {% for brand in provider.get_brands %}
+                          <a title="{{brand.name}}"
+                             class="socialaccount_provider {{provider.id}} {{brand.id}}"
+                             href="{% provider_login_url provider.id openid=brand.openid_url process=process %}"
+                             >{{brand.name}}
+                          </a>
+                        {% endfor %}
+                    {% endif %}
+                        <a title="sign in with {{provider.name}}" class="socialaccount_provider {{provider.id}}"
+                           style="height: 100%;display: flex;align-items: center;"
+                           href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}">
+                              <img
+                                   src="{% if provider.name == 'VK' %}{% static 'img/users/vk-logo.png' %}{% elif provider.name == 'Google' %}{% static 'img/users/google-logo.png' %}{% endif %}"
+                                   class="provider-icon">
+                        </a>
+                {% endfor %}
+            </div>
+        </div>
+        {% csrf_token %}
+        {% for field_id, field in form|enumerate_ %}
+            <p class="data-input">
+                <label for="{{ field.id_for_label }}">{{ field.label|lower }}</label>
+                {{ field }}
+                {% include 'field-error.html' %}
+            </p>
+        {% endfor %}
+        <button type="submit" class="submit-button">Register</button>
+    </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript" src="{% static 'js\users\warns.js' %}"></script>
+{% endblock %}

@@ -159,6 +159,6 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 .idea/
 
-/lunemarket/media/categories/
+/emarket/media/categories/
 
-/lunemarket/media/cards/
+/emarket/media/cards/

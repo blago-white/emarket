@@ -1,0 +1,29 @@
+{% extends 'users/account.html' %}
+{% load static %}
+
+{% block head %}
+{% if current_section == "products" %}
+    <link rel="stylesheet" href="{% static 'css/users/account-cards.css' %}" type="text/css"
+          xmlns="http://www.w3.org/1999/html">
+{% endif %}
+<link rel="stylesheet" href="{% static 'css/users/confirm-window.css' %}" type="text/css"
+      xmlns="http://www.w3.org/1999/html">
+{% endblock %}
+
+{% block profile-content %}
+    <div class="user-cards"
+         style="{% if items|length < 4 %}{% if items|length > 0 %}grid-template-columns: repeat({{ items|length }}, 1fr);{% else %}grid-template-columns: repeat(1, 1fr);{% endif %}{% endif %}">
+    {% if items %}
+        {% for idx, item in items|enumerate_ %}
+            {% include 'users/account-product-card.html' %}
+        {% endfor %}
+    {% else %}
+        you have not published products
+    {% endif %}
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    {% include 'users/confirm-delete-card.html' %}
+    <script type="text/javascript" src="{% static 'js/users/confirm.js' %}"></script>
+{% endblock %}

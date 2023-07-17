@@ -21,7 +21,7 @@
                     {% for category in categoriesbatch %}
                     <a
                         class="category-card {% cycle 'frs' 'sec' 'thr' 'fou' 'fif' 'six' 'sev' 'eig' 'nin' %}-card bg"
-                        style="background: url('media/{{ category.photo }}');filter: grayscale(100%);"
+                        style="background: url('uploads/{{ category.photo }}');filter: grayscale(100%);"
                         onmouseover="onhover(this)"
                         onmouseout="onunhover(this)"
                         id="{{ category.title }}"

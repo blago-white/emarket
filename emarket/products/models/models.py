@@ -140,6 +140,7 @@ class Phone(_BaseProduct):
 
     def delete(self, using=None, keep_parents=False):
         products_with_current_category = Phone.objects.filter(category=self.category)
+        delete_photo(model=self)
 
         if products_with_current_category.count() == 1:
             self.category.delete()
@@ -147,7 +148,7 @@ class Phone(_BaseProduct):
             super(Phone, self).delete(using=using, keep_parents=keep_parents)
 
     class Meta:
-        db_table="products_phones"
+        db_table = "products_phones"
         verbose_name = "Phone"
         verbose_name_plural = "Phone"
         unique_together = ("title", "author", "price", "color", "stortage")

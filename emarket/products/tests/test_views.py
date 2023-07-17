@@ -4,9 +4,9 @@ from django.template.response import TemplateResponse
 from django.core.files.uploadedfile import SimpleUploadedFile
 
 from emarket.testsutils.tests_presets import (BaseSingleUserTestCase,
-                                                    BaseTwinUsersTestCase,
-                                                    TEST_CATEGORY_DEFAULT_FIELDS,
-                                                    TEST_PHONE_DEFAULT_FIELDS)
+                                              BaseTwinUsersTestCase,
+                                              TEST_CATEGORY_DEFAULT_FIELDS,
+                                              TEST_PHONE_DEFAULT_FIELDS)
 from emarket.testsutils import tests_utils
 
 from ..filters import dashes_to_spaces, spaces_to_dashes

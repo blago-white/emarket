@@ -55,6 +55,10 @@
             {% include 'users/change-profile-photo.html' %}
         </div>
         <div class="account-info-string profile-controls">
+            <a class="profile-control-button" href="{% url 'about-emarket' %}">
+                <img src="{% static 'img/users/about.png' %}"
+                     style="height: 1em;width: 1em;margin-bottom: .1em;filter: contrast(.7);margin-right: 0.1em;">about
+            </a>
             <a class="profile-control-button" href="{% url 'account_change_password' %}">
                 <img src="{% static 'img/users/password-icon.png' %}"
                      style="height: 1em;width: 1em;margin-bottom: .2em;filter: contrast(.75);">change password

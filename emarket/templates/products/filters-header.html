@@ -27,7 +27,7 @@
         <div class="filters-line">
             <a class="header-nav-button header-filters header-filter"
                id="change-order"
-               href="?page={{ page_obj.number }}{{ url_args_invert_sorting }}">
+               href="{% url 'category-products' category_name %}?page={{ page_obj.number }}{{ url_args_invert_sorting }}">
                 <img src="{% static 'img\products\ordering-icon.png' %}" class="ordering-icon">
             </a>
             <div class="header-nav-button header-filters header-filter price-interval"

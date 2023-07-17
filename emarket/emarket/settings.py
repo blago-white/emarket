@@ -23,9 +23,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
+
+HOST_NAME_WITHOUT_PORT = "http://127.0.0.1"
+HOST_NAME_WITH_PORT = HOST_NAME_WITHOUT_PORT + ":8000"
 
 # Application definition
 
@@ -116,6 +119,8 @@ AUTHENTICATION_BACKENDS = (
     "allauth.account.auth_backends.AuthenticationBackend",
 )
 
+CSRF_TRUSTED_ORIGINS = [HOST_NAME_WITH_PORT, HOST_NAME_WITHOUT_PORT]
+
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
@@ -130,14 +135,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATICFILES_DIRS = [
-    BASE_DIR / "static",
-]
-
 STATIC_URL = '/static/'
-# STATIC_ROOT = BASE_DIR / 'static'
-MEDIA_URL = 'media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+STATIC_ROOT = BASE_DIR / 'static'
+
+MEDIA_URL = '/uploads/'
+MEDIA_ROOT = '/emarket-statics/uploads/'
 
 
 # Default primary key field type
@@ -145,15 +147,18 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-
 LOGIN_REDIRECT_URL = "/"
 
 MAIN_PAGE_CATEGORIES_BATCH_SIZE = 9
 CATEGORY_PRODUCTS_BATCH_SIZE = 8
 
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
+DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL")
+EMAIL_HOST = "smtp.timeweb.ru"
+EMAIL_PORT = 25
+EMAIL_USE_TLS = True
 
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
@@ -164,9 +169,6 @@ ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_CONFIRM_EMAIL_ON_GET = True
 
 ACCOUNT_LOGIN_ON_PASSWORD_RESET = True
-
-EMAIL_HOST = "connect.smtp.bz"
-EMAIL_PORT = 2525
 
 ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 1
 

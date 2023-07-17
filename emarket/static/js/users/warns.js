@@ -1,37 +1,51 @@
-let clicked = false;
+let nowWarnWindowDisplayed = false;
+const warn_window_full_screen = document.getElementById("full-screen-warn-canvas");
 
 
 function ChangeVisibilityWarnClick(event) {
-    let warn_window;
-    const target_element_id = event.target.parentElement.id;
+    const targetElementId = event.target.parentElement.id;
 
-    warn_window = document.getElementById(
-        "warn-window-" + target_element_id
-    );
+    if (event.pointerType == "mouse") {
+        ChangeDisplaySmallErrorField(event, targetElementId)
+    } else {ChangeDisplayFullScreenErrorField(event, targetElementId)}
 
-    const target_opacity = clicked ? "0" : "1";
+    nowWarnWindowDisplayed = !nowWarnWindowDisplayed;
+}
+
+function ResetFullScreenWarnWindowDisplay (event) {
+    nowWarnWindowDisplayed = false;
+    ChangeDisplayFullScreenErrorField(event);
+}
+
+function ChangeDisplayFullScreenErrorField(event, targetElementId) {
+    warn_window_full_screen.classList.toggle("warn-canvas-hidden");
+    document.getElementById("canvas-content").innerHTML = document.getElementById("warn-text-" + targetElementId).innerHTML;
+}
+
+
+function ChangeDisplaySmallErrorField(event, targetElementId) {
+    warn_window = document.getElementById("warn-window-" + targetElementId);
+    const target_opacity = nowWarnWindowDisplayed ? "0" : "1";
+
     warn_window.animate({"opacity": target_opacity},
                         {duration: 200})
 
-    if (!clicked) {
+    if (!nowWarnWindowDisplayed) {
         warn_window.style.display = "unset";
         setTimeout(e => {
             warn_window.style.opacity = target_opacity;
         }, 200);
     }
 
-    else if (clicked) {
+    else if (nowWarnWindowDisplayed) {
         setTimeout(e => {
             warn_window.style.display = "none";
             warn_window.style.opacity = target_opacity;
         }, 200);
     }
-
-    clicked = !clicked;
 }
 
-
-function RegisterHandlers(elements) {
+function RegisterSmallErrorFieldsHandlers(elements) {
     for (warn in elements) {
         try {
             elements[warn].addEventListener("click", ChangeVisibilityWarnClick);
@@ -39,4 +53,6 @@ function RegisterHandlers(elements) {
     }
 }
 
-RegisterHandlers(document.getElementsByClassName("warnings"));
+RegisterSmallErrorFieldsHandlers(document.getElementsByClassName("warnings"));
+
+warn_window_full_screen.addEventListener("click", ResetFullScreenWarnWindowDisplay);

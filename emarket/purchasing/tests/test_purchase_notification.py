@@ -46,7 +46,7 @@ class PurchaseNotificationTestCase(BaseTwinUsersTestCase):
 
     def _create_test_product(self):
         self._test_product = tests_utils.create_test_product(test_user=self._test_owner,
-                                                            products_count=self._TEST_PRODUCT_COUNT)
+                                                             products_count=self._TEST_PRODUCT_COUNT)
 
     def _fill_messages_templates(self):
         message_template_content = {

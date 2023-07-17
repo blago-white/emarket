@@ -3,6 +3,7 @@
     height: 100%;
     text-align: center;
     display: grid;
+    align-items: center;
     justify-items: center;
     grid-template-columns: repeat(4, 1fr);
     grid-template-rows: repeat(2, 1fr);
@@ -21,14 +22,13 @@
     height: 100%;
     overflow: hidden;
     border: 0px;
-    box-shadow: 0px 0px 1em white;
+    box-shadow: 0.5em 0.5em 1em rgb(182 182 182 / 60%);
     transition: box-shadow .2s cubic-bezier(0.22, 0.61, 0.36, 1), transform .2s ease-in-out;
 }
 
 .card:hover {
     box-shadow: 0px 0px .5em black;
     background-color: black;
-    transform: scale(1.05);
     transition: box-shadow .2s cubic-bezier(0.22, 0.61, 0.36, 1), background-color .0s .2s;
 }
 
@@ -36,6 +36,7 @@
     height: 100%;
     width: auto;
     opacity: 1;
+    filter: saturate(0.7);
     transition: opacity .2s;
 }
 
@@ -43,7 +44,8 @@
     position: relative;
     display: flex;
     justify-content: center;
-    height: 100%;
+    height: 95%;
+    margin-block: 2.5%;
     align-items: center;
     align-items: baseline;
 }
@@ -174,6 +176,6 @@
     }
 
     .card {
-        height: 50vmin;
+        height: 50vmin!important;
     }
 }

@@ -3,7 +3,7 @@
 <form enctype="multipart/form-data" method="post" action="{% url 'change-account-field' %}" class="drop-photo-form">
     {% csrf_token %}
     {% if user.avatar.name %}
-    <img src="../../../media/{{ user.avatar.name }}" style="height: 1em;border-radius: .2em;">
+    <img src="../../../uploads/{{ user.avatar.name }}" style="height: 1em;border-radius: .2em;">
     {% elif user.socialaccount_set.all.0.get_avatar_url %}
     <img src="{{ user.socialaccount_set.all.0.get_avatar_url }}" style="height: 1em;border-radius: .2em;">
     {% endif %}

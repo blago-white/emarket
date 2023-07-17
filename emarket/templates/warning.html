@@ -19,11 +19,11 @@
 
 {% block rootcontent %}
 <div class="form">
-    <div class="register-form verification-info" style="overflow: hidden;" id="floated-element">
+    <div class="register-form verification-info" style="overflow: hidden;gap: 0em;" id="floated-element">
         <div
                 style="left: -30%;display: flex;justify-content: center;align-items: center;z-index: -1;">
-            <img src="{% static 'img/users/info.png' %}"
-                 style="position: fixed;left: -20%;height: 15em;width: 15em;opacity: .05;">
+            <img src="{% if custom_bg_img_path %}{% static custom_bg_img_path %}{% else %}{% static 'img/users/info.png' %}{% endif %}"
+                 style="position: fixed;left: -20%;height: 15em;width: 15em;opacity: {% if custom_bg_img_path %}.2;filter: saturate(.3){% else %}.05;{% endif %}">
         </div>
         <div style="width: 100%;text-align: center;display: flex;flex-direction: column;justify-content: center;gap: .5em;">
             <div style="display: flex;align-items: center;justify-content: center;gap: .5em;">

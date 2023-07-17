@@ -16,16 +16,23 @@ services:
     container_name: web
     command: /bin/sh /emarket/startdjango.sh
     volumes:
-      - static_volume:/emarket/emarket/static
-      - media_volume:/emarket/emarket/media
-    ports:
-      - "8000:8000"
+      - ./emarketdb_dump.json:/emarket/emarketdb_dump.json
+    expose:
+      - 8000
     depends_on:
       - emarketdb
     env_file:
       - .env
+  nginx:
+    container_name: nginx
+    build: ./nginx
+    volumes:
+      - ./emarket/static:/emarket-statics/static
+      - ./emarket/media:/emarket-statics/uploads
+    ports:
+      - "8000:80"
+    depends_on:
+      - web
 
 volumes:
-  static_volume:
-  media_volume:
   postgres_data:

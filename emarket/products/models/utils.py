@@ -1,12 +1,18 @@
 import hashlib
 import random
+import os
 
 from django.db import models
 from django.db.models import F
+from django.conf import settings
 
 from .. import filters
 
-__all__ = ["get_image_path", "decrease_phones_count", "delete_photo", "increment_product_views"]
+__all__ = ["get_image_path",
+           "decrease_phones_count",
+           "delete_photo",
+           "increment_product_views",
+           "convert_category_filters_to_product_filters"]
 
 
 def get_image_path(self: models.Model, filename: str) -> str:
@@ -30,7 +36,18 @@ def increment_product_views(phone: models.Model) -> None:
 
 
 def delete_photo(model: models.Model):
+    model_photo_folder_path: str = settings.MEDIA_ROOT + "/".join(model.photo.name.split("/")[:-1])
+
     model.photo.delete(save=True)
+
+    _delete_photo_dir_if_empty(path=model_photo_folder_path)
+
+
+def _delete_photo_dir_if_empty(path: str) -> None:
+    try:
+        os.rmdir(path)
+    except OSError:
+        pass
 
 
 def convert_category_filters_to_product_filters(query_filters: dict) -> None:

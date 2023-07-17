@@ -1,0 +1,37 @@
+{% extends 'warning.html' %}
+
+{% block additional-head %}
+<style>
+    .highlighted {
+        color: #904c4c;
+    }
+    a {
+        text-decoration: none;
+        color: rgb(15, 15, 15);
+    }
+</style>
+{% endblock %}
+
+{% block warn-title %}
+ABOUT
+{% endblock %}
+
+{% block warn-title-highlighted %}
+EMARKET
+{% endblock %}
+
+{% block warn-info %}
+<span class="highlighted" style="font-size: 1.5em;line-height: 0em;">T</span>he e-market is my test
+<span class="highlighted">online store</span> written
+in <span class="highlighted">django</span>, in its creation I used <span class="highlighted">lot of technologies and solutions</span>
+unfamiliar to me, but although the development took me a lot of time, <span class="highlighted">I am completely
+    satisfied</span> with the work done. More detailed information on the links
+{% endblock %}
+{% block additional-warn-info %}
+<div style="font-size: .8em;display: grid;background: rgb(40, 40, 40, .1);border-radius: 1em;box-shadow: inset 0em 0em 0.5em rgb(40, 40, 40, .54);padding-block: 0.2em;">
+    <span>git: <a href="https://github.com/blago-white/emarket">https://github.com/blago-white/emarket</a></span>
+    <span>vk: <a href="https://vk.com/l0ginoff">https://vk.com/l0ginoff</a></span>
+    <span>tg: <a href="https://t.me/VictorMerinov">https://t.me/VictorMerinov</a></span>
+    <span>gmail: <span style="color: black;">bogdanloginov31@gmail.com</span></span>
+</div>
+{% endblock %}

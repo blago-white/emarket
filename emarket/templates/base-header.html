@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block head %}
-    <link href="{% static 'css/products/base-header.css' %}" type="text/css">
+    <link href="{% static 'css/base-header.css' %}" type="text/css">
 {% endblock %}
 
 {% block navigation %}
@@ -11,7 +11,8 @@
             <img src="{% static 'img/account-icon.png' %}" class="button-icon">account
         </a>
     {% else %}
-        <a class="header-nav-button" href="{% url 'register' %}">registrate</a>
+        <a class="header-nav-button" href="{% url 'register' %}">
+            <img src="{% static 'img/signup.png' %}" class="button-icon">registrate</a>
     {% endif %}
     <a class="header-nav-button" href="{% url 'home' %}">
         <img src="{% static 'img/home.png' %}" class="button-icon"> home

@@ -14,7 +14,7 @@ from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect, HttpRequest
 from django.middleware.csrf import get_token
 from django.urls import reverse_lazy
-from django.views.generic import DetailView, ListView, DeleteView, UpdateView, RedirectView
+from django.views.generic import DetailView, ListView, DeleteView, UpdateView, RedirectView, TemplateView
 from django.db.models import F, Exists
 from products.models.models import Phone
 from .mixins import UserLoginRequiredMixin
@@ -38,7 +38,8 @@ __all__ = ["RegisterUserView",
            "ResetUserPasswordView",
            "ResetUserPasswordDoneView",
            "ResetUserPasswordFromKeyView",
-           "RedirectToAccountInfoView"]
+           "RedirectToAccountInfoView",
+           "AboutInfoView"]
 
 
 class BaseAccountView:
@@ -73,6 +74,17 @@ class BaseAccountView:
         raise ValueError("Not correct section name")
 
 
+class AboutInfoView(TemplateView):
+    template_name = "about.html"
+
+    def get_context_data(self, **kwargs):
+        current_context = super(AboutInfoView, self).get_context_data(**kwargs)
+
+        current_context.update({"custom_bg_img_path": "img/emarket-icon.png"})
+
+        return current_context
+
+
 class RegisterUserView(SignupView):
     form_class = RegisterUserForm
     template_name = "users/register.html"
@@ -83,7 +95,7 @@ class RegisterUserView(SignupView):
 
         try:
             self._try_create_empty_user_profile()
-        except Exception as e:
+        except:
             return super().form_invalid(form=form)
 
         return http_response
@@ -325,6 +337,7 @@ class ResetUserPasswordFromKeyView(PasswordResetFromKeyView):
     template_name = "users/change-password.html"
 
     def get_context_data(self, **kwargs):
+        print("reset key")
         current_context = super(ResetUserPasswordFromKeyView, self).get_context_data(**kwargs)
         try:
             del current_context["form"].fields["password1"].widget.attrs["placeholder"]
@@ -351,7 +364,7 @@ def send_reset_password_email(user: User):
     request = HttpRequest()
     request.method = 'POST'
     request.user = user
-    request.META['HTTP_HOST'] = '127.0.0.1:8000'
+    request.META['HTTP_HOST'] = django.conf.settings.HOST_NAME_WITH_PORT
 
     request.POST = {
         'email': user.email,

@@ -173,7 +173,23 @@
     .button-buy-product-form {
         transform: none;
     }
+    .user-card-info {
+        font-size: .8em;
+    }
     .user-card-price {
         transform: none;
+        font-size: .8em;
     }
+    .user-card-bg {
+        grid-column-start: -6;
+        opacity: .8;
+        filter: contrast(0.8);
+    }
+    .user-card-delete {
+        transform: none;
+        width: 3.5em;
+        grid-column-start: auto;
+        font-size: .8em;
+    }
+}
 }

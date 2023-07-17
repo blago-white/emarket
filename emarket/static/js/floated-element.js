@@ -4,6 +4,8 @@ const motionMatchMedia = window.matchMedia('(prefers-reduced-motion)');
 const threshold_element = 4;
 
 function handleHoverContentCard(e) {
+    if (window.innerWidth < 1100) {return}
+
     const { clientX, clientY, currentTarget } = e;
     const { clientWidth, clientHeight, offsetLeft, offsetTop } = currentTarget;
 

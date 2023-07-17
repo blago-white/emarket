@@ -8,6 +8,8 @@ from products.models import utils
 
 
 class ModelsUtilitsTestCase(BaseSingleUserTestCase):
+    _test_product: models.Phone
+
     def setUp(self) -> None:
         super().setUp()
         self._test_product = tests_utils.create_test_product(test_user=self.test_user)

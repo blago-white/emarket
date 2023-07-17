@@ -1,3 +1,4 @@
+from django.db import IntegrityError
 from django.urls import reverse_lazy
 from django.views.generic import DeleteView, ListView, CreateView
 from django.contrib.auth.models import User
@@ -11,7 +12,7 @@ from .models import ShoppingBasket
 from .filters import *
 from . import *
 
-__all__ = ["ShoppingBasketView", "DeleteProductFromBucketView", "BuyProductView", "AddProductToBasketView"]
+__all__ = ["ShoppingBasketView", "DeleteProductFromBasketView", "BuyProductView", "AddProductToBasketView"]
 
 
 class ShoppingBasketView(UserLoginRequiredMixin, BaseAccountView, ListView):
@@ -28,11 +29,10 @@ class ShoppingBasketView(UserLoginRequiredMixin, BaseAccountView, ListView):
         return current_context
 
     def get_queryset(self):
-        user = self.request.user
-        return self.model.objects.filter(user=user)
+        return self.model.objects.filter(user=self.request.user)
 
 
-class DeleteProductFromBucketView(UserLoginRequiredMixin, DeleteView):
+class DeleteProductFromBasketView(UserLoginRequiredMixin, DeleteView):
     model = ShoppingBasket
     success_url = reverse_lazy("basket")
 
@@ -52,10 +52,13 @@ class AddProductToBasketView(UserLoginRequiredMixin, CreateView):
         form.instance.user = self.request.user
         form.instance.product = Phone.objects.get(pk=self.kwargs.get("productid"))
 
-        if form.instance.product.author.id == self.request.user.id:
-            return self.form_invalid(form=form)
+        if form.instance.product.author.id != self.request.user.id:
+            try:
+                return super().form_valid(form=form)
+            except IntegrityError:
+                pass
 
-        return super().form_valid(form=form)
+        return self.form_invalid(form=form)
 
 
 class BuyProductView(UserLoginRequiredMixin, DeleteView):
@@ -77,6 +80,8 @@ class BuyProductView(UserLoginRequiredMixin, DeleteView):
         if not int(self._product_data.products_count):
             return self._get_product_count_null_redirect()
 
+        decrease_phones_count(phone=self._product_data)
+
         purchase_notification.notify_about_purchase(purchaser=self.request.user,
                                                     owner=self._product_data.author,
                                                     product=self._product_data)
@@ -85,10 +90,6 @@ class BuyProductView(UserLoginRequiredMixin, DeleteView):
             decrease_phones_count(phone=self._product_data)
             product_is_over_notification.notify_product_is_over(recipient=self._product_data.author,
                                                                 product=self._product_data)
-
-            return super().form_valid(form=form)
-
-        decrease_phones_count(phone=self._product_data)
 
         return super().form_valid(form=form)
 

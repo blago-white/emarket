@@ -18,7 +18,7 @@
 
 {% block profile-content %}
     {% if products %}
-        <div class="user-cards {% if items|length < 4 %}one-row{% endif %} many-items">
+        <div class="user-cards">
         {% for product in products %}
             <div class="account-info-string user-card-info"
                style="color: black;text-decoration: none;"

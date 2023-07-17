@@ -1,9 +1,9 @@
 <a class="card"
-   style="{% if items.count < 4 %}height: 50%;{% else %}height: 50%;{% endif %}{% if items.count == 1 %}width: 25%;{% endif %}"
+   style="{% if items.count < 5 %}height: 50%;{% else %}height: 100%;{% endif %}{% if items.count == 1 %}width: 25%;{% endif %}"
    href="{% url 'product-card' item.id %}">
     <div class="card-hover-field" id="{{ idx }}"></div>
     <div class="card-preview-wrapper">
-        <img src="../../../media/{{ item.photo }}" class="card-preview">
+        <img src="../../../uploads/{{ item.photo }}" class="card-preview">
     </div>
     <div class="card-content">
         <div class="card-specs">

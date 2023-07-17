@@ -58,6 +58,22 @@ class UserProfile(models.Model):
     def __str__(self):
         return f"{self.user.username}'s profile"
 
+    def clean(self):
+        avatar: JpegImageFile = self.cleaned_data.get('avatar', None)
+
+        try:
+            photo_width, photo_height = avatar.image.size
+        except:
+            return self.avatar
+
+        if photo_width < 300 or photo_height < 300:
+            raise ValidationError("Photo dimensions are too small (minimum: width - 300 height - 500)")
+
+        elif photo_width > 4500 or photo_height > 5000:
+            raise ValidationError("Photo dimensions are too large (maximum: width - 4500 height - 5000)")
+
+        return self.avatar
+
     class Meta:
         db_table = "users_profiles"
         verbose_name = "UserProfile"

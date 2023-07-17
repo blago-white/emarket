@@ -14,6 +14,6 @@ class ShoppingBasket(models.Model):
 
     class Meta:
         db_table = "purchasing_shopping_baskets"
-        verbose_name = "ShoppingBasket"
-        verbose_name_plural = "ShoppingBasket"
+        verbose_name = "Shopping Basket"
+        verbose_name_plural = "Shopping Baskets"
         unique_together = ("user", "product")

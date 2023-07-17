@@ -11,7 +11,7 @@ from emarket.testsutils import tests_utils
 from products.models.models import Phone
 from users.models.models import Notifications
 
-from ..views import ShoppingBasketView, DeleteProductFromBucketView, AddProductToBasketView, BuyProductView
+from ..views import ShoppingBasketView, DeleteProductFromBasketView, AddProductToBasketView, BuyProductView
 from ..models import ShoppingBasket
 
 from . import *
@@ -59,7 +59,7 @@ class ShoppingBasketViewTestCase(_BaseShoppingBasketViewTestCase):
         self.assertEqual(basket_view_response.context_data["products"][0].user, self.test_user)
 
 
-class DeleteProductFromBucketViewTestCase(_BaseShoppingBasketViewTestCase):
+class DeleteProductFromBasketViewTestCase(_BaseShoppingBasketViewTestCase):
     def test_get_object(self):
         self.add_test_product_to_basket(target_user=self.test_user)
 
@@ -69,7 +69,7 @@ class DeleteProductFromBucketViewTestCase(_BaseShoppingBasketViewTestCase):
                                                                )
                                                   )
 
-        DeleteProductFromBucketView.as_view()(request, pk=self.test_product_basket.id)
+        DeleteProductFromBasketView.as_view()(request, pk=self.test_product_basket.id)
 
         with self.assertRaises(ShoppingBasket.DoesNotExist):
             ShoppingBasket.objects.get(product=self.test_product)

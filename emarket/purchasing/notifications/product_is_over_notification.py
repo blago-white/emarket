@@ -19,5 +19,5 @@ def notify_product_is_over(recipient: User, product: Phone) -> None:
 
 
 def _send_product_is_over_email(user: User, productname: Phone):
-    message = PRODUCT_IS_OVER_WARNING_MESSAGE_TEMPLATE.format(productname=productname)
+    message = PRODUCT_IS_OVER_WARNING_MESSAGE_HTML_TEMPLATE.format(productname=productname)
     send_notification(message=message, recipient_mail=user.email)

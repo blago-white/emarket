@@ -37,5 +37,5 @@ def _add_purchase_notification_for_owner(purchaser: User, owner: User, product: 
 
 
 def _send_purchase_info_email(user: User, product: Phone) -> None:
-    email_purchase = EmailPurchaseNotification(purchaser_name=user.username, purchaser_mail=user.email)
+    email_purchase = EmailPurchaseNotification(purchaser=user)
     email_purchase.send_notification(product=product)

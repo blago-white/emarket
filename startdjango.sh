@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 
-python emarket/manage.py migrate --noinput
+cd emarket
 
-python emarket/manage.py shell < "delete_content_types.py"
+python manage.py makemigrations
+python manage.py migrate --noinput
 
-python emarket/manage.py loaddata dumped_data.json
+python loaddump.py
 
-python emarket/manage.py runserver 0.0.0.0:8000 --insecure
+gunicorn emarket.wsgi:application --bind 0.0.0.0:8000

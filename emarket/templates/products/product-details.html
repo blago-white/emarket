@@ -21,9 +21,10 @@
 
 {% block rootcontent %}
     <div class="page-bg">
-            <img src="../../../media/{{ item_info.photo.name }}" class="card-photo">
+            <img src="../../../uploads/{{ item_info.photo.name }}" class="card-photo">
             <div class="card-info card-info-shrink" id="floated-element">
                 <div class="prod-info prod-info-shrink">
+                    {% if user.is_authenticated %}
                     <a class="top-card-info-marker"
                        href="{% url 'account-info' item_info.author.id %}"
                        title="owner of this product is user {{ item_info.author }}">
@@ -33,7 +34,9 @@
                                  style="height: 1.5em;filter: contrast(.5);margin-right: 0.75em;margin-bottom: 0.3em;">
                         </span>
                     </a>
-                    <header class="card-title">
+                    {% endif %}
+                    <header class="card-title"
+                            style="{% if item_info.readable_title|length < 10 and not viewer_is_author %}font-size: 1.3em;{% elif item_info.readable_title|length < 12 %}font-size: 1.1em;{% endif %}">
                         <span class="card-product-title">
                             <span
                                 style="background-color: {{ item_info.color }};box-shadow: 0px 0px .5em {{ item_info.color }}"
@@ -66,9 +69,11 @@
                                 add to basket
                         </button>
                         {% elif not user.is_authenticated %}
-                            <button type="submit" class="button-save small-text">
+                            <a href="{% url 'login' %}"
+                               class="button-save small-text"
+                            style="display: flex;align-items: center;justify-content: center;text-decoration: none;">
                                 login if you like this
-                            </button>
+                            </a>
                         {% endif %}
                     {% else %}
                         <div class="price">{{views}} views</div>

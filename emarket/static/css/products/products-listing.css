@@ -148,12 +148,13 @@
         transform: translate(50%, 0px);
         visibility: visible;
         width: 40%;
-        left: 39.9%;
+        left: 40%;
         justify-content: space-between;
     }
 
     .card-preview-wrapper {
         width: 60%;
+        padding-block: 1.5%;
     }
 
     .products-count{
@@ -172,7 +173,7 @@
         grid-template-columns: repeat(1, 1fr)!important;
         height: auto;
         padding-inline: 1em;
-        padding-top: 4em;
+        padding-top: 3em;
     }
 
     .card {

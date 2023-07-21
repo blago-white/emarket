@@ -49,10 +49,6 @@
     text-align: center;
 }
 
-.account-info-string:hover {
-    text-shadow: 0px 0px .1em white;
-}
-
 .account-sections {
     width: 100%;
     display: grid;
@@ -114,10 +110,6 @@
     transition: transform .2s ease;
 }
 
-.user-card-info:hover {
-    text-shadow: none;
-}
-
 .section {
     text-align: center;
     color: white;
@@ -147,26 +139,40 @@
     box-shadow: 0px 0px .5em white;
 }
 
-.user-card-info:hover .user-card-price {
-    transform: translateX(0%);
-}
+@media (hover: hover) {
+    .user-card-info:hover .user-card-price {
+        transform: translateX(0%);
+    }
 
-.user-card-info:hover .user-card-title {
-    transform: translateY(0%);
-}
+    .user-card-info:hover .user-card-title {
+        transform: translateY(0%);
+    }
 
-.section:hover .section-text {
-    transform: translateY(-30%);
-}
+    .section:hover .section-text {
+        transform: translateY(-30%);
+    }
 
-.section:hover .section-underline {
-    width: 5vw;
-    box-shadow: 0px 0px 1em white, 0px -.2em .5em white;
-}
+    .section:hover .section-underline {
+        width: 5vw;
+        box-shadow: 0px 0px 1em white, 0px -.2em .5em white;
+    }
 
-.section-underline:hover {
-    width: 80%;
-    box-shadow: 0px 0px 1em white, 0px -.2em .5em white;
+    .section-underline:hover {
+        width: 80%;
+        box-shadow: 0px 0px 1em white, 0px -.2em .5em white;
+    }
+
+    .user-card-info:hover {
+        text-shadow: none;
+    }
+
+    .account-info-string:hover {
+        text-shadow: 0px 0px .1em white;
+    }
+
+    .profile-avatar:hover {
+        transform: scale(1.05);
+    }
 }
 
 @media (aspect-ratio < 1 / 1) {

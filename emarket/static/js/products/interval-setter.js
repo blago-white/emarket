@@ -14,3 +14,5 @@ const input_min = document.getElementById("min-interval-input");
 const input_max = document.getElementById("max-interval-input");
 input_min.addEventListener("click", SetRange);
 input_max.addEventListener("click", SetRange);
+input_min.addEventListener("touch", SetRange);
+input_max.addEventListener("touch", SetRange);

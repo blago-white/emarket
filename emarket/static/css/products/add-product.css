@@ -59,6 +59,7 @@ input[name="products_count"] {
     padding-inline: .2em;
     border-radius: .2em;
     cursor: pointer;
+    overflow-x: scroll;
     transition: all .2s ease;
 }
 

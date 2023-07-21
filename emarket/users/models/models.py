@@ -59,7 +59,7 @@ class UserProfile(models.Model):
         return f"{self.user.username}'s profile"
 
     def clean(self):
-        avatar: JpegImageFile = self.cleaned_data.get('avatar', None)
+        avatar: JpegImageFile = self.avatar
 
         try:
             photo_width, photo_height = avatar.image.size

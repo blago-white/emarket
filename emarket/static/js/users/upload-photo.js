@@ -8,7 +8,7 @@ function uploadNewPhoto(event) {
     photoSaveButton.style.display = "flex";
     photoSaveButton.style.display = "flex";
 
-    changePhotoLabel.innerHTML = "uploaded " + "<span style='font-weight: 100;'>" + event.target.files[0].name + "</span>";
+    changePhotoLabel.innerHTML = "uploaded " + "<span style='font-weight: 100;max-width: 14ch;display: inline-flex;overflow: hidden;'>" + event.target.files[0].name + "</span>";
 
     dropPhotoButtonImg.style.width = "0.6em";
     dropPhotoButtonImg.style.height = "0.6em";

@@ -160,35 +160,36 @@
     padding: 0px;
 }
 
-.user-card-info:hover .user-card-price {
-    transform: translateY(150%);
-}
+@media (hover: hover) {
+    .user-card-info:hover .user-card-price {
+        transform: translateY(150%);
+    }
 
-.user-card-info:hover .static-price {
-    transform: none;
-}
+    .user-card-info:hover .static-price {
+        transform: none;
+    }
 
-.user-card-info:hover .user-card-title {
-    transform: translateY(50%);
-}
+    .user-card-info:hover .user-card-title {
+        transform: translateY(50%);
+    }
 
-.user-card-info:hover .user-card-bg {
-/*    filter: blur(.2em) contrast(75%); */
-      filter: blur(.5em) saturate(0.6);
-}
+    .user-card-info:hover .user-card-bg {
+          filter: blur(.5em) saturate(0.6);
+    }
 
-.edit-card:hover {
-    color: rgb(176, 196, 222, .75);
-    text-shadow: 0px 0px .5em rgb(176, 196, 222);
-}
+    .edit-card:hover {
+        color: rgb(176, 196, 222, .75);
+        text-shadow: 0px 0px .5em rgb(176, 196, 222);
+    }
 
-.delete-card:hover {
-    color: rgb(255, 109, 106, .75);
-    text-shadow: 0px 0px .5em rgb(255, 109, 106);
-}
+    .delete-card:hover {
+        color: rgb(255, 109, 106, .75);
+        text-shadow: 0px 0px .5em rgb(255, 109, 106);
+    }
 
-.user-card-info:hover .card-controls {
-    box-shadow: 0px 0px .5em white;
+    .user-card-info:hover .card-controls {
+        box-shadow: 0px 0px .5em white;
+    }
 }
 
 @media(aspect-ratio<=4/3) {

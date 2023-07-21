@@ -91,7 +91,7 @@
 }
 
 .page-indicator-wrapper {
-    position: absolute;
+    position: fixed;
     display: flex;
     justify-content: center;
     width: 0px;

@@ -23,12 +23,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ["*"]
 
-HOST_NAME_WITHOUT_PORT = "http://127.0.0.1"
-HOST_NAME_WITH_PORT = HOST_NAME_WITHOUT_PORT + ":8000"
+HOST_NAME_WITHOUT_PORT = "http://е-маркет.рф"
 
 # Application definition
 
@@ -119,7 +118,7 @@ AUTHENTICATION_BACKENDS = (
     "allauth.account.auth_backends.AuthenticationBackend",
 )
 
-CSRF_TRUSTED_ORIGINS = [HOST_NAME_WITH_PORT, HOST_NAME_WITHOUT_PORT]
+CSRF_TRUSTED_ORIGINS = [HOST_NAME_WITH_PORT]
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/

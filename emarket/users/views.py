@@ -364,7 +364,7 @@ def send_reset_password_email(user: User):
     request = HttpRequest()
     request.method = 'POST'
     request.user = user
-    request.META['HTTP_HOST'] = django.conf.settings.HOST_NAME_WITH_PORT
+    request.META['HTTP_HOST'] = django.conf.settings.HOST_NAME_WITHOUT_PORT
 
     request.POST = {
         'email': user.email,

@@ -3,14 +3,10 @@
 .gitignore
 .git
 .idea
+.env
 
 htmlcov
 venv
-
-**/.coverage
-**/testsutils/
-**/tests/
-
 
 emarket/emarket/testsettings.py
 emarket/media
@@ -18,8 +14,10 @@ emarket/static
 emarket/.coverage
 
 LICENSE
-
 README.md
 
+**/.coverage
+**/testsutils/
+**/tests/
 **/*.pyc
 **/__pycache__

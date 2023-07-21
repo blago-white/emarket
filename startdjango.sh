@@ -7,4 +7,4 @@ python manage.py migrate --noinput
 
 python loaddump.py
 
-gunicorn emarket.wsgi:application --bind 0.0.0.0:8000
+gunicorn emarket.wsgi:application --bind 0.0.0.0 --workers 2

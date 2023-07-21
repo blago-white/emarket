@@ -13,24 +13,25 @@ services:
       - .env
   web:
     build: .
-    container_name: web
+    container_name: emarketweb
     command: /bin/sh /emarket/startdjango.sh
     volumes:
       - ./emarketdb_dump.json:/emarket/emarketdb_dump.json
+      - ./emarket/media:/emarket-statics/uploads
     expose:
-      - 8000
+      - 80
     depends_on:
       - emarketdb
     env_file:
       - .env
   nginx:
-    container_name: nginx
+    container_name: emarketnginx
     build: ./nginx
     volumes:
       - ./emarket/static:/emarket-statics/static
       - ./emarket/media:/emarket-statics/uploads
     ports:
-      - "8000:80"
+      - "80:80"
     depends_on:
       - web
 

@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.contrib.auth.models import User
-from django.core.mail import EmailMessage, send_mail
+from django.core.mail import send_mail
 from products.models.models import Phone
 from . import PURCHASE_MESSAGE_FOR_OWNER_HTML_TEMPLATE, PURCHASE_MESSAGE_FOR_PURCHASER_HTML_TEMPLATE
 
@@ -50,5 +50,5 @@ def send_notification(message: str, recipient_mail: str, subject: str = "info") 
     send_mail(subject=subject,
               recipient_list=[recipient_mail],
               from_email=settings.DEFAULT_FROM_EMAIL,
-              message="test",
+              message=str(),
               html_message=message)

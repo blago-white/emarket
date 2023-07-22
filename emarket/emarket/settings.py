@@ -27,7 +27,7 @@ DEBUG = False
 
 ALLOWED_HOSTS = ["*"]
 
-HOST_NAME_WITHOUT_PORT = "http://е-маркет.рф"
+HOST_NAME = "https://xn----8sbncyk3as.xn--p1ai"
 
 # Application definition
 
@@ -118,7 +118,7 @@ AUTHENTICATION_BACKENDS = (
     "allauth.account.auth_backends.AuthenticationBackend",
 )
 
-CSRF_TRUSTED_ORIGINS = [HOST_NAME_WITH_PORT]
+CSRF_TRUSTED_ORIGINS = [HOST_NAME]
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/

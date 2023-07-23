@@ -30,8 +30,8 @@ services:
     volumes:
       - ./emarket/static:/emarket-statics/static
       - ./emarket/media:/emarket-statics/uploads
-      - /etc/letsencrypt/live/xn----8sbncyk3as.xn--p1ai/fullchain.pem:/etc/letsencrypt/live/xn----8sbncyk3as.xn--p1a>
-      - /etc/letsencrypt/live/xn----8sbncyk3as.xn--p1ai/privkey.pem:/etc/letsencrypt/live/xn----8sbncyk3as.xn--p1ai/>
+      - /etc/letsencrypt/live/xn----8sbncyk3as.xn--p1ai/fullchain.pem:/etc/letsencrypt/live/xn----8sbncyk3as.xn--p1ai/fullchain.pem
+      - /etc/letsencrypt/live/xn----8sbncyk3as.xn--p1ai/privkey.pem:/etc/letsencrypt/live/xn----8sbncyk3as.xn--p1ai/privkey.pem
     ports:
       - "443:443"
     depends_on:

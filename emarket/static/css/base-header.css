@@ -89,11 +89,12 @@
 }
 
 
-@media(aspect-ratio < 12/10) {
+@media(aspect-ratio < 14/10) {
     .main-header {
         border-radius: 0px!important;
         width: 100%!important;
         top: 0px!important;
+        background: rgb(180, 180, 180, .5);
     }
     .header-logo {
         display: none;

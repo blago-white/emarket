@@ -30,6 +30,7 @@
     background: lightcoral;
     color: white;
     border: 0px;
+    font-weight: 900;
     transition: all .2s ease;
 }
 
@@ -108,7 +109,7 @@
     font-size: .75em;
 }
 
-@media (aspect-ratio<52/100) {
+@media (max-width: 540px) {
     .notification-title {
         flex-direction: column;
     }

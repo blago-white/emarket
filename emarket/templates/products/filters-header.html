@@ -23,7 +23,7 @@
 {% endblock %}
 
 {% block extension-window %}
-    <div class="filters" style="{% if filters and items %}display: flex;{% else %}display: none;{% endif %}">
+    <div class="filters" style="{% if filters %}display: flex;{% else %}display: none;{% endif %}">
         <div class="filters-line">
             <a class="header-nav-button header-filters header-filter"
                id="change-order"
@@ -44,11 +44,12 @@
                        step="1"
                        value="{{ price_lower_bound  }}"
                        id="min-interval-input">
-                <datalist id="values-min">
+                <datalist id="values-min" class="prices-datalist">
                     {% for price_stage in price_upper_bound|get_prices_range %}
                         <option value="{{ price_stage }}" label="{{ price_stage }}"></option>
                     {% endfor %}
                 </datalist>
+                <div class="prices-value" id="input-price-value-min">test</div>
             </div>
             <div class="header-nav-button header-filters header-filter price-interval"
                  title="price should not be more than {{ price_upper_bound }}$"
@@ -65,11 +66,12 @@
                        step="1"
                        value="{{ price_upper_bound }}"
                        id="max-interval-input">
-                <datalist id="values-max">
+                <datalist id="values-max" class="prices-datalist">
                     {% for price_stage in max_item_price|get_prices_range:price_lower_bound %}
                         <option value="{{ price_stage }}" label="{{ price_stage }}"></option>
                     {% endfor %}
                 </datalist>
+                <div class="prices-value" id="input-price-value-max"></div>
             </div>
         </div>
         <div class="filters-line">

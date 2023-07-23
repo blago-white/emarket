@@ -72,7 +72,7 @@
 }
 
 .color-choice {
-    width: 3.25em;
+    width: 100%;
 }
 
 .choice:hover {
@@ -154,3 +154,17 @@ option {
     padding: 0;
     width: min-content;
 }
+
+.prices-value {
+    display: none;
+}
+
+@media (max-width: 730px) {
+    .prices-datalist {
+        display: none;
+    }
+    .prices-value {
+        display: flex;
+    }
+}
+

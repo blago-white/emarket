@@ -1,3 +1,15 @@
+const inputMin = document.getElementById("min-interval-input");
+const inputMax = document.getElementById("max-interval-input");
+const inputValueMin = document.getElementById("input-price-value-min");
+const inputValueMax = document.getElementById("input-price-value-max");
+
+function getPriceWithCurrency(value) {
+    return value + "$"
+}
+
+inputValueMin.textContent = getPriceWithCurrency(inputMin.value);
+inputValueMax.textContent = getPriceWithCurrency(inputMax.value);
+
 function SetRange(event) {
     let url = new URL(document.location.href);
 
@@ -10,9 +22,12 @@ function SetRange(event) {
     document.location.href = url.href;
 }
 
-const input_min = document.getElementById("min-interval-input");
-const input_max = document.getElementById("max-interval-input");
-input_min.addEventListener("click", SetRange);
-input_max.addEventListener("click", SetRange);
-input_min.addEventListener("touch", SetRange);
-input_max.addEventListener("touch", SetRange);
+function SetInputValue(event) {
+    const targetLabel = event.target.id == "max-interval-input" ? inputValueMax : inputValueMin;
+    targetLabel.textContent = getPriceWithCurrency(event.target.value);
+}
+
+inputMin.addEventListener("change", SetRange);
+inputMax.addEventListener("change", SetRange);
+inputMin.addEventListener("touchmove", SetInputValue);
+inputMax.addEventListener("touchmove", SetInputValue);

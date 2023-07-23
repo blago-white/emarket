@@ -104,6 +104,7 @@
     width: 100%;
     height: min-content;
     padding-inline: .1em;
+    text-shadow: none!important;
     grid-row-start: 1;
     grid-row-end: 1;
     grid-column-start: 1;

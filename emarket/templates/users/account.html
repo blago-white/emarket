@@ -21,8 +21,10 @@ Hi, {{ user.user.username }}{{ user.socialaccount_set.all.0.extra_data.screen_na
 {% block rootcontent %}
 <link rel="stylesheet" href="{% static 'css\users\account-sections.css' %}" type="text/css"
       xmlns="http://www.w3.org/1999/html">
-    <div class="form {% if products|length < 7 %}{% else %}big{% endif %}">
-        <div style="{% if current_section == 'info' %}gap: .5em;{% endif %}"
+    <div class="form{% if products|length < 7 %}{% else %} big{% endif %}"
+         style="{% if current_section == 'notifications' %}overflow-y: scroll;{% endif %}">
+        <div
+                style="{% if current_section == 'info' %}gap: .5em;{% endif %}z-index: 1;"
             class="account-body {% if current_section == 'notifications' and notifications|length > 5 %}notifications-body-long{% endif %}{% if items|length > 6 %}long-account-body{% endif %}">
             <div class="account-sections-wrapper{% if not is_self_account %} account-sections-wrapper-small{% endif %}">
                 <nav class="account-sections"

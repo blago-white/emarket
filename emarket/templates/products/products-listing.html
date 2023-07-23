@@ -24,18 +24,14 @@
 {% endblock %}
 
 {% block header %}
-    {% if items %}
-        {% include 'products/filters-header.html' %}
-    {% else %}
-        {% include 'main-header.html' %}
-    {% endif %}
+    {% include 'products/filters-header.html' %}
 {% endblock %}
 
 {% block rootcontent %}
     {% if items %}
         {% if items.count <= 4 %}
             <div class="cards"
-                 style="height: 100%;grid-template-columns: repeat({{items.count}}, 1fr);grid-template-rows: 1fr;align-items: center;justify-items: stretch;">
+                 style="{% if items.count < 4 %}height: 100%;{% endif %}grid-template-columns: repeat({{items.count}}, 1fr);grid-template-rows: 1fr;align-items: center;justify-items: stretch;">
         {% else %}
             <div class="cards">
         {% endif %}

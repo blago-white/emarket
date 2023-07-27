@@ -63,6 +63,7 @@ p {
 .sign-in-issues {
     width: max-content;
     display: flex;
+    justify-content: center;
     align-items: center;
     height: 100%;
     overflow: hidden;
@@ -80,7 +81,7 @@ p {
 
 .register-form {
     width: 25%;
-    min-width: 15em;
+    min-width: 17em;
     padding-inline: 1em;
     padding-block: 1em;
 }

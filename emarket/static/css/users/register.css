@@ -86,7 +86,6 @@ p {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: monospace;
     color: rgb(58, 58, 58);
     gap: .5em;
     text-align: end;

@@ -83,10 +83,6 @@
     box-shadow: 0px 0px .2em rgb(68, 68, 68);
 }
 
-.color-choice:hover {
-    width: 10em;
-}
-
 .choice-active {
     color: beige;
     background: rgb(68, 68, 68, 1);
@@ -101,7 +97,7 @@
 
 .price-interval {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-evenly;
     padding-inline: 1em;
     flex-direction: column;
     cursor: pointer;
@@ -125,13 +121,13 @@ datalist {
 
 input[type='range']::-webkit-slider-thumb {
     -webkit-appearance: none !important;
-    background: rgb(0, 0, 0, .75);
+    background: rgb(64, 64, 64);
     height: 1em;
-    width: 1.2em;
-    border-radius: .6em;
+    width: 1em;
+    border-radius: 50%;
     cursor: pointer;
     z-index: 4;
-    box-shadow: 0px 0px .5em rgb(64, 64, 64, 1);
+    box-shadow: 0px 0px .5em rgb(64, 64, 64);
 }
 
 input[type='range']::-webkit-slider-runnable-track {
@@ -142,7 +138,7 @@ input[type='range']::-webkit-slider-runnable-track {
 
 .price-input {
     -webkit-appearance: none !important;
-    height: 1em;
+    height: .4em;
     width: 100%;
     display: flex;
     align-items: center;
@@ -156,13 +152,16 @@ option {
 }
 
 .prices-value {
-    display: none;
+    display: flex;
 }
 
-@media (max-width: 730px) {
-    .prices-datalist {
-        display: none;
+@media(hover: hover) {
+    .color-choice:hover {
+        width: 200%;
     }
+}
+
+@media(max-width: 730px) {
     .prices-value {
         display: flex;
     }

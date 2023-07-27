@@ -26,11 +26,12 @@
 
 .account-info-data {
     padding-inline: 0em;
-    padding-top: .5em;
-    padding-bottom: .2em;
+    padding-block: .2em;
     overflow: hidden;
     grid-template-columns: 1fr;
     gap: .5em;
+    font-family: system-ui;
+    font-weight: 500;
 }
 
 .account-info-string {
@@ -72,11 +73,7 @@
 }
 
 .save-photo-button {
-    height: 0em;
-    width: 0em;
-    font-size: 0em;
     padding: 0px;
-    transition: all .1s ease;
 }
 
 .drop-user-profile-photo {
@@ -99,12 +96,6 @@
     }
 
     .change-profile-photo-string:hover .drop-user-profile-photo {
-        height: 1em;
-        width: 1em;
-        font-size: 1em;
-    }
-
-    .change-profile-photo-string:hover .save-photo-button {
         height: 1em;
         width: 1em;
         font-size: 1em;

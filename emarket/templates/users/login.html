@@ -62,7 +62,7 @@ login
             <p class="data-input">
                 <label for="{{ field.id_for_label }}"
                        id="{% if field.name == 'remember' %}checkbox-label{% endif %}"
-                       style="{% if field.name == 'remember' %}display: flex;align-items: center;cursor: pointer;font-size: .9em;height: 1.77em;width: 6.5em;{% endif %}">
+                       style="{% if field.name == 'remember' %}display: flex;align-items: center;cursor: pointer;font-size: .9em;height: 1.77em;width: 6.5em;min-width: fit-content;{% endif %}">
                     {{ field.label|lower }}
                     {% if field.name == 'remember' %}
                         <span class="checkbox-remember" >

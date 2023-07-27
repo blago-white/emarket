@@ -16,7 +16,7 @@ function checkboxAction(event) {
     }
 
     checkboxLabel.childNodes[1].classList.toggle("checkbox-remember-active");
-    checkboxLabel.style.width = active ? "7.9em" : "6.5em";
+    checkboxLabel.style.width = active ? "8.2em" : "6.5em";
     checkboxMark.style.transform = transform;
 }
 

@@ -6,6 +6,10 @@
     top: -16vh;
 }
 
+.register-form {
+    gap: 1.25vh;
+}
+
 .notification {
     background: rgb(33, 33, 33, .1);
     border-radius: .5em;
@@ -94,7 +98,7 @@
     overflow: hidden;
     padding: .5em;
     font-weight: 100;
-    font-family: system-ui;
+    font-family: inherit;
 }
 
 .notification-full-text {

@@ -1,6 +1,10 @@
 {% extends 'users/account.html' %}
 {% load static %}
 
+{% block account-title %}
+{{ user.username }}'s notifications
+{% endblock %}
+
 {% block head %}
 <link rel="stylesheet" href="{% static 'css\users\notifications.css' %}" type="text/css" xmlns="http://www.w3.org/1999/html">
 <style>

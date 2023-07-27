@@ -29,5 +29,3 @@ function SetInputValue(event) {
 
 inputMin.addEventListener("change", SetRange);
 inputMax.addEventListener("change", SetRange);
-inputMin.addEventListener("touchmove", SetInputValue);
-inputMax.addEventListener("touchmove", SetInputValue);

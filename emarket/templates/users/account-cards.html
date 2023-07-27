@@ -1,6 +1,10 @@
 {% extends 'users/account.html' %}
 {% load static %}
 
+{% block account-title %}
+account products
+{% endblock %}
+
 {% block head %}
 {% if current_section == "products" %}
     <link rel="stylesheet" href="{% static 'css/users/account-cards.css' %}" type="text/css"

@@ -9,6 +9,7 @@ from allauth.account.views import (LoginView,
                                    PasswordResetDoneView,
                                    PasswordResetFromKeyView)
 from allauth.socialaccount.views import LoginErrorView
+from allauth.socialaccount.models import SocialAccount
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect, HttpRequest
@@ -49,11 +50,16 @@ class BaseAccountView:
         current_context = super().get_context_data(**kwargs)
 
         current_context.update({"current_section": self._get_curren_section()})
-        current_context.update({"current_user_account_pk": self.request.user.id})
+        current_context.update({"account_user": self.request.user})
 
         if "pk" in self.kwargs:
             current_context.update({"is_self_account": int(self.kwargs.get("pk")) == int(self.request.user.id)})
-            current_context.update({"current_user_account_pk": int(self.kwargs.get("pk"))})
+            current_context.update({"account_user": User.objects.get(pk=self.kwargs.get("pk"))})
+
+        if current_context["current_section"] == "info":
+            current_context.update(
+                {"current_account_avatar_url": self.get_user_avatar_url(current_context["account_user"].id)}
+            )
 
         return current_context
 
@@ -72,6 +78,15 @@ class BaseAccountView:
             raise AttributeError("Field section required if you inherited by 'BaseAccountView'")
 
         raise ValueError("Not correct section name")
+
+    @staticmethod
+    def get_user_avatar_url(user_id: int) -> str | None:
+        try:
+            return UserProfile.objects.get(user__id=user_id).avatar.name
+        except UserProfile.DoesNotExist:
+            return SocialAccount.objects.get(user__id=user_id).get_avatar_url()
+        except:
+            pass
 
 
 class AboutInfoView(TemplateView):

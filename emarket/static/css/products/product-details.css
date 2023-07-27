@@ -44,11 +44,10 @@
 }
 
 .card-info-splitter {
-    width: .11em;
+    width: .1em;
     height: 100%;
     background: rgb(220, 220, 220);
     border-radius: 1em;
-    box-shadow: 0px 0px .05em rgb(220, 220, 220);
 }
 
 .card-product-title {
@@ -74,12 +73,12 @@
     display: grid;
     grid-template-rows: 1fr 1fr 1fr 1fr;
     align-content: space-between;
-    width: 30%;
-    height: 30%;
+    width: 28%;
+    height: 28%;
     min-width: 14em;
     font-size: 1.5em;
     border-radius: .75em;
-    background-color: rgb(128, 128, 128, .5);
+    background-color: rgb(170, 170, 170, .5);
     backdrop-filter: blur(.5em);
     color: white;
     overflow: hidden;
@@ -118,13 +117,10 @@
     display: flex;
     align-items: flex-end;
     justify-content: flex-end;
-    min-width: 2em;
-    height: 2em;
+    min-width: 1.5em;
+    height: 1em;
     position: absolute;
-    top: -1em;
-    left: -.5em;
-    background: black;
-    border-radius: 0.5em;
+    border-end-end-radius: 0.5em;
     background: rgb(240 240 240 / 20%);
     text-decoration: none;
 }
@@ -132,20 +128,20 @@
 .owner-link-text {
     display: inline-flex;
     justify-content: flex-end;
-    color: rgb(50, 50, 50);
+    color: rgb(72 72 72);
     overflow: hidden;
     min-width: 0em;
     max-width: 0em;
     text-overflow: ellipsis;
     text-align: center;
-    font-weight: bold;
-
+    font-family: system-ui;
+    font-weight: 600;
     transition: all .2s ease-in-out;
 }
 
 .top-card-info-marker:hover .owner-link-text {
-    min-width: 6em;
-    max-width: 6em;
+    min-width: 5em;
+    max-width: 5em;
 }
 
 .card-title {
@@ -196,6 +192,8 @@
     width: 100%;
     height: 100%;
     bottom: 0px;
+    font-weight: 100;
+    text-decoration: none;
     background-color: rgb(128, 128, 128, .0);
     color: white;
     transition: color .2s ease, background-color .2s ease;
@@ -303,7 +301,7 @@
         width: 100%;
     }
     .card-title {
-        font-size: 1.25em;
+        font-size: 1.5em!important;
     }
     .top-card-info-marker {
         width: 100%;

@@ -7,9 +7,9 @@
     </div>
     <div class="card-content">
         <div class="card-specs">
-            <b>{{ item.title|dashes_to_spaces }}</b>
-            <b>{{ item.price }}$</b>
-            <span>{{ item.author__username }}</span>
+            <b style="font-size: 1.3em;">{{ item.title|dashes_to_spaces }}</b>
+            <b class="card-price">{{ item.price }}$</b>
+            <span style="font-size: .8em;color: rgb(205 205 205);">{{ item.author__username }}</span>
             <span
                     style="background: {{ item.color }};width: .8em;height: .8em;border-radius: .2em;display: block;margin-top: 2%;">
             </span>

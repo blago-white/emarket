@@ -80,16 +80,15 @@ class BuyProductView(UserLoginRequiredMixin, DeleteView):
         if not int(self._product_data.products_count):
             return self._get_product_count_null_redirect()
 
+        if int(self._product_data.products_count) == 1:
+            product_is_over_notification.notify_product_is_over(recipient=self._product_data.author,
+                                                                product=self._product_data)
+
         decrease_phones_count(phone=self._product_data)
 
         purchase_notification.notify_about_purchase(purchaser=self.request.user,
                                                     owner=self._product_data.author,
                                                     product=self._product_data)
-
-        if int(self._product_data.products_count) == 1:
-            decrease_phones_count(phone=self._product_data)
-            product_is_over_notification.notify_product_is_over(recipient=self._product_data.author,
-                                                                product=self._product_data)
 
         return super().form_valid(form=form)
 

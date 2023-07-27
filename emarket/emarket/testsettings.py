@@ -5,6 +5,9 @@ from .settings import *
 
 DEBUG = True
 
+HOST_NAME = "http://127.0.0.1:8000"
+CSRF_TRUSTED_ORIGINS = [HOST_NAME]
+
 MEDIA_ROOT = BASE_DIR / 'media'
 DATABASES["default"]["PASSWORD"] = os.environ.get("POSTGRES_TEST_PASSWORD")
 

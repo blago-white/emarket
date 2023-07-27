@@ -1,18 +1,6 @@
-/*@-webkit-keyframes background-animation {
-    0%{background-position:0% 4%}
-    50%{background-position:100% 97%}
-    100%{background-position:0% 4%}
-}
-@-moz-keyframes background-animation {
-    0%{background-position:0% 4%}
-    50%{background-position:100% 97%}
-    100%{background-position:0% 4%}
-}
-@keyframes background-animation {
-    0%{background-position:0% 4%}
-    50%{background-position:100% 97%}
-    100%{background-position:0% 4%}
-}*/
+@import url('https://fonts.cdnfonts.com/css/sf-pro-display');
+@import url('https://fonts.googleapis.com/css2?family=Gantari:wght@400;500;600&display=swap');
+@import url('https://fonts.cdnfonts.com/css/helvetica-neue-55?styles=30123');
 
 @-webkit-keyframes background-animation {
     0%{background-position:0% 0%}
@@ -30,19 +18,19 @@
     100%{background-position:0% 0%}
 }
 
+@font-face {
+  font-family: "San Francisco";
+  font-weight: 400;
+  src: url("https://applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-regular-webfont.woff");
+}
+
 .page-content  {
     margin: 0px;
     display: flow-root;
     font-size: 2.5vh!important;
-    font-family: monospace!important;
+    font-family: 'SF Pro Display', sans-serif;
     user-select: none;
     height: 100vh;
-/*    background: linear-gradient(90deg, rgba(238,174,202,0.5) 0%, rgba(148,187,233,0.5) 100%);
-    background-size: 400% 400%;
-    -webkit-animation: background-animation 40s ease infinite;
-    -moz-animation: background-animation 40s ease infinite;
-    animation: background-animation 40s ease infinite;
-*/
 }
 
 .page-content::-webkit-scrollbar {

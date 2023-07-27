@@ -28,7 +28,11 @@
                     <a class="top-card-info-marker"
                        href="{% url 'account-info' item_info.author.id %}"
                        title="owner of this product is user {{ item_info.author }}">
-                        <span style="font-size: .5em;">
+                        <span style="font-size: .5em;
+                                     width: min-content;
+                                     display: flex;
+                                     align-items: center;
+                                     gap: 0.5em;">
                             <span class="owner-link-text">{{ item_info.author.username|truncatechars:8 }}</span>
                             <img src="{% static 'img/products/to-owner.png' %}"
                                  style="height: 1.5em;filter: contrast(.5);margin-right: 0.75em;margin-bottom: 0.3em;">
@@ -36,7 +40,7 @@
                     </a>
                     {% endif %}
                     <header class="card-title"
-                            style="{% if item_info.readable_title|length < 10 and not viewer_is_author %}font-size: 1.3em;{% elif item_info.readable_title|length < 12 %}font-size: 1.1em;{% endif %}">
+                            style="{% if item_info.readable_title|length < 14 %}font-size: 1.3em;{% elif item_info.readable_title|length < 16 %}font-size: 1.2em;{% else %}font-size: 1.1em;{% endif %}font-family: 'SF Pro Display';">
                         <span class="card-product-title">
                             <span
                                 style="background-color: {{ item_info.color }};box-shadow: 0px 0px .5em {{ item_info.color }}"
@@ -46,15 +50,14 @@
                             <span class="card-info-splitter"></span>
                             <span style="display: flex;flex-direction: column;align-items: flex-start;">
                                 {{ item_info.readable_title }}<br>
-                                <span style="font-size: .8em;color: rgb(240, 240, 240);">
+                                <span style="font-size: .7em;color: rgb(245 245 245);">
+                                    {% if viewer_is_author %}
+                                        <span style="background: rgb(170 170 170 / 50%);border-radius: 0.3em;padding-left: 0.2em;margin-right: 0.4em;">
+                                            {{ item_info.products_count }} items
+                                        </span>
+                                    {% endif %}
                                     {{ stortage }}GB
                                 </span>
-                                {% if viewer_is_author %}
-                                <span
-                                    style="font-size: .8em;background: rgb(150, 150, 150, .5);border-radius: .2em;padding-inline: .2em;">
-                                    {{ item_info.products_count }} items
-                                </span>
-                                {% endif %}
                             </span>
                         </span>
                     </header>
@@ -76,7 +79,7 @@
                             </a>
                         {% endif %}
                     {% else %}
-                        <div class="price">{{views}} views</div>
+                        <a class="price" href="{% url 'edit-product' item_info.id %}">update</a>
                     {% endif %}
                     </form>
                     <div class="price">{{ item_info.price }} $</div>

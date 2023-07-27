@@ -6,11 +6,8 @@
     </div>
     <div class="card-content">
         <div class="card-specs">
-            <b>{{ item.title|dashes_to_spaces }}</b>
-            ~<b style="display: contents;">{{ item.price|round_:2 }}$</b>
+            <b style="font-size: 1.3em;">{{ item.title|dashes_to_spaces }}</b>
+            ~<b class="card-price">{{ item.price|round_:2 }}$</b>
         </div>
-        <span class="products-count">
-            {{ item.count_products_in }} item{% if item.count_products_in > 1 %}s{% endif %}
-        </span>
     </div>
 </a>

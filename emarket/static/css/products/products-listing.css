@@ -26,12 +26,6 @@
     transition: box-shadow .2s cubic-bezier(0.22, 0.61, 0.36, 1), transform .2s ease-in-out;
 }
 
-.card:hover {
-    box-shadow: 0px 0px .5em black;
-    background-color: black;
-    transition: box-shadow .2s cubic-bezier(0.22, 0.61, 0.36, 1), background-color .0s .2s;
-}
-
 .card-preview {
     height: 100%;
     width: auto;
@@ -50,21 +44,17 @@
     align-items: baseline;
 }
 
-.products-count {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgb(30, 30, 30);
-    border-radius: .2em;
-    padding-inline: .2em;
-    line-height: 1.1em;
-    margin-top: .2em;
-}
-
 .card-specs {
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+.card-price {
+    display: contents;
+    font-size: .9em;
+    color: rgb(205 205 205);
+    font-weight: 500;
 }
 
 .card-content {
@@ -92,6 +82,15 @@
 .card:hover .card-preview {
     opacity: .0;
     transition: opacity .0s .2s;
+}
+
+@media(hover: hover) {
+    .card:hover {
+        box-shadow: 0px 0px .5em black;
+        background-color: black;
+        transform: scale3d(1.1, 1.05, 1.1);
+        transition: box-shadow .2s cubic-bezier(0.22, 0.61, 0.36, 1), background-color .0s .2s, transform .2s ease;
+    }
 }
 
 @media(aspect-ratio <= 18/10) {
@@ -162,8 +161,14 @@
         height: 20%;
     }
 
+    .card-price {
+        font-size: 1.2em;
+    }
+
     .card-specs {
-        height: 80%;
+        height: 100%;
+        padding-inline: 0.2em;
+        font-size: .9em;
         justify-content: center;
     }
 }

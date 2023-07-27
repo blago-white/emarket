@@ -2,6 +2,10 @@
 {% load static %}
 {% load socialaccount %}
 
+{% block account-title %}
+Hi, {{ account_user.username }}{{ account_user.user.username }}
+{% endblock %}
+
 {% block profile-content %}
     <div style="display: flex;flex-direction: column;gap: .2em;">
         <div class="account-info-string"
@@ -34,7 +38,7 @@
     </div>
     <div style="display: flex;flex-direction: column;gap: .2em;">
         <div class="account-info-string"
-             style="display: {% if not error_field == 'email' %}flex{% else %}none{% endif %};flex-direction: row;align-items: center;justify-content: center;"
+             style="display: {% if not error_field == 'email' %}flex{% else %}none{% endif %};flex-direction: row;align-items: baseline;justify-content: center;"
              id="email-field">
             <img src="{% static 'img/email.png' %}"
              style="height: .7em;aspect-ratio: 1/1;margin-right: .2em;filter: invert(1);">{{ user.user.email }}{{ user.email }}

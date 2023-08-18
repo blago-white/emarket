@@ -77,7 +77,7 @@
 
 .choice:hover {
     color: beige;
-    width: 10em;
+    width: 20em;
     background: rgb(68, 68, 68, 1);
     text-shadow: 0px 0px .2em rgb(255, 255, 255, .5);
     box-shadow: 0px 0px .2em rgb(68, 68, 68);

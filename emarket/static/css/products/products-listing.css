@@ -39,7 +39,7 @@
     display: flex;
     justify-content: center;
     height: 95%;
-    margin-block: 1.5%;
+    margin-block: 2.5%;
     align-items: center;
     align-items: baseline;
 }
@@ -124,6 +124,7 @@
 
     .card-preview-wrapper {
         width: 60%;
+	margin-block: 1.5%;
     }
 
     .card-content {
@@ -153,7 +154,6 @@
 
     .card-preview-wrapper {
         width: 60%;
-        margin-block: 1.5%;
     }
 
     .products-count{

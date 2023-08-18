@@ -52,7 +52,12 @@ class Notifications(models.Model):
 
 
 class UserProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, null=False, primary_key=True, unique=True)
+    user = models.OneToOneField(User,
+                                on_delete=models.CASCADE,
+                                null=False,
+                                primary_key=True,
+                                unique=True,
+                                related_name="profile")
     avatar = models.ImageField(upload_to=get_image_path, null=True, blank=True)
 
     def __str__(self):

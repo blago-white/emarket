@@ -34,6 +34,7 @@ services:
       - /etc/letsencrypt/live/xn----8sbncyk3as.xn--p1ai/privkey.pem:/etc/letsencrypt/live/xn----8sbncyk3as.xn--p1ai/privkey.pem
     ports:
       - "443:443"
+      - "80:80"
     depends_on:
       - web
 

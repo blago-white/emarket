@@ -119,13 +119,14 @@ class ProductsView(ListView):
     def _complement_context(self, current_context: dict) -> None:
         self._set_max_product_price()
         price_range_bounds = self._get_acceptable_price_range_bounds(max_price_bound=self._max_product_price)
+        filters_window_display = int(self.request.GET.get("filters", 0))
 
         current_context.update({
-            "filters": int("filters" in self.request.GET.keys()),
+            "filters": filters_window_display,
             "url_args": compile_url_args_for_pagination(
                 price=get_url_arg_from_ordering_field(field=self.get_ordering()),
                 min_=price_range_bounds[0],
-                filters=int("filters" in self.request.GET.keys()),
+                filters=filters_window_display,
                 max_=price_range_bounds[1],
                 stortage=self.request.GET.getlist("stortage"),
                 color=self.request.GET.getlist("color"),
@@ -133,7 +134,7 @@ class ProductsView(ListView):
             "url_args_invert_sorting": compile_url_args_for_pagination(
                 price=invert_sorting(get_url_arg_from_ordering_field(field=self.get_ordering())),
                 min_=price_range_bounds[0],
-                filters=int("filters" in self.request.GET.keys()),
+                filters=filters_window_display,
                 max_=price_range_bounds[1],
                 stortage=self.request.GET.getlist("stortage"),
                 color=self.request.GET.getlist("color"),
@@ -247,14 +248,29 @@ class AddProductView(UserLoginRequiredMixin, CreateView):
 
 class EditProductView(AddProductView):
     form_class = EditProductForm
+    _current_product: Phone
+
+    def get(self, request, *args, **kwargs):
+        self.get_current_product()
+        return super(EditProductView, self).get(*args, request=request, **kwargs)
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
 
-        kwargs['instance'] = self.model.objects.get(pk=self.kwargs.get("pk"))
+        kwargs['instance'] = self._current_product
         kwargs['instance'].title = dashes_to_spaces(string=kwargs['instance'].readable_title())
 
         return kwargs
+
+    def get_current_product(self) -> Phone:
+        self._current_product = self.model.objects.get(pk=self.kwargs.get("pk"))
+
+    def get_context_data(self, **kwargs):
+        current_context = super().get_context_data(**kwargs)
+
+        current_context.update({"current_product": self._current_product})
+
+        return current_context
 
 
 class DeleteUserProductView(UserLoginRequiredMixin, DeleteView):

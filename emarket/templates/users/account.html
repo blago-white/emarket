@@ -25,7 +25,7 @@
     <div class="form{% if products|length < 7 %}{% else %} big{% endif %}"
          style="overflow-y: scroll;">
         <div style="{% if current_section == 'info' %}gap: .5em;{% endif %}{% if current_section == 'products' and items|length > 18 %}position: absolute;top: 7vh;{% endif %}z-index: 1;"
-            class="account-body {% if current_section == 'notifications' and notifications|length > 5 %}notifications-body-long{% endif %}{% if items|length > 6 %}long-account-body{% endif %}">
+            class="account-body {% if notifications|length > 2 and current_section == 'notifications' %}long-account-body{% elif items|length > 9 and current_section == 'products' %}long-account-body{% endif %}">
             <div class="account-sections-wrapper{% if not is_self_account %} account-sections-wrapper-small{% endif %}">
                 <nav class="account-sections"
                      style="{% if is_self_account %}{% else %}grid-template-columns: 1fr 1fr;gap: .5em;{% endif %}">

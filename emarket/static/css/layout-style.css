@@ -2,22 +2,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Gantari:wght@400;500;600&display=swap');
 @import url('https://fonts.cdnfonts.com/css/helvetica-neue-55?styles=30123');
 
-@-webkit-keyframes background-animation {
-    0%{background-position:0% 0%}
-    50%{background-position:100% 100%}
-    100%{background-position:0% 0%}
-}
-@-moz-keyframes background-animation {
-    0%{background-position:0% 0%}
-    50%{background-position:100% 100%}
-    100%{background-position:0% 0%}
-}
-@keyframes background-animation {
-    0%{background-position:0% 0%}
-    50%{background-position:100% 100%}
-    100%{background-position:0% 0%}
-}
-
 @font-face {
   font-family: "San Francisco";
   font-weight: 400;

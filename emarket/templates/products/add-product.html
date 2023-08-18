@@ -41,8 +41,7 @@
                     <span style="display: flex;justify-content: flex-start;"
                           class="price-product-input">
                         {{ field }}
-                            <span
-                                    style="background-color: rgb(0, 0, 0, .5);color: white;border-radius: .2em;padding-inline: .2em;margin-left: .2em;">
+                            <span style="background-color: rgb(0, 0, 0, .5);color: white;border-radius: .2em;padding-inline: .2em;margin-left: .2em;">
                                 {% if field.name == "price" %}${% elif field.name == "stortage" %}gb{% endif %}
                             </span>
                     </span>
@@ -53,7 +52,18 @@
                 {% include 'field-error.html' %}
                 </p>
             {% endfor %}
-        <button type="submit" class="submit-button">{% if form.initial %}Edit{% else %}Add{% endif %}</button>
+        <div style="display: flex;justify-content: center;gap: .5em;">
+            <button type="submit" class="submit-button" style="{% if form.initial %}margin-inline: unset;{% endif %}">
+                {% if form.initial %}Edit{% else %}Add{% endif %}
+            </button>
+            {% if form.initial %}
+            <a class="submit-button delete-product-button"
+               href="{% url 'delete-product' current_product.pk %}"
+               style="margin-inline: unset;">
+                Delete
+            </a>
+            {% endif %}
+        </div>
     </form>
 </div>
 {% include 'small-screen-field-error.html' %}

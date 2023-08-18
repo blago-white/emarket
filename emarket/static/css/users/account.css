@@ -13,6 +13,12 @@
     gap: .5em;
 }
 
+.long-account-body {
+    margin-top: 10em;
+    position: absolute;
+    top: -16vh;
+}
+
 .account-info {
     color: white;
     width: auto;

@@ -44,6 +44,11 @@ input[name="products_count"] {
     min-width: 485px;
 }
 
+.delete-product-button {
+    background: indianred;
+    text-decoration: none;
+}
+
 .abbreviated-title {
     border-radius: .2em;
     padding-inline: .2em;

@@ -19,8 +19,6 @@ p {
     justify-content: center;
     width: 0em;
     height: 1.25em;
-/*    background: rgb(0, 0, 0, .5);
-    border-radius: .2em; */
     overflow: visible;
     transition: all .1s ease;
 }

@@ -14,7 +14,7 @@
 <body class="page-content" style="background: mintcream;">
     {% if current_account_avatar_url %}
     <div style="position: fixed;width: 100vw;height: 100vh;overflow: hidden;
-                background: url({% if current_account_avatar_url|truncate:4 == 'http' %}{{ current_account_avatar_url }}{% else %}{% static current_account_avatar_url|get_media_path %}{% endif %});
+                background: url({% if current_account_avatar_url|truncate:4 == 'http' %}{{ current_account_avatar_url }}{% else %}{{ current_account_avatar_url }}{% endif %});
                 background-position: center center;background-size: cover;
                 filter: blur(2.5em);opacity: 0.4;z-index: -1;"></div>
     {% elif user.profile.avatar.name or user.socialaccount_set.all.0.get_avatar_url %}

@@ -248,22 +248,21 @@ class AddProductView(UserLoginRequiredMixin, CreateView):
 
 class EditProductView(AddProductView):
     form_class = EditProductForm
-    _current_product: Phone
-
-    def get(self, request, *args, **kwargs):
-        self.get_current_product()
-        return super(EditProductView, self).get(*args, request=request, **kwargs)
+    _current_product: Phone = None
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
+
+        if not self._current_product:
+            self._current_product = self.get_object()
 
         kwargs['instance'] = self._current_product
         kwargs['instance'].title = dashes_to_spaces(string=kwargs['instance'].readable_title())
 
         return kwargs
 
-    def get_current_product(self) -> Phone:
-        self._current_product = self.model.objects.get(pk=self.kwargs.get("pk"))
+    def get_object(self, *args, **kwargs) -> Phone:
+        return self.model.objects.get(pk=self.kwargs.get("pk"))
 
     def get_context_data(self, **kwargs):
         current_context = super().get_context_data(**kwargs)

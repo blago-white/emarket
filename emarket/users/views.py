@@ -1,3 +1,4 @@
+import django
 from django.db import IntegrityError
 from allauth.account.utils import send_email_confirmation
 from allauth.account.views import (LoginView,
@@ -82,11 +83,12 @@ class BaseAccountView:
     @staticmethod
     def get_user_avatar_url(user_id: int) -> str | None:
         try:
-            return UserProfile.objects.get(user__id=user_id).avatar.name
+            print(django.conf.settings.MEDIA_URL, UserProfile.objects.get(user__id=user_id).avatar.name)
+            return str(django.conf.settings.MEDIA_URL) + UserProfile.objects.get(user__id=user_id).avatar.name
         except UserProfile.DoesNotExist:
             return SocialAccount.objects.get(user__id=user_id).get_avatar_url()
-        except:
-            pass
+        except Exception as e:
+            print(e)
 
 
 class AboutInfoView(TemplateView):

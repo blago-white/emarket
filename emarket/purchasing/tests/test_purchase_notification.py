@@ -1,13 +1,11 @@
 from django.contrib.auth.models import User
-
-from emarket.testsutils.tests_presets import BaseTwinUsersTestCase
 from emarket.testsutils import tests_utils
+from emarket.testsutils.tests_presets import BaseTwinUsersTestCase
 
-from users.models.models import Notifications
 from products.models.models import Phone
-
-from ..notifications import purchase_notification
+from users.models.models import Notifications
 from .. import *
+from ..notifications import purchase_notification
 
 
 class PurchaseNotificationTestCase(BaseTwinUsersTestCase):

@@ -1,4 +1,3 @@
-import os
 from django.conf import settings
 
 __all__ = ["PURCHASE_MESSAGE_FOR_OWNER_TEMPLATE",

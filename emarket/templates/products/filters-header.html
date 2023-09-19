@@ -4,13 +4,13 @@
 {% block head %}
     <link rel="stylesheet" href="{% static 'css\products\header-filters.css' %}" type="text/css">
     <style>
-        {% for idx, color in supported_colors|enumerate_ %}
+        {% for colorcode, color in supported_colors %}
             .color-choice-{{ color }}:hover {
-                color: {{ supported_color_codes|get_element_by_index:idx }};
+                color: {{ colorcode }};
                 text-shadow: 0px 0px 0px transparent;
             }
             .color-choice-active-{{ color }} {
-                color: {{ supported_color_codes|get_element_by_index:idx }};
+                color: {{ colorcode }};
             }
         {% endfor %}
     </style>
@@ -25,6 +25,7 @@
 {% block extension-window %}
     <div class="filters" style="{% if filters %}display: flex;{% else %}display: none;{% endif %}">
         <div class="filters-line">
+            {% with price_lower_bound=price_bounds|get_element_by_index:0 price_upper_bound=price_bounds|get_element_by_index:1 %}
             <a class="header-nav-button header-filters header-filter"
                id="change-order"
                href="{% url 'category-products' category_name %}?page={{ page_obj.number }}{{ url_args_invert_sorting }}">
@@ -62,23 +63,24 @@
                        value="{{ price_upper_bound }}"
                        id="max-interval-input">
             </div>
+            {% endwith %}
         </div>
         <div class="filters-line">
                 <a class="header-nav-button header-filters header-filter setter-button"
-                   id="stortage-setter"
+                   id="storage-setter"
                     style="width: 40%;">
                     <div id="setter-text"
                          class="setter-text"
-                        style="{% if selected_stortage_values %}transform: translateY(0%){% else %}transform: translateY(100%){% endif %}">
-                    stortage
+                        style="{% if selected_storage_values %}transform: translateY(0%){% else %}transform: translateY(100%){% endif %}">
+                    storage
                     </div>
-                <div id="stortage-setter-choices-expand"
-                     style="{% if selected_stortage_values %}transform: translateY(0%){% else %}transform: translateY(100%){% endif %}"
+                <div id="storage-setter-choices-expand"
+                     style="{% if selected_storage_values %}transform: translateY(0%){% else %}transform: translateY(100%){% endif %}"
                      class="choices">
-                    {% for stortage_size in supported_stortage_sizes %}
-                        <span class="choice {% if stortage_size in selected_stortage_values %}choice-active{% endif %}"
-                              onclick="choiceActivate({{ stortage_size }})">
-                            {{ stortage_size }}
+                    {% for _, storage_size in supported_storages %}
+                        <span class="choice {% if storage_size in selected_storage_values %}choice-active{% endif %}"
+                              onclick="choiceActivate({{ storage_size }})">
+                            {{ storage_size }}
                         </span>
                     {% endfor %}
                 </div>
@@ -95,7 +97,7 @@
                 <div id="color-setter-choices-expand"
                      style="{% if selected_color_values %}transform: translateY(0%){% else %}transform: translateY(100%){% endif %}"
                      class="choices">
-                    {% for color in supported_colors %}
+                    {% for colorcode, color in supported_colors %}
                         <span
                               class="choice color-choice {% if color in selected_color_values %}choice-active color-choice-active-{{ color }}{% endif %} color-choice-{{ color }}"
                               onclick="choiceActivateColor('{{ color }}')">
@@ -109,6 +111,6 @@
 {% endblock %}
 
 {% block scripts %}
-    <script type="text/javascript" src="{% static 'js\products\stortage-setter.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js\products\storage-setter.js' %}"></script>
     <script type="text/javascript" src="{% static 'js\products\color-setter.js' %}"></script>
 {% endblock %}

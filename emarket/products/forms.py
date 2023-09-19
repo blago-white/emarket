@@ -1,7 +1,6 @@
-from django.forms import ModelForm, TextInput, ModelChoiceField, FileInput, NumberInput, ChoiceField
-from django.core.exceptions import ValidationError
-
 from PIL.JpegImagePlugin import JpegImageFile
+from django.core.exceptions import ValidationError
+from django.forms import ModelForm, TextInput, ModelChoiceField, FileInput, NumberInput, ChoiceField
 
 from .models.models import Category, Phone
 
@@ -17,13 +16,13 @@ class AddProductForm(ModelForm):
     color = ChoiceField(choices=Phone.BASE_COLORS,
                         required=True,
                         initial="red")
-    stortage = ChoiceField(choices=Phone.STORTAGE_SIZES,
-                           required=True,
-                           initial="128")
+    storage = ChoiceField(choices=Phone.STORTAGE_SIZES,
+                          required=True,
+                          initial="128")
 
     class Meta:
         model = Phone
-        fields = ["title", "category", "photo", "price", "color", "stortage", "products_count"]
+        fields = ["title", "category", "photo", "price", "color", "storage", "products_count"]
         widgets = {
             "title": TextInput(attrs={
                 "required": True
@@ -61,7 +60,7 @@ class EditProductForm(AddProductForm):
 
     class Meta:
         model = Phone
-        fields = ["title", "photo", "price", "color", "stortage", "products_count"]
+        fields = ["title", "photo", "price", "color", "storage", "products_count"]
         widgets = {
             "title": TextInput(attrs={
                 "required": True

@@ -1,10 +1,8 @@
-from django.db import IntegrityError
-from django.http.response import HttpResponse
 from django.contrib.auth.models import User
+from django.http.response import HttpResponse
+from emarket.testsutils.tests_presets import *
 
 from products.models.models import Category, Phone
-
-from emarket.testsutils.tests_presets import *
 
 
 def create_test_product(test_user: User, test_category: Category = None, **custom_product_fields):

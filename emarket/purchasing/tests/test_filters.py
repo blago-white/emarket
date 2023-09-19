@@ -1,4 +1,5 @@
 from django.test import TestCase
+
 from ..filters import get_media_path
 
 

@@ -1,11 +1,10 @@
-from emarket.testsutils.tests_presets import BaseSingleUserTestCase
 from emarket.testsutils import tests_utils
+from emarket.testsutils.tests_presets import BaseSingleUserTestCase
 
-from users.models.models import Notifications
 from products.models.models import Phone
-
-from ..notifications import product_is_over_notification
+from users.models.models import Notifications
 from .. import *
+from ..notifications import product_is_over_notification
 
 
 class ProductIsOverNotificationTestCase(BaseSingleUserTestCase):

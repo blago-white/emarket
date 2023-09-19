@@ -1,10 +1,7 @@
-from django.test import TestCase
-
-from emarket.testsutils.tests_presets import BaseSingleUserTestCase
 from emarket.testsutils import tests_utils
+from emarket.testsutils.tests_presets import BaseSingleUserTestCase
 
 from products.models.models import Phone
-
 from ..models import ShoppingBasket
 
 

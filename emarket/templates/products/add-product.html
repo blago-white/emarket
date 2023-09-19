@@ -37,12 +37,12 @@
                     {{ field }}
                     <label class="drop" for="{{ field.id_for_label }}">drop file</label>
                 {% else %}
-                    {% if field.name == "price" or field.name == "stortage" %}
+                    {% if field.name == "price" or field.name == "storage" %}
                     <span style="display: flex;justify-content: flex-start;"
                           class="price-product-input">
                         {{ field }}
                             <span style="background-color: rgb(0, 0, 0, .5);color: white;border-radius: .2em;padding-inline: .2em;margin-left: .2em;">
-                                {% if field.name == "price" %}${% elif field.name == "stortage" %}gb{% endif %}
+                                {% if field.name == "price" %}${% elif field.name == "storage" %}gb{% endif %}
                             </span>
                     </span>
                     {% else %}

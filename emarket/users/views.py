@@ -1,5 +1,4 @@
 import django
-from django.db import IntegrityError
 from allauth.account.utils import send_email_confirmation
 from allauth.account.views import (LoginView,
                                    LogoutView,
@@ -10,47 +9,36 @@ from allauth.account.views import (LoginView,
                                    PasswordResetDoneView,
                                    PasswordResetFromKeyView)
 from allauth.socialaccount.views import LoginErrorView
-from allauth.socialaccount.models import SocialAccount
-from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
+from django.db import IntegrityError
 from django.http import HttpResponseRedirect, HttpRequest
 from django.middleware.csrf import get_token
 from django.urls import reverse_lazy
 from django.views.generic import DetailView, ListView, DeleteView, UpdateView, RedirectView, TemplateView
-from django.db.models import F, Exists
+
 from products.models.models import Phone
+from .forms import RegisterUserForm, ChangeUsernameForm, ChangeEmailForm, ChangeAvatarForm
 from .mixins import UserLoginRequiredMixin
 from .models.models import UserProfile, Notifications
-from .forms import RegisterUserForm, ChangeUsernameForm, ChangeEmailForm, ChangeAvatarForm
+from .services import users
+from . import sections
+
 from .filters import *
 
-
-__all__ = ["RegisterUserView",
-           "UserLoginErrorView",
-           "LoginUserView",
-           "UserPasswordChangeView",
-           "BaseAccountView",
-           "AccountInfoView",
-           "AccountProductsView",
-           "AccountNotificationsView",
-           "AccountNotificationDeleteView",
-           "LogoutUserView",
-           "ChangeAccountDataView",
-           "UserEmailVerificationView",
-           "ResetUserPasswordView",
-           "ResetUserPasswordDoneView",
-           "ResetUserPasswordFromKeyView",
-           "RedirectToAccountInfoView",
-           "AboutInfoView"]
+__all__ = ["RegisterUserView", "UserLoginErrorView", "LoginUserView",
+           "UserPasswordChangeView", "BaseAccountView", "AccountInfoView",
+           "AccountProductsView", "AccountNotificationsView", "AccountNotificationDeleteView",
+           "LogoutUserView", "ChangeAccountDataView", "UserEmailVerificationView",
+           "ResetUserPasswordView", "ResetUserPasswordDoneView", "ResetUserPasswordFromKeyView",
+           "RedirectToAccountInfoView", "AboutInfoView"]
 
 
 class BaseAccountView:
-    _account_sections = ("info", "products", "basket", "notifications")
-
     def get_context_data(self, **kwargs):
         current_context = super().get_context_data(**kwargs)
 
-        current_context.update({"current_section": self._get_curren_section()})
+        current_context.update({"current_section": self._get_curren_section().section_name})
         current_context.update({"account_user": self.request.user})
 
         if "pk" in self.kwargs:
@@ -59,7 +47,7 @@ class BaseAccountView:
 
         if current_context["current_section"] == "info":
             current_context.update(
-                {"current_account_avatar_url": self.get_user_avatar_url(current_context["account_user"].id)}
+                {"current_account_avatar_url": users.get_user_avatar_url(current_context["account_user"].id)}
             )
 
         return current_context
@@ -70,25 +58,15 @@ class BaseAccountView:
 
         return User.objects.filter(id=self.kwargs.get(url_pk_name))
 
-    def _get_curren_section(self):
+    def _get_curren_section(self) -> sections.BaseAccountSection:
         try:
-            if self.section in self._account_sections:
+            if self.section.__bases__[0] == sections.BaseAccountSection:
                 return self.section
 
-        except AttributeError:
-            raise AttributeError("Field section required if you inherited by 'BaseAccountView'")
+        except:
+            raise AttributeError("Field 'section' required if you inherited by 'BaseAccountView'")
 
         raise ValueError("Not correct section name")
-
-    @staticmethod
-    def get_user_avatar_url(user_id: int) -> str | None:
-        try:
-            print(django.conf.settings.MEDIA_URL, UserProfile.objects.get(user__id=user_id).avatar.name)
-            return str(django.conf.settings.MEDIA_URL) + UserProfile.objects.get(user__id=user_id).avatar.name
-        except UserProfile.DoesNotExist:
-            return SocialAccount.objects.get(user__id=user_id).get_avatar_url()
-        except Exception as e:
-            print(e)
 
 
 class AboutInfoView(TemplateView):
@@ -107,7 +85,7 @@ class RegisterUserView(SignupView):
     template_name = "users/register.html"
 
     def form_valid(self, form):
-        form.instance.username = _get_username_by_mail(mail_adress=form.instance.email)
+        form.instance.username = users.get_username_by_mail(mail_adress=form.instance.email)
         http_response = super().form_valid(form=form)
 
         try:
@@ -155,7 +133,6 @@ class UserPasswordChangeView(PasswordChangeView):
             del current_context["form"].fields["oldpassword"].widget.attrs["placeholder"]
             del current_context["form"].fields["password1"].widget.attrs["placeholder"]
             del current_context["form"].fields["password2"].widget.attrs["placeholder"]
-
         except:
             pass
 
@@ -169,7 +146,7 @@ class AccountInfoView(BaseAccountView, DetailView):
     slug_url_kwarg = "pk"
     slug_field = "pk"
 
-    section = "info"
+    section = sections.InfoAccountSection
 
     def get_object(self, queryset=None):
         try:
@@ -201,7 +178,8 @@ class AccountProductsView(BaseAccountView, ListView):
     model = Phone
     template_name = "users/account-cards.html"
     context_object_name = "items"
-    section = "products"
+
+    section = sections.ProductsAccountSection
 
     def get_queryset(self):
         user_from_request = super().get_user()[0]
@@ -214,9 +192,10 @@ class AccountProductsView(BaseAccountView, ListView):
 
 class AccountNotificationsView(UserLoginRequiredMixin, BaseAccountView, ListView):
     model = Notifications
-    section = "notifications"
     template_name = "users/notifications.html"
     context_object_name = "notifications"
+
+    section = sections.NotificationsAccountSection
 
     def get_context_data(self, **kwargs):
         current_context = super().get_context_data(**kwargs)
@@ -226,14 +205,14 @@ class AccountNotificationsView(UserLoginRequiredMixin, BaseAccountView, ListView
         return current_context
 
     def get_queryset(self):
-        user = self.request.user.id
-        return self.model.objects.filter(recipient=user)
+        return self.model.objects.filter(recipient=self.request.user)
 
 
 class AccountNotificationDeleteView(UserLoginRequiredMixin, DeleteView):
     model = Notifications
     success_url = reverse_lazy("account-notifications")
-    section = "notifications"
+
+    section = sections.NotificationsAccountSection
 
     def get_object(self, queryset=None):
         return self.model.objects.get(pk=self.kwargs.get("pk"))
@@ -251,8 +230,8 @@ class ChangeAccountDataView(UpdateView):
     _avaible_fields_for_update_profile = ("avatar", )
     _avaible_fields_for_update = _avaible_fields_for_update_user + _avaible_fields_for_update_profile
 
-    _uncorrect_username_warn = User.username_validator.message
-    _exist_username_warn = "A user with that username already exists."
+    _UNCORRECT_USERNAME_WARN = User.username_validator.message
+    _EXIST_USERNAME_WARN = "A user with that username already exists."
 
     _field_name: str
     _value_from_request: object
@@ -301,12 +280,11 @@ class ChangeAccountDataView(UpdateView):
     def _get_redirect_url_for_update_email(self, email: str) -> str:
         try:
             send_email_confirmation(request=self.request, user=self.request.user, email=email)
-        except IntegrityError:
-            return _get_url_with_args(url=self.get_success_url(), error="exist-email")
-        except:
-            return _get_url_with_args(url=self.get_success_url(), error="unexpected-error-email")
-        else:
-            return reverse_lazy("account_email_verification_sent")
+        except Exception as exception:
+            return _get_url_with_args(url=self.get_success_url(),
+                                      error="exist-email" if exception == IntegrityError else "unexpected-error-email")
+
+        return reverse_lazy("account_email_verification_sent")
 
     def _get_updating_field_name(self) -> str:
         if not self.request.POST:
@@ -317,9 +295,9 @@ class ChangeAccountDataView(UpdateView):
                 return avaible_field_name
 
     def _get_url_with_username_error_info(self, validation_error: ValidationError) -> str:
-        if validation_error.error_dict[self._field_name][0].message == self._uncorrect_username_warn:
+        if validation_error.error_dict[self._field_name][0].message == self._UNCORRECT_USERNAME_WARN:
             error_code = "uncorrect-username"
-        elif validation_error.error_dict[self._field_name][0].message == self._exist_username_warn:
+        elif validation_error.error_dict[self._field_name][0].message == self._EXIST_USERNAME_WARN:
             error_code = "exist-username"
         else:
             error_code = "unexpected-error-username"
@@ -354,7 +332,6 @@ class ResetUserPasswordFromKeyView(PasswordResetFromKeyView):
     template_name = "users/change-password.html"
 
     def get_context_data(self, **kwargs):
-        print("reset key")
         current_context = super(ResetUserPasswordFromKeyView, self).get_context_data(**kwargs)
         try:
             del current_context["form"].fields["password1"].widget.attrs["placeholder"]
@@ -367,10 +344,6 @@ class ResetUserPasswordFromKeyView(PasswordResetFromKeyView):
 class RedirectToAccountInfoView(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         return reverse_lazy("account-info", kwargs={"pk": self.request.user.id})
-
-
-def _get_username_by_mail(mail_adress: str) -> str:
-    return "".join(letter for letter in mail_adress.split("@")[0] if letter.isalpha())
 
 
 def _get_url_with_args(url: str, **url_args) -> str:
@@ -387,4 +360,5 @@ def send_reset_password_email(user: User):
         'email': user.email,
         'csrfmiddlewaretoken': get_token(HttpRequest())
     }
+
     return PasswordResetView.as_view()(request)

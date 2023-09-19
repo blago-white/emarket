@@ -1,15 +1,20 @@
-from django.http.response import HttpResponseRedirect
 from django.core.exceptions import ValidationError
-from django.db.models import Count, Max, Avg, F, Sum, QuerySet
+from django.core.handlers.wsgi import WSGIRequest
+from django.db.models import QuerySet
+from django.http.response import HttpResponseRedirect
 from django.shortcuts import redirect
-from django.urls import reverse_lazy, reverse
+from django.urls import reverse
 from django.views.generic import ListView, DetailView, CreateView, DeleteView, TemplateView
-from django.conf import settings
 
 from products.forms import AddProductForm, EditProductForm
 from users.mixins import UserLoginRequiredMixin
-from .models.models import Category, Phone
+from emarket import config
+
+from .models.models import Category, Phone, BaseProduct
 from .models.utils import increment_product_views, convert_category_filters_to_product_filters
+from .services import utils as services_utils, urls as urls_services
+from .services.models_services import category as category_model_services, phone as phone_model_services
+
 from .filters import *
 
 
@@ -19,163 +24,129 @@ class HomePageProductsView(ListView):
     context_object_name = 'categories'
 
     def get_queryset(self) -> QuerySet:
-        return self.model.objects.filter(parent=None)
+        return category_model_services.get_main_categories()
 
 
 class ProductsView(ListView):
-    paginate_by = settings.CATEGORY_PRODUCTS_BATCH_SIZE
+    paginate_by = config.CATEGORY_PRODUCTS_BATCH_SIZE
     model = Phone
     template_name = "products/products-listing.html"
     context_object_name = "items"
-    _max_product_price: int
+
+    _MULTIPLE_VALUES_URL_ARGS = "storage", "color"
+
+    _CHOISES_VALUES_FOR_CODES_FOR_FIELD = {
+        _MULTIPLE_VALUES_URL_ARGS[0]: {storage_size: storage_id for storage_id, storage_size in Phone.STORTAGE_SIZES},
+        _MULTIPLE_VALUES_URL_ARGS[1]: {color_name: color_code for color_code, color_name in Phone.BASE_COLORS}
+    }
+
+    _CHOISES_LIST_FOR_FIELD = {_MULTIPLE_VALUES_URL_ARGS[0]: Phone.STORTAGE_SIZES,
+                               _MULTIPLE_VALUES_URL_ARGS[1]: Phone.BASE_COLORS}
+
+    _max_product_price: int = None
     _product_id: int = None
+    _ordering_field: str = None
+
+    def setup(self, request, *args, **kwargs):
+        super().setup(*args, request=request, **kwargs)
+        self._set_max_product_price()
+        self._set_ordering_field(request=request)
 
     def get_queryset(self):
-        category = self.kwargs.get("category")
-        prices_range = self._get_acceptable_price_range_bounds()
-
-        filters = {"price__gte": prices_range[0], "price__lte": prices_range[1]}
-
-        if self.request.GET.get("stortage") or self.request.GET.get("color"):
-            self._add_multiple_url_filtring_args(filters=filters)
-
-        return self._get_queryset(
-            category=category,
-            **filters
+        prices_range = services_utils.get_product_prices_bounds(
+            request_get_args=self.request.GET, max_price_bound=self._max_product_price
         )
+
+        filters = dict(price__gte=prices_range[0], price__lte=prices_range[1])
+
+        self._add_multiple_url_filtring_args(filters=filters)
+
+        return self._get_queryset(category=self.kwargs.get("category"), **filters)
 
     def get_context_data(self, *, object_list=None, **kwargs):
         current_context = super().get_context_data(object_list=None, **kwargs)
         self._complement_context(current_context)
         return current_context
 
-    def get_ordering(self):
-        return get_ordering_field_from_url_arg(url_arg=self.request.GET.get("price"), field="price")
-
     def render_to_response(self, context, **response_kwargs):
         if self._product_id:
             return redirect(reverse("product-card", kwargs={"pk": self._product_id}))
+
         return super(ProductsView, self).render_to_response(context=context, **response_kwargs)
 
     def _add_multiple_url_filtring_args(self, filters: dict) -> None:
-        multiple_url_filtering_args = {"stortage": self.request.GET.get("stortage"),
-                                       "color": self.request.GET.get("color")}
+        multiple_url_filtering_args = {
+            multiple_url_arg: self.request.GET.get(multiple_url_arg)
+            for multiple_url_arg in self._MULTIPLE_VALUES_URL_ARGS
+        }
 
         for multiple_url_filtering_arg in multiple_url_filtering_args:
             if not multiple_url_filtering_args[multiple_url_filtering_arg]:
                 continue
 
-            filters.update({f"phone__{multiple_url_filtering_arg}__in": list()})
-            from_db_choices_dict = Phone.STORTAGE_ID_BY_SIZE if multiple_url_filtering_arg == "stortage" else Phone.COLOR_CODE_BY_NAME
-
-            for url_filtering_arg in self.request.GET.getlist(multiple_url_filtering_arg):
-                try:
-                    filters[
-                        f"phone__{multiple_url_filtering_arg}__in"
-                    ].append(
-                        from_db_choices_dict[
-                            int(url_filtering_arg) if url_filtering_arg.isdigit() else url_filtering_arg
-                        ]
-                    )
-                except:
-                    pass
+            filters.update({f"phone__{multiple_url_filtering_arg}__in": [
+                self._CHOISES_VALUES_FOR_CODES_FOR_FIELD[multiple_url_filtering_arg][
+                    int(url_filtering_arg) if url_filtering_arg.isdigit() else url_filtering_arg
+                ] for url_filtering_arg in self.request.GET.getlist(multiple_url_filtering_arg)
+            ]})
 
     def _get_queryset(self, category: str, **query_filters) -> QuerySet:
-        queryset = self._get_categories_queryset(parent_category=category, **query_filters)
+        queryset: QuerySet = category_model_services.get_categories_queryset(
+            parent_category=category, ordering=self._ordering_field, **query_filters
+        )
 
         if not queryset.count():
-            convert_category_filters_to_product_filters(query_filters=query_filters)
-            queryset = self._get_products_queryset(category=category, **query_filters)
+            queryset: QuerySet = phone_model_services.get_phones_queryset(
+                category=category, ordering=self._ordering_field,
+                **convert_category_filters_to_product_filters(query_filters=query_filters),
+            )
 
             if queryset.count() == 1:
-                self._product_id = queryset[0].id
+                self._product_id = queryset.first().pk
 
         return queryset
 
-    def _get_categories_queryset(self, parent_category, **query_filters) -> QuerySet:
-        return Category.objects.filter(
-            parent=parent_category,
-        ).values("title").annotate(
-            price=Avg(F("phone__price")),
-            photo=Max(F("phone__photo")),
-            _count_items_in=Sum("phone__products_count")
-        ).filter(
-            **query_filters, _count_items_in__gt=0
-        ).annotate(
-            count_products_in=Count("phone")
-        ).order_by(
-            self.get_ordering()
-        )
-
-    def _get_products_queryset(self, category, **query_filters):
-        return Phone.objects.filter(
-            category=category,
-            products_count__gt=0,
-            **query_filters
-        ).order_by(
-            self.get_ordering()
-        )
-
     def _complement_context(self, current_context: dict) -> None:
-        self._set_max_product_price()
-        price_range_bounds = self._get_acceptable_price_range_bounds(max_price_bound=self._max_product_price)
-        filters_window_display = int(self.request.GET.get("filters", 0))
+        price_range_bounds = services_utils.get_product_prices_bounds(
+            request_get_args=self.request.GET, max_price_bound=self._max_product_price
+        )
 
-        current_context.update({
-            "filters": filters_window_display,
-            "url_args": compile_url_args_for_pagination(
-                price=get_url_arg_from_ordering_field(field=self.get_ordering()),
-                min_=price_range_bounds[0],
-                filters=filters_window_display,
-                max_=price_range_bounds[1],
-                stortage=self.request.GET.getlist("stortage"),
-                color=self.request.GET.getlist("color"),
-            ),
-            "url_args_invert_sorting": compile_url_args_for_pagination(
-                price=invert_sorting(get_url_arg_from_ordering_field(field=self.get_ordering())),
-                min_=price_range_bounds[0],
-                filters=filters_window_display,
-                max_=price_range_bounds[1],
-                stortage=self.request.GET.getlist("stortage"),
-                color=self.request.GET.getlist("color"),
-            ),
-            "max_item_price": self._max_product_price,
-            "price_lower_bound": price_range_bounds[0],
-            "price_upper_bound": price_range_bounds[-1],
-            "supported_stortage_sizes": Phone.STORTAGE_ID_BY_SIZE.keys(),
-            "supported_colors": tuple(Phone.COLOR_CODE_BY_NAME.keys()),
-            "supported_color_codes": tuple(Phone.COLOR_CODE_BY_NAME.values()),
-            "category_name": self.kwargs.get("category")
-        })
+        filters_window_displayed = services_utils.filters_window_requested(request_get_args=self.request.GET)
 
-        if self.request.GET.getlist("stortage") or self.request.GET.getlist("color"):
-            for url_multiple_arg_name in "stortage", "color":
-                current_context.update(
-                    {f"selected_{url_multiple_arg_name}_values":
-                        tuple(
-                            int(url_value) if url_value.isdigit() else url_value for url_value in
-                            self.request.GET.getlist(url_multiple_arg_name)
-                        )}
-                )
+        url_arguments = dict(
+            price=urls_services.get_url_arg_from_ordering_field(field=self._ordering_field),
+            min_=price_range_bounds[0],
+            filters=filters_window_displayed,
+            max_=price_range_bounds[1],
+            **{multiple_url_arg: self.request.GET.getlist(multiple_url_arg)
+               for multiple_url_arg in self._MULTIPLE_VALUES_URL_ARGS}
+        )
 
-    def _get_acceptable_price_range_bounds(self, max_price_bound=5000) -> tuple:
-        try:
-            bounds = int(self.request.GET.get("min", 0)), int(self.request.GET.get("max", max_price_bound))
-        except:
-            return 0, max_price_bound
+        current_context.update(dict(
+            filters=filters_window_displayed,
+            price_bounds=price_range_bounds,
+            max_item_price=self._max_product_price,
+            category_name=self.kwargs.get("category"),
+            url_args=urls_services.compile_url_args(**url_arguments),
+            url_args_invert_sorting=urls_services.compile_inverted_price_url_args(**url_arguments),
+            **{f"supported_{multiple_url_arg}s": self._CHOISES_LIST_FOR_FIELD[multiple_url_arg]
+               for multiple_url_arg in self._MULTIPLE_VALUES_URL_ARGS}
+        ))
 
-        if bounds[0] > bounds[1]:
-            return 0, bounds[1]
+        if any(self.request.GET.getlist(multiple_url_arg) for multiple_url_arg in self._MULTIPLE_VALUES_URL_ARGS):
+            for url_multiple_arg_name in self._MULTIPLE_VALUES_URL_ARGS:
+                current_context.update({f"selected_{url_multiple_arg_name}_values": tuple(
+                    int(url_value) if url_value.isdigit() else url_value
+                    for url_value in self.request.GET.getlist(url_multiple_arg_name)
+                )})
 
-        return int(self.request.GET.get("min", 0)), int(self.request.GET.get("max", max_price_bound))
+    def _set_ordering_field(self, request: WSGIRequest):
+        self._ordering_field = urls_services.get_ordering_field_from_url_arg(
+            url_arg=request.GET.get("price"), field="price"
+        )
 
-    def _set_max_product_price(self) -> int:
-        max_price = Phone.objects.all().aggregate(Max('price'))["price__max"]
-
-        if max_price:
-            self._max_product_price = max_price + 1
-        else:
-            self._max_product_price = 5000
+    def _set_max_product_price(self) -> None:
+        self._max_product_price = phone_model_services.get_max_phone_price()
 
 
 class ProductDetailView(DetailView):
@@ -183,27 +154,16 @@ class ProductDetailView(DetailView):
     template_name = "products/product-details.html"
     context_object_name = "item_info"
 
-    _product_author_id: int
-    _product_views: int
-
-    def get_object(self, queryset=None):
-        card_specs: Phone = Phone.objects.get(pk=self.kwargs.get("pk"))
-        self._product_author_id = card_specs.author.id
-        self._product_views = card_specs.views
-
-        if not self.request.__dict__.get("user") or self.request.user != card_specs.author:
-            increment_product_views(phone=card_specs)
-
-        return card_specs
+    object: BaseProduct
+    __card_viewer_is_owner: bool = None
 
     def get_context_data(self, **kwargs):
         current_context = super().get_context_data(**kwargs)
 
-        current_context.update({
-            "viewer_is_author": self.request.__dict__.get("user") and self.request.user.id == self._product_author_id
-        })
-        current_context.update({"stortage": current_context["item_info"].get_stortage_display()})
-        current_context.update({"views": self._product_views})
+        current_context.update(dict(
+            viewer_is_author=self._card_viewer_is_owner,
+            storage=current_context["item_info"].get_storage_display(),
+        ))
 
         return current_context
 
@@ -211,13 +171,25 @@ class ProductDetailView(DetailView):
         if not context["viewer_is_author"] and self.object.products_count < 1:
             return HttpResponseRedirect(redirect_to=reverse("product-not-exist"))
 
+        if not self._card_viewer_is_owner:
+            increment_product_views(phone=self.object)
+
         return super().render_to_response(context=context, **response_kwargs)
+
+    @property
+    def _card_viewer_is_owner(self) -> bool:
+        if not self.__card_viewer_is_owner:
+            self.__card_viewer_is_owner = (self.request.__dict__.get("user") and
+                                           self.request.user == self.object.author)
+
+        return self.__card_viewer_is_owner
 
 
 class AddProductView(UserLoginRequiredMixin, CreateView):
     model = Phone
     template_name = "products/add-product.html"
     form_class = AddProductForm
+
     _created_product_category_name: str
 
     def get_success_url(self):
@@ -227,42 +199,34 @@ class AddProductView(UserLoginRequiredMixin, CreateView):
         form.instance.author, self._created_product_category_name = self.request.user, form.instance.category
 
         try:
-            target_category = Category.objects.get(title=spaces_to_dashes(form.instance.title))
-        except:
-            new_category = Category(title=form.instance.title,
-                                    parent=form.instance.category,
-                                    photo=form.instance.photo)
-            try:
-                new_category.full_clean()
-            except ValidationError:
-                return super().form_invalid(form=form)
-            else:
-                new_category.save()
-
-            target_category = new_category
+            target_category, _ = Category.objects.get_or_create(
+                title=spaces_to_dashes(form.instance.title),
+                defaults=dict(parent=form.instance.category,
+                              photo=form.instance.photo)
+            )
+        except ValidationError:
+            return super().form_invalid(form=form)
 
         form.instance.category = target_category
 
-        return super(AddProductView, self).form_valid(form=form)
+        return super().form_valid(form=form)
 
 
 class EditProductView(AddProductView):
     form_class = EditProductForm
+
     _current_product: Phone = None
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
 
         if not self._current_product:
-            self._current_product = self.get_object()
+            self._current_product = self.object or self.get_object()
 
         kwargs['instance'] = self._current_product
-        kwargs['instance'].title = dashes_to_spaces(string=kwargs['instance'].readable_title())
+        kwargs['instance'].title = kwargs['instance'].readable_title()
 
         return kwargs
-
-    def get_object(self, *args, **kwargs) -> Phone:
-        return self.model.objects.get(pk=self.kwargs.get("pk"))
 
     def get_context_data(self, **kwargs):
         current_context = super().get_context_data(**kwargs)
@@ -284,4 +248,3 @@ class DeleteUserProductView(UserLoginRequiredMixin, DeleteView):
 
 class ProductDoesNotExistWarningView(UserLoginRequiredMixin, TemplateView):
     template_name = "products/product-does-not-exist.html"
-

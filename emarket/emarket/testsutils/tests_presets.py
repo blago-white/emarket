@@ -1,8 +1,7 @@
+from django.contrib.auth.models import User
 from django.core.handlers.wsgi import WSGIRequest
 from django.test import TestCase
 from django.test.client import RequestFactory
-from django.contrib.auth.models import User
-from products.models.models import Category, Phone
 
 __all__ = ["TEST_USER_DEFAULT_PASSWORD",
            "TEST_USER_DEFAULT_USERNAME",
@@ -28,7 +27,7 @@ TEST_PHONE_DEFAULT_FIELDS = dict(
     products_count=1,
     author=None,
     color="#222222",
-    stortage=1
+    storage=1
 )
 TEST_CATEGORY_DEFAULT_FIELDS = dict(
     title="testcategory",

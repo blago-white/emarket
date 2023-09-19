@@ -1,20 +1,15 @@
-from django.http import HttpResponseRedirect, HttpResponse
-from django.core.handlers.wsgi import WSGIRequest
-from django.urls import reverse
-from django.test import TestCase
-from django.test.client import RequestFactory
 from django.contrib.auth.models import User
-
+from django.core.handlers.wsgi import WSGIRequest
+from django.http import HttpResponseRedirect
+from django.test.client import RequestFactory
+from django.urls import reverse
 from emarket.testsutils import tests_presets
 from emarket.testsutils import tests_utils
 
 from products.models.models import Phone
 from users.models.models import Notifications
-
-from ..views import ShoppingBasketView, DeleteProductFromBasketView, AddProductToBasketView, BuyProductView
 from ..models import ShoppingBasket
-
-from . import *
+from ..views import ShoppingBasketView, DeleteProductFromBasketView, AddProductToBasketView, BuyProductView
 
 
 class _BaseShoppingBasketViewTestCase(tests_presets.BaseSingleUserTestCase):

@@ -1,5 +1,6 @@
-from django.db import models
 from django.contrib.auth.models import User
+from django.db import models
+
 from products.models.models import Phone
 
 __all__ = ["ShoppingBasket"]

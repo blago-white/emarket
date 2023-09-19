@@ -1,21 +1,31 @@
-from typing import Union
-from abc import ABCMeta
-
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
+from emarket import config
+
 from . import validators
 from .utils import get_image_path, delete_photo
 from ..filters import spaces_to_dashes, dashes_to_spaces
 
-__all__ = ["Category", "Phone"]
+__all__ = ["BaseProduct", "Category", "Phone"]
 
 
 class _BaseModelWithTitle:
+    title: str
+
     def readable_title(self):
         return dashes_to_spaces(self.title)
+
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        if " " in self.title:
+            self.title = spaces_to_dashes(self.title)
+
+        return super().save(force_insert=force_insert,
+                            force_update=force_update,
+                            using=using,
+                            update_fields=update_fields)
 
 
 class Category(_BaseModelWithTitle, models.Model):
@@ -43,13 +53,6 @@ class Category(_BaseModelWithTitle, models.Model):
         delete_photo(model=self)
         super().delete(using=using, keep_parents=keep_parents)
 
-    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
-        self.title = spaces_to_dashes(self.title)
-        return super().save(force_insert=force_insert,
-                            force_update=force_update,
-                            using=using,
-                            update_fields=update_fields)
-
     def clean(self):
         if not self.parent and not self.title.isalpha():
             raise ValidationError("title of category without parent may contain only lowercase words and spaces")
@@ -57,13 +60,16 @@ class Category(_BaseModelWithTitle, models.Model):
         if not self.parent:
             validators.parent_category_title_validator(value=self.title)
 
+    def readable_title(self):
+        return super().readable_title()
+
     class Meta:
         db_table = "products_categories"
         verbose_name = "Category"
         verbose_name_plural = "Categories"
 
 
-class _BaseProduct(_BaseModelWithTitle, models.Model):
+class BaseProduct(_BaseModelWithTitle, models.Model):
     title = models.CharField("Name of product",
                              max_length=100,
                              validators=[validators.card_title_validator],
@@ -95,45 +101,28 @@ class _BaseProduct(_BaseModelWithTitle, models.Model):
                                verbose_name="Creator's account",
                                null=False)
 
-    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
-        self.title = spaces_to_dashes(self.title)
-        return super().save(force_insert=force_insert,
-                            force_update=force_update,
-                            using=using,
-                            update_fields=update_fields)
-
     class Meta:
         abstract = True
 
 
-class Phone(_BaseProduct):
-    BASE_COLORS = [("#FFEDDA", "white"),
-                   ("#E4717A", "red"),
-                   ("#FCE883", "yellow"),
-                   ("#A8E4A0", "green"),
-                   ("#AFDAFC", "blue"),
-                   ("#CCCCFF", "purple"),
-                   ("#222222", "black")]
+class Phone(BaseProduct):
+    BASE_COLORS = config.PRODUCTS_COLORS
 
-    STORTAGE_SIZES = [(1, 64),
-                      (2, 128),
-                      (3, 256),
-                      (4, 512),
-                      (5, 1024)]
+    COLOR_NAMES = tuple([color[-1] for color in BASE_COLORS])
 
-    STORTAGE_ID_BY_SIZE = {stortage_size: stortage_id for stortage_id, stortage_size in STORTAGE_SIZES}
+    STORTAGE_SIZES = config.PRODUCTS_STORTAGE_SIZES
 
-    COLOR_CODE_BY_NAME = {color_name: color_code for color_code, color_name in BASE_COLORS}
+    STORAGE_SIZES_NAMES = tuple([storage_size[-1] for storage_size in STORTAGE_SIZES])
 
     color = models.CharField(verbose_name="Color of product",
                              choices=BASE_COLORS,
                              null=False,
                              blank=False)
 
-    stortage = models.PositiveSmallIntegerField(verbose_name="Stortage size",
-                                                choices=STORTAGE_SIZES,
-                                                null=False,
-                                                blank=False)
+    storage = models.PositiveSmallIntegerField(verbose_name="Stortage size",
+                                               choices=STORTAGE_SIZES,
+                                               null=False,
+                                               blank=False)
 
     def __str__(self):
         return self.title
@@ -151,4 +140,4 @@ class Phone(_BaseProduct):
         db_table = "products_phones"
         verbose_name = "Phone"
         verbose_name_plural = "Phone"
-        unique_together = ("title", "author", "price", "color", "stortage")
+        unique_together = ("title", "author", "price", "color", "storage")

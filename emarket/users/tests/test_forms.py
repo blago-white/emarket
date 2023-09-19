@@ -1,8 +1,7 @@
 from django.core.exceptions import ValidationError
 from django.test import TestCase
-from django.contrib.auth.models import User
-
 from emarket.testsutils.tests_utils import create_test_user
+
 from . import *
 from ..forms import RegisterUserForm
 

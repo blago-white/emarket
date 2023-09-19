@@ -1,10 +1,10 @@
 import hashlib
-import random
 import os
+import random
 
+from django.conf import settings
 from django.db import models
 from django.db.models import F
-from django.conf import settings
 
 from .. import filters
 
@@ -43,20 +43,13 @@ def delete_photo(model: models.Model):
     _delete_photo_dir_if_empty(path=model_photo_folder_path)
 
 
-def _delete_photo_dir_if_empty(path: str) -> None:
-    try:
-        os.rmdir(path)
-    except OSError:
-        pass
-
-
-def convert_category_filters_to_product_filters(query_filters: dict) -> None:
-    for query_filter_column, query_filter_value in tuple(zip(query_filters.keys(), query_filters.values())):
-        if not ("phone__" in query_filter_column):
-            continue
-
-        query_filters[query_filter_column.replace("phone__", "")] = query_filters[query_filter_column]
-        del query_filters[query_filter_column]
+def convert_category_filters_to_product_filters(query_filters: dict) -> dict:
+    return {
+        query_filter_column.replace("phone__", ""): query_filter_value
+        for query_filter_column, query_filter_value in tuple(
+            zip(query_filters.keys(), query_filters.values())
+        )
+    }
 
 
 def _form_load_path_to_image(**path_parts: dict) -> str:
@@ -74,6 +67,13 @@ def _form_load_path_to_image(**path_parts: dict) -> str:
 def _get_image_name(filename: str) -> str:
     filename = "".join(random.choice(list(filename)))
     return hashlib.sha256(filename.encode("utf-8")).hexdigest()
+
+
+def _delete_photo_dir_if_empty(path: str) -> None:
+    try:
+        os.rmdir(path)
+    except OSError:
+        pass
 
 
 def _get_target_directory(model: models.Model) -> str:

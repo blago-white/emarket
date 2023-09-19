@@ -1,21 +1,18 @@
 from allauth.account.views import PasswordResetView as AllauthPasswordResetView
-
-from django.http.response import HttpResponseRedirect
-from django.core.handlers.wsgi import WSGIRequest
 from django.contrib.auth.models import AnonymousUser
-from django.urls import reverse
+from django.contrib.auth.models import User
+from django.core.handlers.wsgi import WSGIRequest
+from django.http.response import HttpResponseRedirect
+from django.template.response import TemplateResponse
 from django.test import TestCase
 from django.test.client import RequestFactory
-from django.contrib.auth.models import User
-from django.template.response import TemplateResponse
-
-from products.models.models import Phone, Category
+from django.urls import reverse
 from emarket.testsutils import tests_presets, tests_utils
+from emarket.testsutils.tests_presets import *
 
+from . import *
 from ..models.models import UserProfile, Notifications
-from ..forms import RegisterUserForm
-from ..views import (BaseAccountView,
-                     LoginUserView,
+from ..views import (LoginUserView,
                      UserPasswordChangeView,
                      AccountInfoView,
                      AccountProductsView,
@@ -24,9 +21,6 @@ from ..views import (BaseAccountView,
                      ChangeAccountDataView,
                      ResetUserPasswordView,
                      RedirectToAccountInfoView)
-
-from . import *
-from emarket.testsutils.tests_presets import *
 
 
 class _BaseNotificationsTestCase(tests_presets.BaseSingleUserTestCase):

@@ -2,7 +2,6 @@
 .coverage
 .gitignore
 .git
-.idea
 .env
 
 htmlcov

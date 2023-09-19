@@ -1,13 +1,12 @@
-from django.urls import reverse
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.http import HttpResponseRedirect, HttpResponse
 from django.template.response import TemplateResponse
-from django.core.files.uploadedfile import SimpleUploadedFile
-
+from django.urls import reverse
+from emarket.testsutils import tests_utils
 from emarket.testsutils.tests_presets import (BaseSingleUserTestCase,
                                               BaseTwinUsersTestCase,
                                               TEST_CATEGORY_DEFAULT_FIELDS,
                                               TEST_PHONE_DEFAULT_FIELDS)
-from emarket.testsutils import tests_utils
 
 from ..filters import dashes_to_spaces, spaces_to_dashes
 from ..models.models import Category, Phone
@@ -48,7 +47,7 @@ class ProductsViewTestCase(BaseSingleUserTestCase):
     def _test_get_filtered_queryset(self):
         self._test_queryset_ordering()
         self._test_queryset_prices_range()
-        self._test_queryset_stortage_filter()
+        self._test_queryset_storage_filter()
         self._test_queryset_color_filter()
         self._test_queryset_null_products_count()
 
@@ -111,32 +110,32 @@ class ProductsViewTestCase(BaseSingleUserTestCase):
             tuple(ProductsView.as_view()(
                 self.request_factory.get(
                     reverse("category-products", kwargs={"category": TEST_CATEGORY_DEFAULT_FIELDS["title"]}) +
-                    "?stortage=256"
+                    "?storage=256"
                 ), category=TEST_CATEGORY_DEFAULT_FIELDS["title"]).context_data["items"]),
-            tuple(Phone.objects.filter(stortage=3)))
+            tuple(Phone.objects.filter(storage=3)))
 
         self.assertFalse(
             ProductsView.as_view()(
                 self.request_factory.get(
                     reverse("category-products", kwargs={"category": TEST_CATEGORY_DEFAULT_FIELDS["title"]}) +
-                    "?stortage=0"
+                    "?storage=0"
                 ), category=TEST_CATEGORY_DEFAULT_FIELDS["title"]).context_data["items"].exists()
         )
 
-    def _test_queryset_stortage_filter(self):
+    def _test_queryset_storage_filter(self):
         self.assertEqual(
             tuple(ProductsView.as_view()(self.request_factory.get(
                 reverse("category-products", kwargs={"category": TEST_CATEGORY_DEFAULT_FIELDS["title"]}) +
-                "?stortage=256"), category=TEST_CATEGORY_DEFAULT_FIELDS["title"]
+                "?storage=256"), category=TEST_CATEGORY_DEFAULT_FIELDS["title"]
             ).context_data["items"]),
-            tuple(Phone.objects.filter(stortage=3))
+            tuple(Phone.objects.filter(storage=3))
         )
 
         self.assertFalse(
             ProductsView.as_view()(
                 self.request_factory.get(
                     reverse("category-products", kwargs={"category": TEST_CATEGORY_DEFAULT_FIELDS["title"]}) +
-                    "?stortage=0"), category=TEST_CATEGORY_DEFAULT_FIELDS["title"]
+                    "?storage=0"), category=TEST_CATEGORY_DEFAULT_FIELDS["title"]
             ).context_data["items"].exists()
         )
 
@@ -169,7 +168,7 @@ class ProductsViewTestCase(BaseSingleUserTestCase):
                   products_count=1,
                   author=self.test_user,
                   color="#E4717A",
-                  stortage=3),
+                  storage=3),
             Phone(title="test-phone-third",
                   category=self._test_category,
                   photo="test-photo.jpg",
@@ -178,7 +177,7 @@ class ProductsViewTestCase(BaseSingleUserTestCase):
                   products_count=1,
                   author=self.test_user,
                   color="#E4717A",
-                  stortage=3)
+                  storage=3)
         ]
 
         for custom_phone in custom_test_products:
@@ -199,14 +198,14 @@ class ProductDetailViewTestCase(BaseTwinUsersTestCase):
 
     def test_get_context_data(self):
         self._test_viewer_is_author_context()
-        self._test_phone_stortage_display()
+        self._test_phone_storage_display()
 
-    def _test_phone_stortage_display(self):
+    def _test_phone_storage_display(self):
         self.assertEqual(
             ProductDetailView.as_view()(
                 self.request_factory.get(reverse("product-card", kwargs={"pk": self._test_product.id})),
-                pk=self._test_product.id).context_data.get("stortage"),
-            self._test_product.get_stortage_display()
+                pk=self._test_product.id).context_data.get("storage"),
+            self._test_product.get_storage_display()
         )
 
     def _test_viewer_is_author_context(self):

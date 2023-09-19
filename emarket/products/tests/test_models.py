@@ -1,8 +1,6 @@
 from django.core.exceptions import ValidationError
-from django.test import TestCase
-
-from emarket.testsutils.tests_presets import BaseSingleUserTestCase, TEST_PHONE_DEFAULT_FIELDS
 from emarket.testsutils import tests_utils
+from emarket.testsutils.tests_presets import BaseSingleUserTestCase, TEST_PHONE_DEFAULT_FIELDS
 
 from ..filters import dashes_to_spaces
 from ..models.models import Phone, Category

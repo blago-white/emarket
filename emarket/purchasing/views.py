@@ -1,16 +1,18 @@
+from django.contrib.auth.models import User
 from django.db import IntegrityError
+from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic import DeleteView, ListView, CreateView
-from django.contrib.auth.models import User
-from django.http import HttpResponseRedirect
+
 from products.models.models import Phone
 from products.models.utils import decrease_phones_count
-from users.views import BaseAccountView
+from users import sections
 from users.mixins import UserLoginRequiredMixin
-from .notifications import purchase_notification, product_is_over_notification
+from users.views import BaseAccountView
+
 from .models import ShoppingBasket
+from .notifications import purchase_notification, product_is_over_notification
 from .filters import *
-from . import *
 
 __all__ = ["ShoppingBasketView", "DeleteProductFromBasketView", "BuyProductView", "AddProductToBasketView"]
 
@@ -19,7 +21,7 @@ class ShoppingBasketView(UserLoginRequiredMixin, BaseAccountView, ListView):
     model = ShoppingBasket
     template_name = "purchasing/basket.html"
     context_object_name = "products"
-    section = "basket"
+    section = sections.BasketAccountSection
 
     def get_context_data(self, **kwargs):
         current_context = super().get_context_data(**kwargs)
@@ -64,6 +66,7 @@ class AddProductToBasketView(UserLoginRequiredMixin, CreateView):
 class BuyProductView(UserLoginRequiredMixin, DeleteView):
     model = ShoppingBasket
     success_url = reverse_lazy("basket")
+
     _user_data: User
     _product_data: Phone
 

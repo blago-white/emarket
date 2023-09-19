@@ -1,7 +1,5 @@
-from django.test import TestCase
-
-from emarket.testsutils.tests_presets import BaseSingleUserTestCase
 from emarket.testsutils import tests_utils
+from emarket.testsutils.tests_presets import BaseSingleUserTestCase
 
 from products.models import models
 from products.models import utils

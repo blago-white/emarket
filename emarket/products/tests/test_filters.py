@@ -59,7 +59,7 @@ class FiltersTestCase(TestCase):
         )
 
         for inputs, result in test_compile_url_args_for_pagination_values:
-            self.assertEqual(compile_url_args_for_pagination(**inputs), result)
+            self.assertEqual(compile_url_args(**inputs), result)
 
     def test_get_ordering_field_from_url_arg(self) -> None:
         test_get_ordering_field_from_url_arg_values = ((("0", "price"), "price"),

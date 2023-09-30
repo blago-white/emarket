@@ -19,6 +19,7 @@ urlpatterns = [
     path('<int:pk>/cards', AccountProductsView.as_view(), name="account-products"),
     path('logout/', LogoutUserView.as_view(), name="logout"),
     path('email/', RedirectToAccountInfoView.as_view(), name="account_email"),
+    path('delivered/', DistributionDeliveredView.as_view(), name="distribution-delivered"),
     re_path(
         r"^password/reset/key/(?P<uidb36>[0-9A-Za-z]+)-(?P<key>.+)/$",
         ResetUserPasswordFromKeyView.as_view(),

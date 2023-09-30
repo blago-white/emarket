@@ -6,8 +6,9 @@ from django.db import models
 from django.dispatch import receiver
 
 from .utils import get_image_path
+from emarket import config
 
-__all__ = ["Notifications", "UserProfile"]
+__all__ = ["Notifications", "UserProfile", "DistributionDeliveredMessage"]
 
 
 @receiver(email_confirmed)
@@ -71,15 +72,38 @@ class UserProfile(models.Model):
         except:
             return self.avatar
 
-        if photo_width < 300 or photo_height < 300:
-            raise ValidationError("Photo dimensions are too small (minimum: width - 300 height - 500)")
-
-        elif photo_width > 4500 or photo_height > 5000:
-            raise ValidationError("Photo dimensions are too large (maximum: width - 4500 height - 5000)")
+        self._validate_photo_resolution(photo_width=photo_width, photo_height=photo_height)
 
         return self.avatar
+
+    @staticmethod
+    def _validate_photo_resolution(photo_width: int, photo_height: int) -> None:
+        if photo_width < config.MINIMUM_PHOTO_RESOLUTION_WIDTH or photo_height < config.MINIMUM_PHOTO_RESOLUTION_HEIGHT:
+            raise ValidationError(
+                "Photo dimensions are too small (minimum: "
+                f"width - {config.MINIMUM_PHOTO_RESOLUTION_WIDTH} "
+                f"height - {config.MINIMUM_PHOTO_RESOLUTION_HEIGHT})"
+            )
+
+        elif photo_width > config.MAXIMUM_PHOTO_RESOLUTION_WIDTH or photo_height > config.MAXIMUM_PHOTO_RESOLUTION_HEIGHT:
+            raise ValidationError("Photo dimensions are too large (maximum: "
+                                  f"width - {config.MAXIMUM_PHOTO_RESOLUTION_WIDTH} "
+                                  f"height - {config.MAXIMUM_PHOTO_RESOLUTION_HEIGHT})")
 
     class Meta:
         db_table = "users_profiles"
         verbose_name = "UserProfile"
         verbose_name_plural = "UserProfiles"
+
+
+class DistributionDeliveredMessage(models.Model):
+    ip = models.GenericIPAddressField(verbose_name="User IP address", protocol="IPv4", null=False, primary_key=True)
+    date = models.DateField(verbose_name="Date the user viewed the notification", auto_now=True, auto_created=True)
+
+    def __str__(self):
+        return f"Message for {self.ip} delivered"
+
+    class Meta:
+        db_table = "distribution_delivered_messages"
+        verbose_name = "Distribution message delivered"
+        verbose_name_plural = "Delivered distribution messages"

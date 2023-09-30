@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 {% load static %}
+
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}{% endblock %}</title>
@@ -16,7 +17,7 @@
     <div style="position: fixed;width: 100vw;height: 100vh;overflow: hidden;
                 background: url({% if current_account_avatar_url|truncate:4 == 'http' %}{{ current_account_avatar_url }}{% else %}{{ current_account_avatar_url }}{% endif %});
                 background-position: center center;background-size: cover;
-                filter: blur(2.5em);opacity: 0.4;z-index: -1;"></div>
+                filter: blur(2.5em);opacity: 0.4;z-index: {{current_account_avatar_url}};"></div>
     {% elif user.profile.avatar.name or user.socialaccount_set.all.0.get_avatar_url %}
     <div style="position: fixed;width: 100vw;height: 100vh;overflow: hidden;
                 background: url({% if user.socialaccount_set.all.0.get_avatar_url %}{{ user.socialaccount_set.all.0.get_avatar_url }}{% else %}{% static user.profile.avatar.name|get_media_path %}{% endif %});
@@ -36,6 +37,9 @@
     {% endblock %}
     {% block rootcontent %}
     {% endblock %}
+    {% if request|show_notify_user %}
+        {% include 'about-emarket-notification.html' %}
+    {% endif %}
     <script type="text/javascript" src="{% static 'js\main-bg-switch.js' %}"></script>
     <script type="text/javascript" src="{% static 'js\floated-element.js' %}"></script>
     {% block scripts %}

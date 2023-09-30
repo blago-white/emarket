@@ -1,4 +1,6 @@
+import json
 import django
+
 from allauth.account.utils import send_email_confirmation
 from allauth.account.views import (LoginView,
                                    LogoutView,
@@ -9,18 +11,21 @@ from allauth.account.views import (LoginView,
                                    PasswordResetDoneView,
                                    PasswordResetFromKeyView)
 from allauth.socialaccount.views import LoginErrorView
+
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError
-from django.http import HttpResponseRedirect, HttpRequest
+from django.http import HttpResponseRedirect, HttpRequest, JsonResponse
 from django.middleware.csrf import get_token
 from django.urls import reverse_lazy
-from django.views.generic import DetailView, ListView, DeleteView, UpdateView, RedirectView, TemplateView
+from django.views.decorators import csrf
+from django.utils.decorators import method_decorator
+from django.views.generic import DetailView, ListView, DeleteView, UpdateView, RedirectView, TemplateView, CreateView
 
 from products.models.models import Phone
 from .forms import RegisterUserForm, ChangeUsernameForm, ChangeEmailForm, ChangeAvatarForm
 from .mixins import UserLoginRequiredMixin
-from .models.models import UserProfile, Notifications
+from .models.models import UserProfile, Notifications, DistributionDeliveredMessage
 from .services import users
 from . import sections
 
@@ -31,7 +36,7 @@ __all__ = ["RegisterUserView", "UserLoginErrorView", "LoginUserView",
            "AccountProductsView", "AccountNotificationsView", "AccountNotificationDeleteView",
            "LogoutUserView", "ChangeAccountDataView", "UserEmailVerificationView",
            "ResetUserPasswordView", "ResetUserPasswordDoneView", "ResetUserPasswordFromKeyView",
-           "RedirectToAccountInfoView", "AboutInfoView"]
+           "RedirectToAccountInfoView", "AboutInfoView", "DistributionDeliveredView"]
 
 
 class BaseAccountView:
@@ -86,19 +91,17 @@ class RegisterUserView(SignupView):
 
     def form_valid(self, form):
         form.instance.username = users.get_username_by_mail(mail_adress=form.instance.email)
-        http_response = super().form_valid(form=form)
+        success_response = super().form_valid(form=form)
 
         try:
-            self._try_create_empty_user_profile()
+            self._create_empty_user_profile()
         except:
             return super().form_invalid(form=form)
 
-        return http_response
+        return success_response
 
-    def _try_create_empty_user_profile(self) -> None:
-        new_profile = UserProfile(user=self.user)
-        new_profile.full_clean()
-        new_profile.save()
+    def _create_empty_user_profile(self) -> None:
+        UserProfile(user=self.user).save()
 
 
 class UserLoginErrorView(LoginErrorView):
@@ -344,6 +347,25 @@ class ResetUserPasswordFromKeyView(PasswordResetFromKeyView):
 class RedirectToAccountInfoView(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         return reverse_lazy("account-info", kwargs={"pk": self.request.user.id})
+
+
+@method_decorator(csrf.csrf_exempt, name="dispatch")
+class DistributionDeliveredView(CreateView):
+    http_method_names = ["post",
+                         "head",
+                         "options",
+                         "trace"]
+
+    def post(self, request, *args, **kwargs):
+        self._on_delivered_successful(request=request)
+        return JsonResponse({"OK": True})
+
+    def _on_delivered_successful(self, request: HttpRequest):
+        self._set_delivered_status_for_user(user_ipv4=get_user_ip_from_request(request=request))
+
+    @staticmethod
+    def _set_delivered_status_for_user(user_ipv4: str):
+        DistributionDeliveredMessage(ip=user_ipv4).save()
 
 
 def _get_url_with_args(url: str, **url_args) -> str:

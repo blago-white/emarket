@@ -1,0 +1,72 @@
+@import "small-screen-error-message.css";
+
+:root {
+    --highlight-color: rgba(255,106,103,1);
+    --dark-highlight-color: rgba(130, 78, 77, 1);
+    --regular-text-color: beige;
+}
+
+.canvas-content {
+    display: flex;
+    width: 80%;
+    max-width: 25em;
+    border: 3px solid var(--highlight-color);
+    backdrop-filter: blur(3em);
+    flex-direction: column;
+    gap: 0.5em;
+    transition: all .2s ease;
+}
+
+.canvas-content::-webkit-scrollbar {
+    display: none;
+}
+
+.full-screen-warn-canvas-bg {
+    backdrop-filter: brightness(0.2);
+}
+
+.full-screen-warn-canvas {
+    position: sticky;
+    bottom: 0px;
+}
+
+.emarket-notified-button {
+    background: var(--highlight-color);
+    border-radius: .2em;
+    font-weight: 400;
+    border: 0px;
+    color: beige;
+    transition: all .2s;
+}
+
+.notification-message span {
+    background: var(--highlight-color);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.highlighted-text-main {
+    display: flex;
+    justify-content: center;
+    font-weight: bold;
+    font-size: min(12vw, 400%);
+    align-items: center;
+    gap: .1ch;
+    border-block-end: 1px solid var(--dark-highlight-color);
+}
+
+.highlighted-text-main-first-part {
+    background: transparent!important;
+    -webkit-text-stroke: 1px var(--highlight-color);
+    -webkit-text-fill-color:transparent!important;
+}
+
+.highlighted-text-main-second-part {
+    -webkit-text-fill-color: var(--highlight-color)!important;
+    line-height: 1em;
+}
+
+.notification-message {
+    font-weight: 400;
+    color: var(--regular-text-color);
+}

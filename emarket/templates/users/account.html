@@ -62,7 +62,7 @@
                     </a>
                 </nav>
             </div>
-            {% if current_section == 'info' %}
+            {% if current_section == 'info' and current_account_avatar_url %}
             <div style="{% if current_account_avatar_url %}height: 60vh;{% endif %}"
                  class="profile-body">
                 <img src="{{ current_account_avatar_url }}" class="profile-avatar" id="account-avatar">

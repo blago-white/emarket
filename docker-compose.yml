@@ -32,6 +32,7 @@ services:
       - ./emarket/media:/emarket-statics/uploads
       - /etc/letsencrypt/live/xn----8sbncyk3as.xn--p1ai/fullchain.pem:/etc/letsencrypt/live/xn----8sbncyk3as.xn--p1ai/fullchain.pem
       - /etc/letsencrypt/live/xn----8sbncyk3as.xn--p1ai/privkey.pem:/etc/letsencrypt/live/xn----8sbncyk3as.xn--p1ai/privkey.pem
+      - ../backups/nginxaccesslog.log:/var/log/nginx/access.log
     ports:
       - "443:443"
       - "80:80"

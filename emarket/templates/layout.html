@@ -13,22 +13,22 @@
     {% endblock %}
 </head>
 <body class="page-content" style="background: mintcream;">
-    {% if current_account_avatar_url %}
-    <div style="position: fixed;width: 100vw;height: 100vh;overflow: hidden;
-                background: url({% if current_account_avatar_url|truncate:4 == 'http' %}{{ current_account_avatar_url }}{% else %}{{ current_account_avatar_url }}{% endif %});
-                background-position: center center;background-size: cover;
-                filter: blur(2.5em);opacity: 0.4;z-index: {{current_account_avatar_url}};"></div>
-    {% elif user.profile.avatar.name or user.socialaccount_set.all.0.get_avatar_url %}
-    <div style="position: fixed;width: 100vw;height: 100vh;overflow: hidden;
-                background: url({% if user.socialaccount_set.all.0.get_avatar_url %}{{ user.socialaccount_set.all.0.get_avatar_url }}{% else %}{% static user.profile.avatar.name|get_media_path %}{% endif %});
-                background-position: center center;background-size: cover;
-                filter: blur(2.5em);opacity: 0.4;z-index: -1;">
-    </div>
-    {% else %}
-    <div style="position: fixed;width: 100vw;height: 100vh;overflow: hidden;
-                background: gainsboro;z-index: -1;">
-    </div>
-    {% endif %}
+     {% if current_account_avatar_url %}
+     <div style="position: fixed;width: 100vw;height: 100vh;overflow: hidden;
+                 background: url({{ current_account_avatar_url }});
+                 background-position: center center;background-size: cover;
+                 filter: blur(2.5em);opacity: 0.4;z-index: -1;"></div>
+     {% elif user.profile.avatar.name or user.socialaccount_set.all.0.get_avatar_url %}
+     <div style="position: fixed;width: 100vw;height: 100vh;overflow: hidden;
+                 background: url({% if user.socialaccount_set.all.0.get_avatar_url %}{{ user.socialaccount_set.all.0.get_avatar_url }}{% else %}{{ user.profile.avatar.name|get_media_path }}{% endif %});
+                 background-position: center center;background-size: cover;
+                 filter: blur(2.5em);opacity: 0.4;z-index: -1;">
+     </div>
+     {% else %}
+     <div style="position: fixed;width: 100vw;height: 100vh;overflow: hidden;
+                 background: darkgrey;z-index: -1;">
+     </div>
+     {% endif %}
     <div style="position: fixed;width: 100vw;height: 100vh;
                 overflow: hidden;background: url({% static 'img/white-noise.png' %});
                 background-repeat: repeat;opacity: 0.5;mix-blend-mode: overlay;z-index: -1;">

@@ -24,12 +24,12 @@
         </span>
     </div>
     {% endif %}
-    <div class="user-card-bg"  style="background: url({% static item.photo.name|get_media_path %})"></div>
-     <a class="user-card-title"
+    <div class="user-card-bg"  style="background: url({{ item.photo.name|get_media_path }})"></div>
+    <a class="user-card-title"
         href="{% url 'product-card' item.id %}"
         style="{% if not item.price and not is_self_account %}grid-row-start: 1;grid-row-end: 4;transform: none;{% endif %}">
          {{ item.readable_title }}
-     </a>
+    </a>
         <div class="user-card-price {% if not is_self_account %}static-price{% endif %}"
              style="{% if not item.products_count %}color: #fd5757;{% endif %}">
             {{ item.price }}$

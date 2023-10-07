@@ -1,6 +1,3 @@
-import json
-import django
-
 from allauth.account.utils import send_email_confirmation
 from allauth.account.views import (LoginView,
                                    LogoutView,
@@ -11,23 +8,22 @@ from allauth.account.views import (LoginView,
                                    PasswordResetDoneView,
                                    PasswordResetFromKeyView)
 from allauth.socialaccount.views import LoginErrorView
-
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError
 from django.http import HttpResponseRedirect, HttpRequest, JsonResponse
-from django.middleware.csrf import get_token
 from django.urls import reverse_lazy
-from django.views.decorators import csrf
 from django.utils.decorators import method_decorator
+from django.views.decorators import csrf
 from django.views.generic import DetailView, ListView, DeleteView, UpdateView, RedirectView, TemplateView, CreateView
 
 from products.models.models import Phone
+from . import sections
+from .filters import *
 from .forms import RegisterUserForm, ChangeUsernameForm, ChangeEmailForm, ChangeAvatarForm
 from .mixins import UserLoginRequiredMixin
 from .models.models import UserProfile, Notifications, DistributionDeliveredMessage
-from .services import users
-from . import sections
+from .services import users, passwords, urls
 
 from .filters import *
 
@@ -46,9 +42,9 @@ class BaseAccountView:
         current_context.update({"current_section": self._get_curren_section().section_name})
         current_context.update({"account_user": self.request.user})
 
-        if "pk" in self.kwargs:
-            current_context.update({"is_self_account": int(self.kwargs.get("pk")) == int(self.request.user.id)})
-            current_context.update({"account_user": User.objects.get(pk=self.kwargs.get("pk"))})
+        if account_owner_id := self.kwargs.get("pk"):
+            current_context.update({"is_self_account": int(account_owner_id) == int(self.request.user.id)})
+            current_context.update({"account_user": User.objects.get(pk=account_owner_id)})
 
         if current_context["current_section"] == "info":
             current_context.update(
@@ -202,6 +198,7 @@ class AccountNotificationsView(UserLoginRequiredMixin, BaseAccountView, ListView
 
     def get_context_data(self, **kwargs):
         current_context = super().get_context_data(**kwargs)
+
         current_context.update({"is_self_account": True})
         current_context.update({"available_themes": (i[0] for i in Notifications.NOTIFICATIONS_THEMES)})
 
@@ -284,7 +281,7 @@ class ChangeAccountDataView(UpdateView):
         try:
             send_email_confirmation(request=self.request, user=self.request.user, email=email)
         except Exception as exception:
-            return _get_url_with_args(url=self.get_success_url(),
+            return urls.get_url_with_args(url=self.get_success_url(),
                                       error="exist-email" if exception == IntegrityError else "unexpected-error-email")
 
         return reverse_lazy("account_email_verification_sent")
@@ -305,7 +302,7 @@ class ChangeAccountDataView(UpdateView):
         else:
             error_code = "unexpected-error-username"
 
-        return _get_url_with_args(url=self.get_success_url(), error=error_code)
+        return urls.get_url_with_args(url=self.get_success_url(), error=error_code)
 
     def _try_update_user_field(self) -> None:
         self._user_to_update.__dict__[self._field_name] = self._value_from_request
@@ -322,7 +319,7 @@ class ResetUserPasswordView(PasswordResetView):
 
     def get(self, request, *args, **kwargs):
         try:
-            return send_reset_password_email(user=request.user)
+            return PasswordResetView.as_view()(passwords.get_reset_password_request(user=request.user))
         except:
             return super(ResetUserPasswordView, self).get(*args, request=request, *kwargs)
 
@@ -366,21 +363,3 @@ class DistributionDeliveredView(CreateView):
     @staticmethod
     def _set_delivered_status_for_user(user_ipv4: str):
         DistributionDeliveredMessage(ip=user_ipv4).save()
-
-
-def _get_url_with_args(url: str, **url_args) -> str:
-    return url + "?" + "&".join([f"{key}={value}" for key, value in zip(url_args.keys(), url_args.values())])
-
-
-def send_reset_password_email(user: User):
-    request = HttpRequest()
-    request.method = 'POST'
-    request.user = user
-    request.META['HTTP_HOST'] = django.conf.settings.HOST_NAME
-
-    request.POST = {
-        'email': user.email,
-        'csrfmiddlewaretoken': get_token(HttpRequest())
-    }
-
-    return PasswordResetView.as_view()(request)

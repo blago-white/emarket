@@ -201,8 +201,7 @@ class AddProductView(UserLoginRequiredMixin, CreateView):
         try:
             target_category, _ = Category.objects.get_or_create(
                 title=spaces_to_dashes(form.instance.title),
-                defaults=dict(parent=form.instance.category,
-                              photo=form.instance.photo)
+                defaults=dict(parent=form.instance.category, photo=form.instance.photo)
             )
         except ValidationError:
             return super().form_invalid(form=form)

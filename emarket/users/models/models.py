@@ -5,8 +5,9 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.dispatch import receiver
 
-from .utils import get_image_path
 from emarket import config
+
+from .utils import get_image_path
 
 __all__ = ["Notifications", "UserProfile", "DistributionDeliveredMessage"]
 

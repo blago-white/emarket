@@ -108,10 +108,8 @@ class AccountInfoViewTestCase(tests_presets.BaseTwinUsersTestCase):
         self_account_info_request = self._get_test_account_info_request(self.first_test_user)
 
         self.assertEqual(
-            type(AccountInfoView.as_view()(
-                self_account_info_request, pk=self.first_test_user.id
-            ).context_data["object"]
-                 ),
+            type(AccountInfoView.as_view()(self_account_info_request,
+                                           pk=self.first_test_user.id).context_data["object"]),
             User
         )
 

@@ -54,7 +54,8 @@ input[name="products_count"] {
     padding-inline: .2em;
     display: none;
     width: 48%;
-    color: rgb(185, 185, 185);
+    color: rgb(255 255 255);
+    font-weight: 500;
 }
 
 .drop {

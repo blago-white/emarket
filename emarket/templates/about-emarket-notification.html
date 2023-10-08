@@ -3,39 +3,43 @@
 <link rel="stylesheet" href="{% static 'css/notification.css' %}">
 
 <div class="full-screen-warn-canvas" id="emarket-notification-body">
-    <div class="full-screen-warn-canvas-bg"></div>
-    <div class="canvas-content" id="floated-element">
-        <div class="notification-message">
-            <div class="highlighted-text-main">
-                <span class="highlighted-text-main-first-part">THANK</span> <span
-                    class="highlighted-text-main-second-part">YOU!</span>
+        <div class="full-screen-warn-canvas-bg"></div>
+        <div class="canvas-content" id="floated-element">
+            <div class="notification-message">
+                <div class="highlighted-text-main">
+                    <span class="highlighted-text-main-first-part">THANK</span> <span
+                        class="highlighted-text-main-second-part">YOU!</span>
+                </div>
+                <div style="padding-top: 1em;">
+                    I'm the author of <span>E-Market,</span>
+                        I'm 16 years old.
+                    <span>This site is my work for the portfolio</span>, therefore, not
+                        all the necessary tools may be available, if it's not difficult for you,
+                        <span>send your opinion about the site,
+                            about its functionality, shortcomings</span> to me in
+                    <span>telegram -
+                        <a href="https://t.me//VictorMerinov">@VictorMerinov</a>
+                    </span>
+                    or send me email
+                    <em>(all info</em>
+                    <span><em><a href="{% url 'about-emarket' %}">HERE</a></em></span>)<br><br>
+                    <span style="font-weight: bolder">Thanks for using the market, FURTHER - MORE!</span>
+                </div>
             </div>
-            <div style="padding-top: 1em;">
-                I'm the author of <span>E-Market,</span>
-                    I'm 16 years old.
-                <span>This site is my work for the portfolio</span>, therefore, not
-                    all the necessary tools may be available, if it's not difficult for you,
-                    <span>send your opinion about the site,
-                        about its functionality, shortcomings</span> to me in
-                <span>telegram -
-                    <a href="https://t.me//VictorMerinov">@VictorMerinov</a>
-                </span>
-                or send me email
-                <em>(all info</em>
-                <span><em><a href="{% url 'about-emarket' %}">HERE</a></em></span>)<br><br>
-                <span style="font-weight: bolder">Thanks for using the market, FURTHER - MORE!</span>
-            </div>
+            <button class="emarket-notified-button"
+                    onclick="sendUserNotified('{{ request|get_user_ip_from_request }}');enableBodyScrollY();"
+                    onmouseover="changeNotificationBackground();"
+                    onmouseleave="changeNotificationBackground();">
+                I like it!
+            </button>
         </div>
-        <button class="emarket-notified-button"
-                onclick="sendUserNotified('{{ request|get_user_ip_from_request }}');"
-                onmouseover="changeNotificationBackground();"
-                onmouseleave="changeNotificationBackground();">
-            I like it!
-        </button>
     </div>
-</div>
 
+<script type="text/javascript" src="{% static 'js\emarket-extra-notification.js' %}"></script>
+<script type="text/javascript" src="{% static 'js\scroll.js' %}"></script>
 <script>
+    disableBodyScrollY();
+
     class BaseNotificationElement {
         #isActive = false;
 
@@ -92,4 +96,3 @@
         notificationBackgroundActive = !notificationBackgroundActive;
     }
 </script>
-<script type="text/javascript" src="{% static 'js\emarket-extra-notification.js' %}"></script>

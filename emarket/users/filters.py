@@ -35,5 +35,8 @@ def show_notify_user(request: HttpRequest) -> bool:
 
 
 @register.filter
-def get_user_ip_from_request(request: HttpRequest):
-    return request.META.get("REMOTE_ADDR")
+def get_user_ip_from_request(request: HttpRequest) -> str | None:
+    try:
+        return request.META.get("HTTP_X_FORWARDED_FOR", request.META.get("REMOTE_ADDR"))
+    except:
+        return None

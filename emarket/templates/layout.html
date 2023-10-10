@@ -37,7 +37,7 @@
     {% endblock %}
     {% block rootcontent %}
     {% endblock %}
-    {% if request|show_notify_user %}
+    {% if request|show_notication_for_user %}
         {% include 'about-emarket-notification.html' %}
     {% endif %}
     <script type="text/javascript" src="{% static 'js\main-bg-switch.js' %}"></script>

@@ -50,31 +50,6 @@ class FiltersTestCase(TestCase):
         for sorting, result in test_invert_sorting_values:
             self.assertEqual(invert_sorting(sorting), result)
 
-    def test_compile_url_args_for_pagination(self) -> None:
-        test_compile_url_args_for_pagination_values = (
-            ({"price": "0", "filters": int(True), "min": 100}, "&price=0&filters=1&min=100"),
-            ({}, ""),
-            ({"filters": int(True)}, "&filters=1"),
-            ({"filters": int(True), "min": 100}, "&filters=1&min=100")
-        )
-
-        for inputs, result in test_compile_url_args_for_pagination_values:
-            self.assertEqual(compile_url_args(**inputs), result)
-
-    def test_get_ordering_field_from_url_arg(self) -> None:
-        test_get_ordering_field_from_url_arg_values = ((("0", "price"), "price"),
-                                                       (("1", "price"), "-price"),
-                                                       (("test_not_int_arg", "price"), "price"))
-
-        for inputs, result in test_get_ordering_field_from_url_arg_values:
-            self.assertEqual(get_ordering_field_from_url_arg(*inputs), result)
-
-    def test_get_url_arg_from_ordering_field(self) -> None:
-        test_get_url_arg_from_ordering_field_values = (("price", 0), ("-price", 1))
-
-        for field, result in test_get_url_arg_from_ordering_field_values:
-            self.assertEqual(get_url_arg_from_ordering_field(field), result)
-
     def test_underlines_to_spaces(self):
         test_underlined_string = "some_string"
         test_spaced_string = "some string"

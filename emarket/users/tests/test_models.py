@@ -1,6 +1,9 @@
 import datetime
 
+from PIL.JpegImagePlugin import JpegImageFile
 from django.core.exceptions import ValidationError
+from django.conf import settings
+
 from emarket.testsutils.tests_presets import BaseSingleUserTestCase
 
 from ..models.models import Notifications, UserProfile
@@ -28,6 +31,15 @@ class NotificationsModelTestCase(BaseSingleUserTestCase):
 
 
 class UserProfileModelTestCase(BaseSingleUserTestCase):
+    _test_user_profile: UserProfile
+
+    def setUp(self) -> None:
+        super().setUp()
+        self._create_test_user_profile()
+
     def test_str(self):
-        test_profile = UserProfile(user=self.test_user, avatar="")
-        self.assertEqual(str(test_profile), f"{self.test_user.username}'s profile")
+        self.assertEqual(str(self._test_user_profile), f"{self.test_user.username}'s profile")
+
+    def _create_test_user_profile(self):
+        self._test_user_profile = UserProfile(user=self.test_user, avatar="")
+        self._test_user_profile.save()

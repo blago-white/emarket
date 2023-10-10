@@ -2,6 +2,7 @@ from django.core.exceptions import ValidationError
 from django.core.handlers.wsgi import WSGIRequest
 from django.db.models import QuerySet
 from django.http.response import HttpResponseRedirect
+from django.http.request import HttpRequest
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.views.generic import ListView, DetailView, CreateView, DeleteView, TemplateView
@@ -64,7 +65,7 @@ class ProductsView(ListView):
         return self._get_queryset(category=self.kwargs.get("category"), **filters)
 
     def get_context_data(self, *, object_list=None, **kwargs):
-        current_context = super().get_context_data(object_list=None, **kwargs)
+        current_context = super().get_context_data(**kwargs)
         self._complement_context(current_context)
         return current_context
 
@@ -84,11 +85,16 @@ class ProductsView(ListView):
             if not multiple_url_filtering_args[multiple_url_filtering_arg]:
                 continue
 
-            filters.update({f"phone__{multiple_url_filtering_arg}__in": [
-                self._CHOISES_VALUES_FOR_CODES_FOR_FIELD[multiple_url_filtering_arg][
-                    int(url_filtering_arg) if url_filtering_arg.isdigit() else url_filtering_arg
-                ] for url_filtering_arg in self.request.GET.getlist(multiple_url_filtering_arg)
-            ]})
+            try:
+                choises = [
+                    self._CHOISES_VALUES_FOR_CODES_FOR_FIELD[multiple_url_filtering_arg][
+                        int(url_filtering_arg) if url_filtering_arg.isdigit() else url_filtering_arg
+                    ] for url_filtering_arg in self.request.GET.getlist(multiple_url_filtering_arg)
+                ]
+            except KeyError:
+                continue
+
+            filters.update({f"phone__{multiple_url_filtering_arg}__in": choises})
 
     def _get_queryset(self, category: str, **query_filters) -> QuerySet:
         queryset: QuerySet = category_model_services.get_categories_queryset(
@@ -237,11 +243,17 @@ class EditProductView(AddProductView):
 
 class DeleteUserProductView(UserLoginRequiredMixin, DeleteView):
     model = Phone
+    object: Phone
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+
+        return self.form_valid(form=None)
 
     def get_success_url(self):
         return reverse("account-products", kwargs={"pk": self.request.user.id})
 
-    def get_object(self, queryset=None):
+    def get_object(self, queryset=None) -> BaseProduct:
         return self.model.objects.get(pk=self.kwargs.get("pk"), author=self.request.user)
 
 

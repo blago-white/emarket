@@ -91,9 +91,7 @@ class BaseProduct(_BaseModelWithTitle, models.Model):
                                 null=True,
                                 default=0)
 
-    products_count = models.PositiveSmallIntegerField(verbose_name="Number of items of this product",
-                                                      null=False,
-                                                      default=1,
+    products_count = models.PositiveSmallIntegerField(verbose_name="Number of items of this product", default=1,
                                                       validators=[MinValueValidator(0), MaxValueValidator(10000)])
 
     author = models.ForeignKey(User,
@@ -119,10 +117,7 @@ class Phone(BaseProduct):
                              null=False,
                              blank=False)
 
-    storage = models.PositiveSmallIntegerField(verbose_name="Stortage size",
-                                               choices=STORTAGE_SIZES,
-                                               null=False,
-                                               blank=False)
+    storage = models.PositiveSmallIntegerField(verbose_name="Stortage size", choices=STORTAGE_SIZES)
 
     def __str__(self):
         return self.title

@@ -1,5 +1,5 @@
-from django.db.models import Model
+from django.db import models
 
 
-def get_max_product_price(products: Model, price_field: str) -> float:
-    return products.objects.all().aggregate(Max(price_field))[f"{price_field}__max"]
+def get_max_product_price(products: models.Model, price_field_name: str) -> float:
+    return products.objects.all().aggregate(models.Max(price_field_name))[f"{price_field_name}__max"]

@@ -1,21 +1,16 @@
-from allauth.account.models import EmailAddress
+from PIL.JpegImagePlugin import JpegImageFile
 from allauth.account.signals import email_confirmed
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.db import models
-from django.dispatch import receiver
+from django.db.models.signals import pre_save
 
 from emarket import config
 
-from .utils import get_image_path
+from . import utils
+from . import _signals
 
 __all__ = ["Notifications", "UserProfile", "DistributionDeliveredMessage"]
-
-
-@receiver(email_confirmed)
-def _update_user_email(sender, request, email_address, **kwargs):
-    email_address.set_as_primary()
-    EmailAddress.objects.filter(user=email_address.user).exclude(primary=True).delete()
 
 
 class Notifications(models.Model):
@@ -60,36 +55,22 @@ class UserProfile(models.Model):
                                 primary_key=True,
                                 unique=True,
                                 related_name="profile")
-    avatar = models.ImageField(upload_to=get_image_path, null=True, blank=True)
+    avatar = models.ImageField(upload_to=utils.get_image_path, null=True, blank=True)
 
     def __str__(self):
         return f"{self.user.username}'s profile"
 
-    def clean(self):
-        avatar: JpegImageFile = self.avatar
+    def clean(self): # pragma: no cover
+        avatar: models.ImageField = self.avatar
 
         try:
             photo_width, photo_height = avatar.image.size
-        except:
-            return self.avatar
-
-        self._validate_photo_resolution(photo_width=photo_width, photo_height=photo_height)
+        except Exception as e:
+            raise e
+        else:
+            utils.validate_avatar_resolution(photo_width=photo_width, photo_height=photo_height)
 
         return self.avatar
-
-    @staticmethod
-    def _validate_photo_resolution(photo_width: int, photo_height: int) -> None:
-        if photo_width < config.MINIMUM_PHOTO_RESOLUTION_WIDTH or photo_height < config.MINIMUM_PHOTO_RESOLUTION_HEIGHT:
-            raise ValidationError(
-                "Photo dimensions are too small (minimum: "
-                f"width - {config.MINIMUM_PHOTO_RESOLUTION_WIDTH} "
-                f"height - {config.MINIMUM_PHOTO_RESOLUTION_HEIGHT})"
-            )
-
-        elif photo_width > config.MAXIMUM_PHOTO_RESOLUTION_WIDTH or photo_height > config.MAXIMUM_PHOTO_RESOLUTION_HEIGHT:
-            raise ValidationError("Photo dimensions are too large (maximum: "
-                                  f"width - {config.MAXIMUM_PHOTO_RESOLUTION_WIDTH} "
-                                  f"height - {config.MAXIMUM_PHOTO_RESOLUTION_HEIGHT})")
 
     class Meta:
         db_table = "users_profiles"
@@ -108,3 +89,11 @@ class DistributionDeliveredMessage(models.Model):
         db_table = "distribution_delivered_messages"
         verbose_name = "Distribution message delivered"
         verbose_name_plural = "Delivered distribution messages"
+
+
+def _connect_receivers():
+    email_confirmed.connect(receiver=_signals.on_update_user_email)
+    pre_save.connect(receiver=_signals.on_profile_photo_update, sender=UserProfile)
+
+
+_connect_receivers()

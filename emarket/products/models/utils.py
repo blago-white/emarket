@@ -36,7 +36,7 @@ def increment_product_views(phone: models.Model) -> None:
 
 
 def delete_photo(model: models.Model):
-    model_photo_folder_path: str = settings.MEDIA_ROOT + "/".join(model.photo.name.split("/")[:-1])
+    model_photo_folder_path: str = settings.MEDIA_ROOT / "/".join(model.photo.name.split("/")[:-1])
 
     model.photo.delete(save=True)
 

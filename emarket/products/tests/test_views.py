@@ -112,13 +112,14 @@ class ProductsViewTestCase(BaseSingleUserTestCase):
                     reverse("category-products", kwargs={"category": TEST_CATEGORY_DEFAULT_FIELDS["title"]}) +
                     "?storage=256"
                 ), category=TEST_CATEGORY_DEFAULT_FIELDS["title"]).context_data["items"]),
-            tuple(Phone.objects.filter(storage=3)))
+            tuple(Phone.objects.filter(storage=3))
+        )
 
         self.assertFalse(
             ProductsView.as_view()(
                 self.request_factory.get(
                     reverse("category-products", kwargs={"category": TEST_CATEGORY_DEFAULT_FIELDS["title"]}) +
-                    "?storage=0"
+                    "?storage=1024"
                 ), category=TEST_CATEGORY_DEFAULT_FIELDS["title"]).context_data["items"].exists()
         )
 
@@ -135,7 +136,7 @@ class ProductsViewTestCase(BaseSingleUserTestCase):
             ProductsView.as_view()(
                 self.request_factory.get(
                     reverse("category-products", kwargs={"category": TEST_CATEGORY_DEFAULT_FIELDS["title"]}) +
-                    "?storage=0"), category=TEST_CATEGORY_DEFAULT_FIELDS["title"]
+                    "?storage=none&max=10"), category=TEST_CATEGORY_DEFAULT_FIELDS["title"]
             ).context_data["items"].exists()
         )
 

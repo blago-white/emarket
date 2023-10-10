@@ -170,6 +170,7 @@ class BuyProductViewTestCase(_BaseShoppingBasketViewTestCase):
         )
 
     def _recover_tables_after_order(self):
+        ShoppingBasket.objects.all().delete()
         self.add_test_product_to_basket(target_user=self._second_test_user)
         Notifications.objects.all().delete()
 

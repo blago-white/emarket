@@ -20,9 +20,6 @@
                 {{ field }}
             {% endif %}
         {% endfor %}
-    <!--    <input type="text" style="text-align: center;" value="{{ user.user.username }}{{ user.username }}"-->
-    <!--           class="username-input">-->
-
         <button class="submit-button-account-info" type="submit">
             <img src="{% static 'img/products/arrow.png' %}" style="width: .6em;height: .6em;">
         </button>
@@ -38,7 +35,7 @@
         {% if error_field == field_name %}
             <div class="submit-button-account-info"
                  style="background: orange;cursor: help;"
-                 title="{% if error_name == 'exist' %}this {{ field_name }} already exist{% elif error_name == 'uncorrect' %}this {{ field_name }} is not correct{% else %}unexpected error occured, try later{% endif %}">
+                 title="{% if 'exist' in error_name %}this {{ field_name }} already exist{% elif 'uncorrect' in error_name %}this {{ field_name }} is not correct{% else %}unexpected error occured, try later{% endif %}">
                 <img src="{% static 'img/users/issue.png' %}" style="width: 1em;height: 1em;">
             </div>
         {% endif %}

@@ -1,6 +1,7 @@
 from django.test import TestCase
 
-from ..views_utils import convert_category_filters_to_product_filters
+from products.models.utils import convert_category_filters_to_product_filters
+
 
 
 class ViewsUtilsTestCase(TestCase):

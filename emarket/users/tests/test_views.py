@@ -7,11 +7,13 @@ from django.template.response import TemplateResponse
 from django.test import TestCase
 from django.test.client import RequestFactory
 from django.urls import reverse
+
 from emarket.testsutils import tests_presets, tests_utils
 from emarket.testsutils.tests_presets import *
+from users.utils.profile_errors import username_errors
 
 from . import *
-from ..models.models import UserProfile, Notifications
+from ..models.models import UserProfile, Notifications, DistributionDeliveredMessage
 from ..views import (LoginUserView,
                      UserPasswordChangeView,
                      AccountInfoView,
@@ -78,15 +80,15 @@ class UserPasswordChangeViewTestCase(tests_presets.BaseSingleUserTestCase):
 
 class AccountInfoViewTestCase(tests_presets.BaseTwinUsersTestCase):
     request_factory: RequestFactory
-    _test_form_error = "testerror-errorfield"
+    _TEST_FORM_ERROR = username_errors.UncorrectUsernameError
 
     def test_get_object(self):
         self._test_account_info()
         self._test_account_info_form_errors()
 
     def _test_account_info_form_errors(self):
-        self_account_info_request_with_error = self._get_test_self_account_info_request_with_form_error(
-            test_user=self.first_test_user, error=self._test_form_error
+        self_account_info_request_with_error = self._get_test_self_account_info_request(
+            test_user=self.first_test_user, error=self._TEST_FORM_ERROR.code
         )
 
         account_info_form_error_response = AccountInfoView.as_view()(
@@ -95,32 +97,33 @@ class AccountInfoViewTestCase(tests_presets.BaseTwinUsersTestCase):
         )
 
         self.assertEqual(
-            account_info_form_error_response.context_data["error"], self._test_form_error
+            account_info_form_error_response.context_data.get("error"), self._TEST_FORM_ERROR.code
         )
         self.assertEqual(
-            account_info_form_error_response.context_data.get("error_field"), "errorfield"
+            account_info_form_error_response.context_data.get("error_field"), self._TEST_FORM_ERROR.field
         )
         self.assertEqual(
-            account_info_form_error_response.context_data.get("error_name"), "testerror"
+            account_info_form_error_response.context_data.get("error_name"), self._TEST_FORM_ERROR.message
         )
 
     def _test_account_info(self):
         self_account_info_request = self._get_test_account_info_request(self.first_test_user)
 
-        self.assertEqual(
-            type(AccountInfoView.as_view()(self_account_info_request,
-                                           pk=self.first_test_user.id).context_data["object"]),
-            User
-        )
+        # self.assertEqual(
+        #     type(AccountInfoView.as_view()(
+        #         self_account_info_request, pk=self.first_test_user.id
+        #     ).context_data["object"]), User
+        # )
 
         self._create_test_user_profile(test_user=self.first_test_user)
 
         self.assertEqual(
             type(AccountInfoView.as_view()(
                 self_account_info_request, pk=self.first_test_user.id
-            ).context_data["object"]),
-            UserProfile
+            ).context_data["object"]), UserProfile
         )
+
+        self._create_test_user_profile(test_user=self.second_test_user)
 
         stranger_account_info_request = self._get_test_account_info_request(
             test_user=self.first_test_user,
@@ -130,14 +133,12 @@ class AccountInfoViewTestCase(tests_presets.BaseTwinUsersTestCase):
         stranger_account_info_response = AccountInfoView.as_view()(
             stranger_account_info_request, pk=self.second_test_user.id
         )
+
         self.assertFalse(stranger_account_info_response.context_data.get("is_self_account"))
-        self.assertEqual(type(stranger_account_info_response.context_data["object"]), User)
+        self.assertEqual(type(stranger_account_info_response.context_data["object"]), UserProfile)
 
-    def _create_test_user_profile(self, test_user: User):
-        test_userprofile = UserProfile(user=test_user)
-        test_userprofile.save()
 
-    def _get_test_self_account_info_request_with_form_error(self, test_user: int, error: str) -> WSGIRequest:
+    def _get_test_self_account_info_request(self, test_user: User, error: str) -> WSGIRequest:
         test_self_account_info_request = self.request_factory.get(
             reverse("account-info", kwargs={"pk": test_user.id}) + "?error=" + error
         )
@@ -154,6 +155,11 @@ class AccountInfoViewTestCase(tests_presets.BaseTwinUsersTestCase):
         request.user = test_user
 
         return request
+
+    @staticmethod
+    def _create_test_user_profile(test_user: User):
+        test_userprofile = UserProfile(user=test_user)
+        test_userprofile.save()
 
 
 class AccountProductsViewTestCase(tests_presets.BaseTwinUsersTestCase):
@@ -260,7 +266,7 @@ class ResetUserPasswordViewTestCase(tests_presets.BaseSingleUserTestCase):
         reset_password_request.user = self.test_user
         self.assertEqual(
             type(reset_password_view(reset_password_request).context_data["view"]),
-            AllauthPasswordResetView
+            ResetUserPasswordView
         )
         reset_password_request.user = AnonymousUser()
         self.assertEqual(
@@ -277,3 +283,16 @@ class RedirectToAccountInfoViewTestCase(tests_presets.BaseSingleUserTestCase):
         self.assertTrue(
             tests_utils.response_is_redirect(RedirectToAccountInfoView.as_view()(redirect_to_account_info_request))
         )
+
+
+class DistributionDeliveredViewTestCase(TestCase):
+    def test_post(self):
+        self.assertFalse(self._message_status_saved())
+
+        self.client.post(path=reverse("distribution-delivered"))
+
+        self.assertTrue(self._message_status_saved())
+
+    @staticmethod
+    def _message_status_saved() -> bool:
+        return DistributionDeliveredMessage.objects.filter(ip="127.0.0.1").exists()

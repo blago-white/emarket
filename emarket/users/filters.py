@@ -8,6 +8,7 @@ from .models.models import Notifications, DistributionDeliveredMessage
 __all__ = ["enumerate_",
            "wrap",
            "get_title_theme",
+           "show_notication_for_user",
            "get_user_ip_from_request"]
 
 
@@ -29,7 +30,7 @@ def get_title_theme(name: str) -> str:
 
 
 @register.filter
-def show_notify_user(request: HttpRequest) -> bool:
+def show_notication_for_user(request: HttpRequest) -> bool:
     return (not DistributionDeliveredMessage.objects.filter(ip=get_user_ip_from_request(request=request)).exists() and
             (request.path.startswith("/accounts") or request.path == "/"))
 

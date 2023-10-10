@@ -28,7 +28,6 @@ PRODUCT_IS_OVER_WARNING_MESSAGE_HTML_TEMPLATE = _complement_base_html_notificati
     template_name="product_is_over_warning_message_html_template.html"
 )
 
-
 PURCHASE_MESSAGE_FOR_OWNER_TEMPLATE = """
     User {username}({usermail}) ordered the {productname} for the price of {price}
 """

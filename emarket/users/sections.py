@@ -10,7 +10,7 @@ class BaseAccountSection(metaclass=ABCMeta):
 
     @property
     @abstractmethod
-    def section_name(self):
+    def section_name(self): # pragma: no cover
         pass
 
 

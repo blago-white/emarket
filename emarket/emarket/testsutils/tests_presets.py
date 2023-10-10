@@ -43,7 +43,9 @@ class BaseSingleUserTestCase(BaseViewTestCaseWithRequests):
     test_user: User
 
     def setUp(self) -> None:
-        self.test_user = User(username=TEST_USER_DEFAULT_USERNAME, password=TEST_USER_DEFAULT_PASSWORD)
+        self.test_user = User(username=TEST_USER_DEFAULT_USERNAME,
+                              password=TEST_USER_DEFAULT_PASSWORD,
+                              email=TEST_USER_DEFAULT_EMAIL)
         self.test_user.save()
 
     def get_request_with_test_user(

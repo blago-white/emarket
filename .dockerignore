@@ -4,7 +4,7 @@
 .git
 .env
 
-htmlcov
+emarket/htmlcov
 venv
 
 emarket/emarket/testsettings.py

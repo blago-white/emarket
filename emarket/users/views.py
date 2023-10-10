@@ -17,13 +17,15 @@ from django.utils.decorators import method_decorator
 from django.views.decorators import csrf
 from django.views.generic import DetailView, ListView, DeleteView, UpdateView, RedirectView, TemplateView, CreateView
 
+from emarket import config
 from products.models.models import Phone
 from . import sections
-from .filters import *
 from .forms import RegisterUserForm, ChangeUsernameForm, ChangeEmailForm, ChangeAvatarForm
 from .mixins import UserLoginRequiredMixin
 from .models.models import UserProfile, Notifications, DistributionDeliveredMessage
-from .services import users, passwords, urls
+from .services import users, passwords, urls, views, models
+from .utils import profile_errors
+from .utils.profile_errors import username_errors, email_errors, base
 
 from .filters import *
 
@@ -53,11 +55,11 @@ class BaseAccountView:
 
         return current_context
 
-    def get_user(self, url_pk_name: str = "pk"):
+    def get_user(self, url_pk_name: str = "pk") -> User:
         if not self.kwargs.get(url_pk_name):
             raise KeyError(f"Not found url-arg: '{url_pk_name=}'")
 
-        return User.objects.filter(id=self.kwargs.get(url_pk_name))
+        return User.objects.filter(id=self.kwargs.get(url_pk_name)).first()
 
     def _get_curren_section(self) -> sections.BaseAccountSection:
         try:
@@ -114,8 +116,8 @@ class LoginUserView(LoginView):
         current_context = super().get_context_data(**kwargs)
 
         try:
-            del current_context["form"].fields["login"].widget.attrs["placeholder"]
-            del current_context["form"].fields["password"].widget.attrs["placeholder"]
+            for field in current_context["form"].fields.values():
+                del field.widget.attrs["placeholder"]
         except:
             pass
 
@@ -129,9 +131,8 @@ class UserPasswordChangeView(PasswordChangeView):
         current_context = super().get_context_data(**kwargs)
 
         try:
-            del current_context["form"].fields["oldpassword"].widget.attrs["placeholder"]
-            del current_context["form"].fields["password1"].widget.attrs["placeholder"]
-            del current_context["form"].fields["password2"].widget.attrs["placeholder"]
+            for field in current_context["form"].fields.values():
+                del field.widget.attrs["placeholder"]
         except:
             pass
 
@@ -163,14 +164,15 @@ class AccountInfoView(BaseAccountView, DetailView):
         current_context.update({"change_email_form": ChangeEmailForm})
         current_context.update({"change_avatar_form": ChangeAvatarForm})
 
-        try:
-            current_context.update({"error": self.request.GET.get("error")})
-            current_context.update({"error_field": current_context["error"].split("-")[-1]})
-            current_context.update({"error_name": "-".join(current_context["error"].split("-")[0:-1])})
-        except:
-            pass
+        if (profile_data_error := self._get_error_from_url()) is not None:
+            current_context.update({"error": profile_data_error.code})
+            current_context.update({"error_field": profile_data_error.field})
+            current_context.update({"error_name": profile_data_error.message})
 
         return current_context
+
+    def _get_error_from_url(self) -> base.BaseUserProfieDataError | None:
+        return profile_errors.get_error_by_code(code=self.request.GET.get("error"))
 
 
 class AccountProductsView(BaseAccountView, ListView):
@@ -181,12 +183,12 @@ class AccountProductsView(BaseAccountView, ListView):
     section = sections.ProductsAccountSection
 
     def get_queryset(self):
-        user_from_request = super().get_user()[0]
+        user_from_url = self.get_user()
 
-        if self.request.user != user_from_request:
-            return self.model.objects.filter(author=user_from_request, products_count__gt=0).order_by("-views")
+        if self.request.user != user_from_url:
+            return self.model.objects.filter(author=user_from_url, products_count__gt=0).order_by("-views")
 
-        return self.model.objects.filter(author=user_from_request).order_by("-views")
+        return self.model.objects.filter(author=user_from_url).order_by("-views")
 
 
 class AccountNotificationsView(UserLoginRequiredMixin, BaseAccountView, ListView):
@@ -226,13 +228,6 @@ class LogoutUserView(LogoutView):
 class ChangeAccountDataView(UpdateView):
     model = User
 
-    _avaible_fields_for_update_user = ("username", "email")
-    _avaible_fields_for_update_profile = ("avatar", )
-    _avaible_fields_for_update = _avaible_fields_for_update_user + _avaible_fields_for_update_profile
-
-    _UNCORRECT_USERNAME_WARN = User.username_validator.message
-    _EXIST_USERNAME_WARN = "A user with that username already exists."
-
     _field_name: str
     _value_from_request: object
 
@@ -242,19 +237,24 @@ class ChangeAccountDataView(UpdateView):
     def post(self, request, *args, **kwargs):
         self._set_updating_field_name_value_from_request()
 
-        if (not self._field_name) or (self._field_name not in self._avaible_fields_for_update):
+        if (not self._field_name) or (self._field_name not in config.AVAILABLE_FOR_CHANGE_PROFILE_FIELDS):
             return HttpResponseRedirect(self.get_success_url())
 
         self._set_user_to_update_by_request()
 
-        if self._value_from_request and self._user_to_update.__dict__.get(self._field_name) != self._value_from_request:
-            if self._field_name == "email":
-                return HttpResponseRedirect(self._get_redirect_url_for_update_email(email=self._value_from_request))
+        if (not self._value_from_request or
+                self._user_to_update.__dict__.get(self._field_name) == self._value_from_request):
+            return HttpResponseRedirect(self.get_success_url())
 
-            try:
-                self._try_update_user_field()
-            except Exception as exception:
-                return HttpResponseRedirect(self._get_redirect_url_by_exception(exception=exception))
+        if self._field_name == config.EMAIL_PROFILE_FIELD_NAME:
+            return views.confirm_user_email(request=request, email=self._value_from_request)
+
+        try:
+            models.try_update_user_profile_field(user=self._user_to_update,
+                                                 field=self._field_name,
+                                                 new_value=self._value_from_request)
+        except Exception as exception:
+            return HttpResponseRedirect(self._get_redirect_url_by_exception(exception=exception))
 
         return HttpResponseRedirect(self.get_success_url())
 
@@ -263,51 +263,30 @@ class ChangeAccountDataView(UpdateView):
         self._value_from_request = self.request.POST.get(self._field_name) or self.request.FILES.get(self._field_name)
 
     def _get_redirect_url_by_exception(self, exception: Exception) -> str:
-        if type(exception) == ValidationError:
-            if self._field_name == "username":
-                return self._get_url_with_username_error_info(validation_error=exception)
-            else:
-                return self.get_success_url()
-        else:
-            return self.get_success_url()
+        if type(exception) == ValidationError and self._field_name == config.USERNAME_PROFILE_FIELD_NAME:
+            return self._get_url_with_username_error_code(validation_error=exception)
+
+        return self.get_success_url()
+
 
     def _set_user_to_update_by_request(self) -> None:
         self._user_to_update: User = self.model.objects.get(pk=self.request.user.id)
 
-        if self._field_name == "avatar":
+        if self._field_name == config.AVATAR_PROFILE_FIELD_NAME:
             self._user_to_update: UserProfile = UserProfile.objects.get(pk=self.request.user.id)
-
-    def _get_redirect_url_for_update_email(self, email: str) -> str:
-        try:
-            send_email_confirmation(request=self.request, user=self.request.user, email=email)
-        except Exception as exception:
-            return urls.get_url_with_args(url=self.get_success_url(),
-                                      error="exist-email" if exception == IntegrityError else "unexpected-error-email")
-
-        return reverse_lazy("account_email_verification_sent")
 
     def _get_updating_field_name(self) -> str:
         if not self.request.POST:
             return
 
-        for avaible_field_name in self._avaible_fields_for_update:
-            if self.request.POST.get(avaible_field_name) or self.request.FILES.get(avaible_field_name):
-                return avaible_field_name
+        for available_field_name in config.AVAILABLE_FOR_CHANGE_PROFILE_FIELDS:
+            if self.request.POST.get(available_field_name) or self.request.FILES.get(available_field_name):
+                return available_field_name
 
-    def _get_url_with_username_error_info(self, validation_error: ValidationError) -> str:
-        if validation_error.error_dict[self._field_name][0].message == self._UNCORRECT_USERNAME_WARN:
-            error_code = "uncorrect-username"
-        elif validation_error.error_dict[self._field_name][0].message == self._EXIST_USERNAME_WARN:
-            error_code = "exist-username"
-        else:
-            error_code = "unexpected-error-username"
+    def _get_url_with_username_error_code(self, validation_error: ValidationError) -> str:
+        error_code = views.get_username_error_code(validation_error=validation_error, field_name=self._field_name)
 
         return urls.get_url_with_args(url=self.get_success_url(), error=error_code)
-
-    def _try_update_user_field(self) -> None:
-        self._user_to_update.__dict__[self._field_name] = self._value_from_request
-        self._user_to_update.full_clean()
-        self._user_to_update.save()
 
 
 class UserEmailVerificationView(EmailVerificationSentView):
@@ -334,8 +313,8 @@ class ResetUserPasswordFromKeyView(PasswordResetFromKeyView):
     def get_context_data(self, **kwargs):
         current_context = super(ResetUserPasswordFromKeyView, self).get_context_data(**kwargs)
         try:
-            del current_context["form"].fields["password1"].widget.attrs["placeholder"]
-            del current_context["form"].fields["password2"].widget.attrs["placeholder"]
+            for field in current_context["form"].fields.values():
+                del field.widget.attrs["placeholder"]
         except:
             pass
         return current_context

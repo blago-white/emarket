@@ -2,6 +2,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.http import HttpResponseRedirect, HttpResponse
 from django.template.response import TemplateResponse
 from django.urls import reverse
+from django.conf import settings
 from emarket.testsutils import tests_utils
 from emarket.testsutils.tests_presets import (BaseSingleUserTestCase,
                                               BaseTwinUsersTestCase,
@@ -386,9 +387,5 @@ def _get_test_product_form_invalid_fields(valid_fields: dict) -> dict:
 
 def _get_test_image() -> SimpleUploadedFile:
     return SimpleUploadedFile(name='test_image.jpg',
-                              content=open(_get_test_image_path(), 'rb').read(),
+                              content=open(settings.STATICFILES_DIRS[0] / "img/emarket.jpg", 'rb').read(),
                               content_type='image/jfif')
-
-
-def _get_test_image_path() -> str:
-    return "C:\\Users\\GAME-X\\Desktop\\iam.jfif"

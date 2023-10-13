@@ -14,19 +14,15 @@ from users.utils.profile_errors import username_errors
 
 from . import *
 from ..models.models import UserProfile, Notifications, DistributionDeliveredMessage
-from ..views import (LoginUserView,
-                     UserPasswordChangeView,
-                     AccountInfoView,
-                     AccountProductsView,
-                     AccountNotificationsView,
-                     AccountNotificationDeleteView,
-                     ChangeAccountDataView,
+from .. import views
+from ..views import (ChangeAccountDataView,
                      ResetUserPasswordView,
                      RedirectToAccountInfoView)
 
 
 class _BaseNotificationsTestCase(tests_presets.BaseSingleUserTestCase):
-    def create_notifications_for_user(self, test_user: User) -> None:
+    @staticmethod
+    def _create_notifications_for_user(test_user: User) -> None:
         Notifications(recipient=test_user,
                       theme="inf",
                       text="test notify").save()
@@ -52,7 +48,7 @@ class RegisterUserViewTestCase(TestCase):
 
 class LoginUserViewTestCase(TestCase):
     def test_get_success_url(self):
-        self.assertEqual(LoginUserView().get_success_url(), "/")
+        self.assertEqual(views.LoginUserView().get_success_url(), "/")
 
     def test_get_context_data(self):
         login_response = self.client.get(reverse("login"))
@@ -70,7 +66,9 @@ class UserPasswordChangeViewTestCase(tests_presets.BaseSingleUserTestCase):
         request = self.get_request_with_test_user(request_method=self.request_factory.get,
                                                   path=reverse("account_change_password"))
 
-        change_password_response = UserPasswordChangeView.as_view()(request)
+        change_password_response = views.UserPasswordChangeView.as_view()(
+            request
+        )
 
         for field_name in change_password_response.context_data["form"].fields:
             self.assertFalse(
@@ -91,7 +89,7 @@ class AccountInfoViewTestCase(tests_presets.BaseTwinUsersTestCase):
             test_user=self.first_test_user, error=self._TEST_FORM_ERROR.code
         )
 
-        account_info_form_error_response = AccountInfoView.as_view()(
+        account_info_form_error_response = views.AccountInfoView.as_view()(
             self_account_info_request_with_error,
             pk=self.first_test_user.id,
         )
@@ -109,28 +107,22 @@ class AccountInfoViewTestCase(tests_presets.BaseTwinUsersTestCase):
     def _test_account_info(self):
         self_account_info_request = self._get_test_account_info_request(self.first_test_user)
 
-        # self.assertEqual(
-        #     type(AccountInfoView.as_view()(
-        #         self_account_info_request, pk=self.first_test_user.id
-        #     ).context_data["object"]), User
-        # )
-
-        self._create_test_user_profile(test_user=self.first_test_user)
+        tests_utils.create_test_blank_user_profile(user=self.first_test_user)
 
         self.assertEqual(
-            type(AccountInfoView.as_view()(
-                self_account_info_request, pk=self.first_test_user.id
-            ).context_data["object"]), UserProfile
+            views.AccountInfoView.as_view()(
+                self_account_info_request, pk=self.first_test_user.pk
+            ).context_data["object"].__class__, UserProfile
         )
 
-        self._create_test_user_profile(test_user=self.second_test_user)
+        tests_utils.create_test_blank_user_profile(user=self.second_test_user)
 
         stranger_account_info_request = self._get_test_account_info_request(
             test_user=self.first_test_user,
-            account_info_pk=self.second_test_user.id
+            account_info_pk=self.second_test_user.pk
         )
 
-        stranger_account_info_response = AccountInfoView.as_view()(
+        stranger_account_info_response = views.AccountInfoView.as_view()(
             stranger_account_info_request, pk=self.second_test_user.id
         )
 
@@ -140,7 +132,9 @@ class AccountInfoViewTestCase(tests_presets.BaseTwinUsersTestCase):
 
     def _get_test_self_account_info_request(self, test_user: User, error: str) -> WSGIRequest:
         test_self_account_info_request = self.request_factory.get(
-            reverse("account-info", kwargs={"pk": test_user.id}) + "?error=" + error
+            reverse(viewname="account-info",
+                    kwargs={"pk": test_user.id}
+                    ) + "?error=" + error
         )
 
         test_self_account_info_request.user = test_user
@@ -149,17 +143,14 @@ class AccountInfoViewTestCase(tests_presets.BaseTwinUsersTestCase):
 
     def _get_test_account_info_request(self, test_user: User, account_info_pk: int = None) -> WSGIRequest:
         request = self.request_factory.get(
-            reverse("account-info", kwargs={"pk": account_info_pk or test_user.id})
+            reverse(
+                viewname="account-info",
+                kwargs={"pk": account_info_pk or test_user.id})
         )
 
         request.user = test_user
 
         return request
-
-    @staticmethod
-    def _create_test_user_profile(test_user: User):
-        test_userprofile = UserProfile(user=test_user)
-        test_userprofile.save()
 
 
 class AccountProductsViewTestCase(tests_presets.BaseTwinUsersTestCase):
@@ -175,14 +166,18 @@ class AccountProductsViewTestCase(tests_presets.BaseTwinUsersTestCase):
         self._create_test_phones_for_user(test_user=self.first_test_user)
 
         self.assertEqual(
-            AccountProductsView.as_view()(request, pk=self.first_test_user.id).context_data["items"].count(),
+            views.AccountProductsView.as_view()(
+                request, pk=self.first_test_user.id
+            ).context_data["items"].count(),
             2
         )
 
         request.user = self.second_test_user
 
         self.assertEqual(
-            AccountProductsView.as_view()(request, pk=self.first_test_user.id).context_data["items"].count(),
+            views.AccountProductsView.as_view()(
+                request, pk=self.first_test_user.id
+            ).context_data["items"].count(),
             2
         )
 
@@ -204,9 +199,11 @@ class AccountNotificationsViewTestCase(_BaseNotificationsTestCase):
         request = self.get_request_with_test_user(request_method=self.request_factory.get,
                                                   path=reverse("account-notifications"))
 
-        super().create_notifications_for_user(test_user=self.test_user)
+        self._create_notifications_for_user(test_user=self.test_user)
 
-        notifications_response = AccountNotificationsView.as_view()(request)
+        notifications_response = views.AccountNotificationsView.as_view()(
+            request
+        )
         self.assertEqual(notifications_response.context_data["notifications"].count(), 1)
         self.assertTrue(notifications_response.context_data["is_self_account"])
 
@@ -216,10 +213,10 @@ class AccountNotificationDeleteViewTestCase(_BaseNotificationsTestCase):
     test_user: User
 
     def test_get_object(self):
-        super().create_notifications_for_user(test_user=self.test_user)
+        self._create_notifications_for_user(test_user=self.test_user)
         test_notification_id = Notifications.objects.all().values("id")[0]["id"]
 
-        notification_delete_view = AccountNotificationDeleteView()
+        notification_delete_view = views.AccountNotificationDeleteView()
         notification_delete_view.kwargs = {"pk": test_notification_id}
 
         self.assertEqual(notification_delete_view.get_object(),
@@ -227,33 +224,44 @@ class AccountNotificationDeleteViewTestCase(_BaseNotificationsTestCase):
 
 
 class ChangeAccountDataViewTestCase(tests_presets.BaseSingleUserTestCase):
-    _new_username = "testusernameChanged"
+    _USERNAME_AFTER_CHANGE = "testusernameChanged"
     request_factory: RequestFactory
     test_user: User
 
     def test_post(self):
-        change_username_field_request = self.request_factory.post("change-account-field",
-                                                                  data={"username": self._new_username})
-        change_username_field_request.user = self.test_user
-        ChangeAccountDataView.as_view()(change_username_field_request)
+        change_username_field_request = self.get_request_with_test_user(
+            request_method=self.request_factory.post,
+            path="change-account-field",
+            username=self._USERNAME_AFTER_CHANGE
+        )
+
+        views.ChangeAccountDataView.as_view()(change_username_field_request)
 
         changed_test_user = User.objects.get(pk=self.test_user.id)
 
-        self.assertEqual(changed_test_user.username, self._new_username)
+        self.assertEqual(changed_test_user.username,
+                         self._USERNAME_AFTER_CHANGE)
 
-        empty_field_change_request = self.request_factory.post("change-account-field", data={})
-        empty_field_change_request.user = self.test_user
-
-        uncorrect_field_change_request = self.request_factory.post("change-account-field",
-                                                                   data={"username": "$# %-0 ~"})
-        uncorrect_field_change_request.user = self.test_user
-
-        self.assertEqual(
-            type(ChangeAccountDataView.as_view()(empty_field_change_request)), HttpResponseRedirect
+        empty_field_change_request = self.get_request_with_test_user(
+            request_method=self.request_factory.post,
+            path="change-account-field"
         )
-        self.assertEqual(
-            type(ChangeAccountDataView.as_view()(uncorrect_field_change_request)), HttpResponseRedirect
+
+        uncorrect_field_change_request = self.get_request_with_test_user(
+            request_method=self.request_factory.post,
+            path="change-account-field",
+            username="$# %-0 ~"
         )
+
+        for field_change_request in (
+                empty_field_change_request, uncorrect_field_change_request
+        ):
+            self.assertEqual(
+                views.ChangeAccountDataView.as_view()(
+                    field_change_request
+                ).__class__,
+                HttpResponseRedirect
+            )
 
 
 class ResetUserPasswordViewTestCase(tests_presets.BaseSingleUserTestCase):
@@ -262,8 +270,10 @@ class ResetUserPasswordViewTestCase(tests_presets.BaseSingleUserTestCase):
 
     def test_get(self):
         reset_password_view = ResetUserPasswordView.as_view()
-        reset_password_request = self.request_factory.get("account_change_password")
-        reset_password_request.user = self.test_user
+        reset_password_request = self.get_request_with_test_user(
+            request_method=self.request_factory.get,
+            path="account_change_password",
+        )
         self.assertEqual(
             type(reset_password_view(reset_password_request).context_data["view"]),
             ResetUserPasswordView
@@ -277,11 +287,15 @@ class ResetUserPasswordViewTestCase(tests_presets.BaseSingleUserTestCase):
 
 class RedirectToAccountInfoViewTestCase(tests_presets.BaseSingleUserTestCase):
     def test_get_redirect_url(self):
-        redirect_to_account_info_request = self.request_factory.get(reverse("account_email"))
-        redirect_to_account_info_request.user = self.test_user
+        redirect_to_account_info_request = self.get_request_with_test_user(
+            request_method=self.request_factory.get,
+            path="account_email"
+        )
 
         self.assertTrue(
-            tests_utils.response_is_redirect(RedirectToAccountInfoView.as_view()(redirect_to_account_info_request))
+            tests_utils.response_is_redirect(
+                RedirectToAccountInfoView.as_view()(redirect_to_account_info_request)
+            )
         )
 
 
@@ -296,3 +310,14 @@ class DistributionDeliveredViewTestCase(TestCase):
     @staticmethod
     def _message_status_saved() -> bool:
         return DistributionDeliveredMessage.objects.filter(ip="127.0.0.1").exists()
+
+
+class AboutInfoViewTestCase(BaseSingleUserTestCase):
+    def test_get_context_data(self):
+        response = self.client.get(reverse("about-emarket"))
+
+        custom_bg_path = response.context_data.get("custom_bg_img_path")
+
+        self.assertIsNotNone(custom_bg_path)
+
+        self.assertEqual(custom_bg_path, "img/emarket-icon.png")

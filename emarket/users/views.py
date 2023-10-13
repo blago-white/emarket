@@ -1,25 +1,19 @@
+import abc
+
 from allauth.account.utils import send_email_confirmation
-from allauth.account.views import (LoginView,
-                                   LogoutView,
-                                   SignupView,
-                                   PasswordChangeView,
-                                   EmailVerificationSentView,
-                                   PasswordResetView,
-                                   PasswordResetDoneView,
-                                   PasswordResetFromKeyView)
+from allauth.account import views as allauth_views
 from allauth.socialaccount.views import LoginErrorView
+from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
+from django.views.decorators import csrf
+from django.views import generic
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError
 from django.http import HttpResponseRedirect, HttpRequest, JsonResponse
-from django.urls import reverse_lazy
-from django.utils.decorators import method_decorator
-from django.views.decorators import csrf
-from django.views.generic import DetailView, ListView, DeleteView, UpdateView, RedirectView, TemplateView, CreateView
 
 from emarket import config
 from products.models.models import Phone
-from . import sections
 from .forms import RegisterUserForm, ChangeUsernameForm, ChangeEmailForm, ChangeAvatarForm
 from .mixins import UserLoginRequiredMixin
 from .models.models import UserProfile, Notifications, DistributionDeliveredMessage
@@ -27,7 +21,10 @@ from .services import users, passwords, urls, views, models
 from .utils import profile_errors
 from .utils.profile_errors import username_errors, email_errors, base
 
+from . import sections
+
 from .filters import *
+
 
 __all__ = ["RegisterUserView", "UserLoginErrorView", "LoginUserView",
            "UserPasswordChangeView", "BaseAccountView", "AccountInfoView",
@@ -37,7 +34,12 @@ __all__ = ["RegisterUserView", "UserLoginErrorView", "LoginUserView",
            "RedirectToAccountInfoView", "AboutInfoView", "DistributionDeliveredView"]
 
 
-class BaseAccountView:
+class BaseAccountView(metaclass=abc.ABCMeta): # pragma: no cover
+    @property
+    @abc.abstractmethod
+    def section(self) -> str:
+        pass
+
     def get_context_data(self, **kwargs):
         current_context = super().get_context_data(**kwargs)
 
@@ -72,7 +74,7 @@ class BaseAccountView:
         raise ValueError("Not correct section name")
 
 
-class AboutInfoView(TemplateView):
+class AboutInfoView(generic.TemplateView):
     template_name = "about.html"
 
     def get_context_data(self, **kwargs):
@@ -83,7 +85,7 @@ class AboutInfoView(TemplateView):
         return current_context
 
 
-class RegisterUserView(SignupView):
+class RegisterUserView(allauth_views.SignupView):
     form_class = RegisterUserForm
     template_name = "users/register.html"
 
@@ -106,7 +108,7 @@ class UserLoginErrorView(LoginErrorView):
     template_name = "users/login-error.html"
 
 
-class LoginUserView(LoginView):
+class LoginUserView(allauth_views.LoginView):
     template_name = "users/login.html"
 
     def get_success_url(self):
@@ -124,7 +126,7 @@ class LoginUserView(LoginView):
         return current_context
 
 
-class UserPasswordChangeView(PasswordChangeView):
+class UserPasswordChangeView(allauth_views.PasswordChangeView):
     template_name = "users/change-password.html"
 
     def get_context_data(self, **kwargs):
@@ -139,7 +141,7 @@ class UserPasswordChangeView(PasswordChangeView):
         return current_context
 
 
-class AccountInfoView(BaseAccountView, DetailView):
+class AccountInfoView(BaseAccountView, generic.DetailView):
     model = UserProfile
     template_name = "users/account-info.html"
     context_object_name = "user"
@@ -147,15 +149,6 @@ class AccountInfoView(BaseAccountView, DetailView):
     slug_field = "pk"
 
     section = sections.InfoAccountSection
-
-    def get_object(self, queryset=None):
-        try:
-            return super(AccountInfoView, self).get_object(queryset=queryset)
-        except:
-            if self.request.user.id == self.kwargs.get("pk"):
-                return self.request.user
-
-            return User.objects.get(pk=self.kwargs.get("pk"))
 
     def get_context_data(self, **kwargs):
         current_context = super().get_context_data(**kwargs)
@@ -175,7 +168,7 @@ class AccountInfoView(BaseAccountView, DetailView):
         return profile_errors.get_error_by_code(code=self.request.GET.get("error"))
 
 
-class AccountProductsView(BaseAccountView, ListView):
+class AccountProductsView(BaseAccountView, generic.ListView):
     model = Phone
     template_name = "users/account-cards.html"
     context_object_name = "items"
@@ -191,7 +184,9 @@ class AccountProductsView(BaseAccountView, ListView):
         return self.model.objects.filter(author=user_from_url).order_by("-views")
 
 
-class AccountNotificationsView(UserLoginRequiredMixin, BaseAccountView, ListView):
+class AccountNotificationsView(UserLoginRequiredMixin,
+                               BaseAccountView,
+                               generic.ListView):
     model = Notifications
     template_name = "users/notifications.html"
     context_object_name = "notifications"
@@ -210,7 +205,8 @@ class AccountNotificationsView(UserLoginRequiredMixin, BaseAccountView, ListView
         return self.model.objects.filter(recipient=self.request.user)
 
 
-class AccountNotificationDeleteView(UserLoginRequiredMixin, DeleteView):
+class AccountNotificationDeleteView(UserLoginRequiredMixin,
+                                    generic.DeleteView):
     model = Notifications
     success_url = reverse_lazy("account-notifications")
 
@@ -220,12 +216,12 @@ class AccountNotificationDeleteView(UserLoginRequiredMixin, DeleteView):
         return self.model.objects.get(pk=self.kwargs.get("pk"))
 
 
-class LogoutUserView(LogoutView):
+class LogoutUserView(allauth_views.LogoutView):
     next_page = reverse_lazy("home")
     template_name = "users/logout.html"
 
 
-class ChangeAccountDataView(UpdateView):
+class ChangeAccountDataView(generic.UpdateView):
     model = User
 
     _field_name: str
@@ -237,13 +233,17 @@ class ChangeAccountDataView(UpdateView):
     def post(self, request, *args, **kwargs):
         self._set_updating_field_name_value_from_request()
 
-        if (not self._field_name) or (self._field_name not in config.AVAILABLE_FOR_CHANGE_PROFILE_FIELDS):
+        if ((not self._field_name) or
+                (self._field_name not in
+                 config.AVAILABLE_FOR_CHANGE_PROFILE_FIELDS)):
             return HttpResponseRedirect(self.get_success_url())
 
         self._set_user_to_update_by_request()
 
         if (not self._value_from_request or
-                self._user_to_update.__dict__.get(self._field_name) == self._value_from_request):
+                self._user_to_update.__dict__.get(
+                    self._field_name
+                ) == self._value_from_request):
             return HttpResponseRedirect(self.get_success_url())
 
         if self._field_name == config.EMAIL_PROFILE_FIELD_NAME:
@@ -260,54 +260,68 @@ class ChangeAccountDataView(UpdateView):
 
     def _set_updating_field_name_value_from_request(self) -> None:
         self._field_name = self._get_updating_field_name()
-        self._value_from_request = self.request.POST.get(self._field_name) or self.request.FILES.get(self._field_name)
+        self._value_from_request = (self.request.POST.get(self._field_name) or
+                                    self.request.FILES.get(self._field_name))
 
     def _get_redirect_url_by_exception(self, exception: Exception) -> str:
-        if type(exception) == ValidationError and self._field_name == config.USERNAME_PROFILE_FIELD_NAME:
+        if (type(exception) == ValidationError and
+                self._field_name == config.USERNAME_PROFILE_FIELD_NAME):
             return self._get_url_with_username_error_code(validation_error=exception)
 
         return self.get_success_url()
 
 
     def _set_user_to_update_by_request(self) -> None:
-        self._user_to_update: User = self.model.objects.get(pk=self.request.user.id)
+        self._user_to_update: User = self.model.objects.get(
+            pk=self.request.user.id
+        )
 
         if self._field_name == config.AVATAR_PROFILE_FIELD_NAME:
-            self._user_to_update: UserProfile = UserProfile.objects.get(pk=self.request.user.id)
+            self._user_to_update: UserProfile = UserProfile.objects.get(
+                pk=self.request.user.id
+            )
 
     def _get_updating_field_name(self) -> str:
         if not self.request.POST:
             return
 
         for available_field_name in config.AVAILABLE_FOR_CHANGE_PROFILE_FIELDS:
-            if self.request.POST.get(available_field_name) or self.request.FILES.get(available_field_name):
+            if (self.request.POST.get(available_field_name) or
+                    self.request.FILES.get(available_field_name)):
                 return available_field_name
 
     def _get_url_with_username_error_code(self, validation_error: ValidationError) -> str:
-        error_code = views.get_username_error_code(validation_error=validation_error, field_name=self._field_name)
+        error_code = views.get_username_error_code(
+            validation_error=validation_error,
+            field_name=self._field_name
+        )
 
         return urls.get_url_with_args(url=self.get_success_url(), error=error_code)
 
 
-class UserEmailVerificationView(EmailVerificationSentView):
+class UserEmailVerificationView(allauth_views.EmailVerificationSentView):
     template_name = "users/email-verification-info.html"
 
 
-class ResetUserPasswordView(PasswordResetView):
+class ResetUserPasswordView(allauth_views.PasswordResetView):
     template_name = "users/password-reset-from-anonymous-user.html"
 
     def get(self, request, *args, **kwargs):
         try:
-            return PasswordResetView.as_view()(passwords.get_reset_password_request(user=request.user))
+            return allauth_views.PasswordResetView.as_view()(
+                passwords.get_reset_password_request(user=request.user)
+            )
         except:
             return super(ResetUserPasswordView, self).get(*args, request=request, *kwargs)
 
 
-class ResetUserPasswordDoneView(PasswordResetDoneView):
+class ResetUserPasswordDoneView(allauth_views.PasswordResetDoneView):
     template_name = "users/password-reset-done.html"
 
 
-class ResetUserPasswordFromKeyView(PasswordResetFromKeyView):
+class ResetUserPasswordFromKeyView(
+    allauth_views.PasswordResetFromKeyView
+): # pragma: no  cover
     template_name = "users/change-password.html"
 
     def get_context_data(self, **kwargs):
@@ -320,13 +334,13 @@ class ResetUserPasswordFromKeyView(PasswordResetFromKeyView):
         return current_context
 
 
-class RedirectToAccountInfoView(RedirectView):
+class RedirectToAccountInfoView(generic.RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         return reverse_lazy("account-info", kwargs={"pk": self.request.user.id})
 
 
 @method_decorator(csrf.csrf_exempt, name="dispatch")
-class DistributionDeliveredView(CreateView):
+class DistributionDeliveredView(generic.CreateView):
     http_method_names = ["post",
                          "head",
                          "options",

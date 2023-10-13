@@ -5,6 +5,7 @@ from django.core.exceptions import ValidationError
 from django.conf import settings
 
 from emarket.testsutils.tests_presets import BaseSingleUserTestCase
+from emarket.testsutils import tests_utils
 
 from ..models.models import Notifications, UserProfile
 
@@ -35,11 +36,10 @@ class UserProfileModelTestCase(BaseSingleUserTestCase):
 
     def setUp(self) -> None:
         super().setUp()
-        self._create_test_user_profile()
+        self._test_user_profile = tests_utils.create_test_blank_user_profile(
+            user=self.test_user
+        )
 
     def test_str(self):
-        self.assertEqual(str(self._test_user_profile), f"{self.test_user.username}'s profile")
-
-    def _create_test_user_profile(self):
-        self._test_user_profile = UserProfile(user=self.test_user, avatar="")
-        self._test_user_profile.save()
+        self.assertEqual(str(self._test_user_profile),
+                         f"{self.test_user.username}'s profile")

@@ -3,6 +3,7 @@ from django.http.response import HttpResponse
 from emarket.testsutils.tests_presets import *
 
 from products.models.models import Category, Phone
+from users.models.models import UserProfile
 
 
 def create_test_product(test_user: User, test_category: Category = None, **custom_product_fields):
@@ -44,15 +45,11 @@ def create_test_user() -> User:
                     email=TEST_USER_DEFAULT_EMAIL,
                     password=TEST_USER_DEFAULT_PASSWORD)
 
-    try:
-        if User.objects.all().exists():
-            new_user.username = TEST_SECOND_USER_DEFAULT_USERNAME
+    if User.objects.all().exists():
+        new_user.username = TEST_SECOND_USER_DEFAULT_USERNAME
 
-    except User.DoesNotExist:
-        pass
 
-    finally:
-        new_user.save()
+    new_user.save()
 
     return new_user
 
@@ -66,3 +63,10 @@ def create_default_test_category() -> Category:
 
 def response_is_redirect(response: HttpResponse) -> bool:
     return response.status_code // 100 == 3
+
+
+def create_test_blank_user_profile(user: User) -> UserProfile:
+    test_profile = UserProfile(user=user)
+    test_profile.save()
+
+    return test_profile

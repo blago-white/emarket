@@ -1,9 +1,13 @@
 from django.urls import path, re_path
+from django.conf import settings
+from django.views.decorators.cache import cache_page
 
 from .views import *
 
 urlpatterns = [
-    path('about/', AboutInfoView.as_view(), name="about-emarket"),
+    path('about/',
+         cache_page(settings.LONG_CACHE_TIMEOUT)(AboutInfoView.as_view()),
+         name="about-emarket"),
     path('signup/', RegisterUserView.as_view(), name="register"),
     path('login/', LoginUserView.as_view(), name="login"),
     path('password/change/', UserPasswordChangeView.as_view(), name="account_change_password"),

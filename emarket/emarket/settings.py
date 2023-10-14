@@ -95,6 +95,19 @@ DATABASES = {
     }
 }
 
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": "redis://localhost/1",
+    }
+}
+
+KEY_PREFIX = "emarket"
+
+LONG_CACHE_TIMEOUT = 86400
+
+SHORT_CACHE_TIMEOUT = 300
+
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 {% extends 'layout.html' %}
 {% load static %}
+{% load cache %}
 
 {% block head %}
     <link rel="stylesheet" href="{% static 'css\home\home-style.css' %}" type="text/css">
@@ -16,23 +17,24 @@
 
 {% block rootcontent %}
 <div class="page-categories" id="categories">
-    {% for categoriesbatch in categories|get_categories_batches %}
-        <div class="categories-cards">
-                    {% for category in categoriesbatch %}
-                    <a
-                        class="category-card {% cycle 'frs' 'sec' 'thr' 'fou' 'fif' 'six' 'sev' 'eig' 'nin' %}-card bg"
-                        style="background: url('uploads/{{ category.photo }}');filter: grayscale(100%);"
-                        onmouseover="onhover(this)"
-                        onmouseout="onunhover(this)"
-                        id="{{ category.title }}"
-                        href="{% url 'category-products' category.title %}">
-                        <div class="category-card-onhover-filter">
-                            {{ category.title|upper }}
-                        </div>
-                    </a>
+    {% cache 3600 maincategories %}
+        {% for categoriesbatch in categories|get_categories_batches %}
+            <div class="categories-cards">
+                {% for category in categoriesbatch %}
+                <a class="category-card {% cycle 'frs' 'sec' 'thr' 'fou' 'fif' 'six' 'sev' 'eig' 'nin' %}-card bg"
+                   style="background: url('uploads/{{ category.photo }}');filter: grayscale(100%);"
+                   onmouseover="onhover(this)"
+                   onmouseout="onunhover(this)"
+                   id="{{ category.title }}"
+                   href="{% url 'category-products' category.title %}">
+                    <div class="category-card-onhover-filter">
+                        {{ category.title|upper }}
+                    </div>
+                </a>
                 {% endfor %}
-        </div>
-    {% endfor %}
+            </div>
+        {% endfor %}`
+    {% endcache %}
 </div>
 {% endblock %}
 {% block scripts %}

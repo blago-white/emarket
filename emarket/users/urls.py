@@ -5,9 +5,7 @@ from django.views.decorators.cache import cache_page
 from .views import *
 
 urlpatterns = [
-    path('about/',
-         cache_page(settings.LONG_CACHE_TIMEOUT)(AboutInfoView.as_view()),
-         name="about-emarket"),
+    path('about/', AboutInfoView.as_view(), name="about-emarket"),
     path('signup/', RegisterUserView.as_view(), name="register"),
     path('login/', LoginUserView.as_view(), name="login"),
     path('password/change/', UserPasswordChangeView.as_view(), name="account_change_password"),
@@ -21,7 +19,8 @@ urlpatterns = [
     path('notifications', AccountNotificationsView.as_view(), name="account-notifications"),
     path('<int:pk>/info', AccountInfoView.as_view(), name="account-info"),
     path('<int:pk>/cards', AccountProductsView.as_view(), name="account-products"),
-    path('logout/', LogoutUserView.as_view(), name="logout"),
+    path('logout/', LogoutUserView.as_view(),
+         name="logout"),
     path('email/', RedirectToAccountInfoView.as_view(), name="account_email"),
     path('delivered/', DistributionDeliveredView.as_view(), name="distribution-delivered"),
     re_path(

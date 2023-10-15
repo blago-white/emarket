@@ -11,16 +11,16 @@ services:
       - "5432:5432"
     env_file:
       - .env
-  cache:
+  emarketredis:
     image: redis
-    container_name: emarketcache
+    container_name: emarketredis
     volumes:
       - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
       - ../backups/redis.log:/var/log/redis/redis.log
     expose:
       - 6379
-    command: redis-server /usr/local/etc/redis/redis.conf --bind redis-container-name
-  web:
+    command: redis-server /usr/local/etc/redis/redis.conf --bind emarketredis
+  emarketweb:
     build: .
     container_name: emarketweb
     command: /bin/sh /emarket/startdjango.sh
@@ -31,10 +31,10 @@ services:
       - 80
     depends_on:
       - emarketdb
-      - cache
+      - emarketredis
     env_file:
       - .env
-  nginx:
+  emarketnginx:
     container_name: emarketnginx
     build: ./nginx
     volumes:

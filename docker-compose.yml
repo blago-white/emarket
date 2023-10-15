@@ -12,7 +12,8 @@ services:
     env_file:
       - .env
   cache:
-    container_name: redis
+    image: redis
+    container_name: emarketcache
     volumes:
       - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
       - ../backups/redis.log:/var/log/redis/redis.log

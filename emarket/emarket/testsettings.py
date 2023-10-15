@@ -11,6 +11,8 @@ CSRF_TRUSTED_ORIGINS = [HOST_NAME]
 MEDIA_ROOT = BASE_DIR / 'media'
 DATABASES["default"]["PASSWORD"] = os.environ.get("POSTGRES_TEST_PASSWORD")
 
+CACHES["default"]["LOCATION"] = f"redis://localhost/0"
+
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]

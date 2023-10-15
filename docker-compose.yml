@@ -11,6 +11,14 @@ services:
       - "5432:5432"
     env_file:
       - .env
+  cache:
+    container_name: redis
+    volumes:
+      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
+      - ../backups/redis.log:/var/log/redis/redis.log
+    expose:
+      - 6379
+    command: redis-server /usr/local/etc/redis/redis.conf --bind redis-container-name
   web:
     build: .
     container_name: emarketweb
@@ -22,6 +30,7 @@ services:
       - 80
     depends_on:
       - emarketdb
+      - cache
     env_file:
       - .env
   nginx:

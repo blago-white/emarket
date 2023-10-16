@@ -16,10 +16,11 @@ services:
     container_name: emarketredis
     volumes:
       - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
+      - ./redis/startredis.sh:/usr/local/etc/redis/startredis.sh
       - ../backups/redis.log:/var/log/redis/redis.log
     expose:
       - 6379
-    command: redis-server /usr/local/etc/redis/redis.conf --bind emarketredis
+    command: /bin/sh /usr/local/etc/redis/startredis.sh
   emarketweb:
     build: .
     container_name: emarketweb

@@ -34,7 +34,7 @@ __all__ = ["RegisterUserView", "UserLoginErrorView", "LoginUserView",
            "RedirectToAccountInfoView", "AboutInfoView", "DistributionDeliveredView"]
 
 
-class BaseAccountView(metaclass=abc.ABCMeta): # pragma: no cover
+class BaseAccountView(metaclass=abc.ABCMeta):  # pragma: no cover
     @property
     @abc.abstractmethod
     def section(self) -> str:
@@ -69,7 +69,9 @@ class BaseAccountView(metaclass=abc.ABCMeta): # pragma: no cover
                 return self.section
 
         except:
-            raise AttributeError("Field 'section' required if you inherited by 'BaseAccountView'")
+            raise AttributeError(
+                "Field 'section' required if you inherited by 'BaseAccountView'"
+            )
 
         raise ValueError("Not correct section name")
 
@@ -270,7 +272,6 @@ class ChangeAccountDataView(generic.UpdateView):
 
         return self.get_success_url()
 
-
     def _set_user_to_update_by_request(self) -> None:
         self._user_to_update: User = self.model.objects.get(
             pk=self.request.user.id
@@ -321,7 +322,7 @@ class ResetUserPasswordDoneView(allauth_views.PasswordResetDoneView):
 
 class ResetUserPasswordFromKeyView(
     allauth_views.PasswordResetFromKeyView
-): # pragma: no  cover
+):  # pragma: no  cover
     template_name = "users/change-password.html"
 
     def get_context_data(self, **kwargs):
@@ -351,7 +352,9 @@ class DistributionDeliveredView(generic.CreateView):
         return JsonResponse({"OK": True})
 
     def _on_delivered_successful(self, request: HttpRequest):
-        self._set_delivered_status_for_user(user_ipv4=get_user_ip_from_request(request=request))
+        self._set_delivered_status_for_user(
+            user_ipv4=get_user_ip_from_request(request=request)
+        )
 
     @staticmethod
     def _set_delivered_status_for_user(user_ipv4: str):

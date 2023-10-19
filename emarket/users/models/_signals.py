@@ -13,7 +13,7 @@ def on_update_user_email(sender, request, email_address, **kwargs):
 
 def on_profile_photo_update(instance, **_):
     future_avatar_path = "".join((
-            str(settings.MEDIA_ROOT) / get_image_path(self=instance)
+            str(settings.MEDIA_ROOT) + "/" + get_image_path(self=instance)
     ))
 
     if os.path.isfile(path=future_avatar_path):

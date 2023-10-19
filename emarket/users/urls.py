@@ -1,4 +1,6 @@
 from django.urls import path, re_path
+from django.conf import settings
+from django.views.decorators.cache import cache_page
 
 from .views import *
 
@@ -17,7 +19,8 @@ urlpatterns = [
     path('notifications', AccountNotificationsView.as_view(), name="account-notifications"),
     path('<int:pk>/info', AccountInfoView.as_view(), name="account-info"),
     path('<int:pk>/cards', AccountProductsView.as_view(), name="account-products"),
-    path('logout/', LogoutUserView.as_view(), name="logout"),
+    path('logout/', LogoutUserView.as_view(),
+         name="logout"),
     path('email/', RedirectToAccountInfoView.as_view(), name="account_email"),
     path('delivered/', DistributionDeliveredView.as_view(), name="distribution-delivered"),
     re_path(

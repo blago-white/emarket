@@ -11,7 +11,17 @@ services:
       - "5432:5432"
     env_file:
       - .env
-  web:
+  emarketredis:
+    image: redis
+    container_name: emarketredis
+    volumes:
+      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
+      - ./redis/startredis.sh:/usr/local/etc/redis/startredis.sh
+      - ../backups/redis.log:/var/log/redis/redis.log
+    expose:
+      - 6379
+    command: /bin/sh /usr/local/etc/redis/startredis.sh
+  emarketweb:
     build: .
     container_name: emarketweb
     command: /bin/sh /emarket/startdjango.sh
@@ -22,9 +32,10 @@ services:
       - 80
     depends_on:
       - emarketdb
+      - emarketredis
     env_file:
       - .env
-  nginx:
+  emarketnginx:
     container_name: emarketnginx
     build: ./nginx
     volumes:

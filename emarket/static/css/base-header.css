@@ -20,7 +20,7 @@
     flex-wrap: wrap;
     padding-inline: .2em;
     height: 6vh;
-    backdrop-filter: blur(.3em);
+    backdrop-filter: blur(.75em) saturate(0.25);
     justify-content: center;
     top: 1vh;
     overflow: hidden;

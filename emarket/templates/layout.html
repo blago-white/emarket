@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 {% load static %}
+{% load cache %}
 
 <head>
     <meta charset="UTF-8">
@@ -13,26 +14,28 @@
     {% endblock %}
 </head>
 <body class="page-content" style="background: mintcream;">
-     {% if current_account_avatar_url %}
-     <div style="position: fixed;width: 100vw;height: 100vh;overflow: hidden;
-                 background: url({{ current_account_avatar_url }});
-                 background-position: center center;background-size: cover;
-                 filter: blur(2.5em);opacity: 0.4;z-index: -1;"></div>
-     {% elif user.profile.avatar.name or user.socialaccount_set.all.0.get_avatar_url %}
-     <div style="position: fixed;width: 100vw;height: 100vh;overflow: hidden;
-                 background: url({% if user.socialaccount_set.all.0.get_avatar_url %}{{ user.socialaccount_set.all.0.get_avatar_url }}{% else %}{{ user.profile.avatar.name|get_media_path }}{% endif %});
-                 background-position: center center;background-size: cover;
-                 filter: blur(2.5em);opacity: 0.4;z-index: -1;">
-     </div>
-     {% else %}
-     <div style="position: fixed;width: 100vw;height: 100vh;overflow: hidden;
-                 background: darkgrey;z-index: -1;">
-     </div>
-     {% endif %}
-    <div style="position: fixed;width: 100vw;height: 100vh;
-                overflow: hidden;background: url({% static 'img/white-noise.png' %});
-                background-repeat: repeat;opacity: 0.5;mix-blend-mode: overlay;z-index: -1;">
-    </div>
+    {% cache 300 background user current_account_avatar_url %}
+        {% if current_account_avatar_url %}
+        <div style="position: fixed;width: 100vw;height: 100vh;overflow: hidden;
+                    background: url({{ current_account_avatar_url }});
+                    background-position: center center;background-size: cover;
+                    filter: blur(2.5em);opacity: 0.4;z-index: -1;"></div>
+        {% elif user.profile.avatar.name or user.socialaccount_set.all.0.get_avatar_url %}
+        <div style="position: fixed;width: 100vw;height: 100vh;overflow: hidden;
+                    background: url({% if user.socialaccount_set.all.0.get_avatar_url %}{{ user.socialaccount_set.all.0.get_avatar_url }}{% else %}{{ user.profile.avatar.name|get_media_path }}{% endif %});
+                    background-position: center center;background-size: cover;
+                    filter: blur(2.5em);opacity: 0.4;z-index: -1;">
+        </div>
+        {% else %}
+        <div style="position: fixed;width: 100vw;height: 100vh;overflow: hidden;
+                    background: darkgrey;z-index: -1;">
+        </div>
+        {% endif %}
+        <div style="position: fixed;width: 100vw;height: 100vh;
+                    overflow: hidden;background: url({% static 'img/white-noise.png' %});
+                    background-repeat: repeat;opacity: 0.5;mix-blend-mode: overlay;z-index: -1;">
+        </div>
+    {% endcache %}
     {% if request|show_notication_for_user %}
         {% include 'about-emarket-notification.html' %}
     {% endif %}

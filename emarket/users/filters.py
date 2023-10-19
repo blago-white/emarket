@@ -31,8 +31,11 @@ def get_title_theme(name: str) -> str:
 
 @register.filter
 def show_notication_for_user(request: HttpRequest) -> bool:
-    return (not DistributionDeliveredMessage.objects.filter(ip=get_user_ip_from_request(request=request)).exists() and
-            (request.path.startswith("/accounts") or request.path == "/"))
+    try:
+        return (not DistributionDeliveredMessage.objects.filter(ip=get_user_ip_from_request(request=request)).exists() and
+                (request.path.startswith("/accounts") or request.path == "/"))
+    except:
+        return False
 
 
 @register.filter

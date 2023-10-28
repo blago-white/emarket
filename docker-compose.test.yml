@@ -3,7 +3,7 @@ version: '3.11'
 services:
   emarketdb:
     restart: always
-    image: postgres
+    image: postgres:15.4
     container_name: emarketdb
     volumes:
       - postgres_data:/var/lib/postgresql/data
@@ -39,13 +39,10 @@ services:
     container_name: emarketnginx
     build: ./nginx
     volumes:
+      - ./nginx/nginx.test.conf:/etc/nginx/conf.d/nginx.conf
       - ./emarket/static:/emarket-statics/static
       - ./emarket/media:/emarket-statics/uploads
-      - /etc/letsencrypt/live/xn----8sbncyk3as.xn--p1ai/fullchain.pem:/etc/letsencrypt/live/xn----8sbncyk3as.xn--p1ai/fullchain.pem
-      - /etc/letsencrypt/live/xn----8sbncyk3as.xn--p1ai/privkey.pem:/etc/letsencrypt/live/xn----8sbncyk3as.xn--p1ai/privkey.pem
-      - ../backups/nginxaccesslog.log:/var/log/nginx/access.log
     ports:
-      - "443:443"
       - "80:80"
     depends_on:
       - emarketweb

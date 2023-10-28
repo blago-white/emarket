@@ -1,10 +1,11 @@
 from django.contrib.auth.models import User
 
 from products.models.models import Phone
-from purchasing import *
+from purchasing.emails.templates import (PRODUCT_IS_OVER_WARNING_MESSAGE_TEMPLATE,
+                                         PRODUCT_IS_OVER_WARNING_MESSAGE_HTML_TEMPLATE)
 from users.models.models import Notifications
 from . import try_save_notification
-from ..emails import send_notification
+from ..tasks import send_notification
 
 __all__ = ["notify_product_is_over"]
 

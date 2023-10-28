@@ -65,8 +65,8 @@ class UserProfile(models.Model):
 
         try:
             photo_width, photo_height = avatar.image.size
-        except Exception as e:
-            raise e
+        except:
+            pass
         else:
             utils.validate_avatar_resolution(photo_width=photo_width, photo_height=photo_height)
 

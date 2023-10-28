@@ -4,7 +4,7 @@ from emarket.testsutils.tests_presets import BaseTwinUsersTestCase
 
 from products.models.models import Phone
 from users.models.models import Notifications
-from .. import *
+from ..emails.templates import *
 from ..notifications import purchase_notification
 
 

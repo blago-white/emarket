@@ -1,10 +1,10 @@
 from django.contrib.auth.models import User
 
 from products.models.models import Phone
-from purchasing import *
+from purchasing.emails.templates import PURCHASE_MESSAGE_FOR_PURCHASER_TEMPLATE, PURCHASE_MESSAGE_FOR_OWNER_TEMPLATE
 from users.models.models import Notifications
 from . import try_save_notification
-from ..emails import EmailPurchaseNotification
+from ..emails.emails import EmailPurchaseNotification
 
 __all__ = ["notify_about_purchase"]
 

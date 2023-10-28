@@ -1,11 +1,11 @@
-from django.conf import settings
 from django.contrib.auth.models import User
-from django.core.mail import send_mail
 
 from products.models.models import Phone
-from . import PURCHASE_MESSAGE_FOR_OWNER_HTML_TEMPLATE, PURCHASE_MESSAGE_FOR_PURCHASER_HTML_TEMPLATE
+from purchasing import tasks
+from purchasing.emails.templates import (PURCHASE_MESSAGE_FOR_OWNER_HTML_TEMPLATE,
+                                         PURCHASE_MESSAGE_FOR_PURCHASER_HTML_TEMPLATE)
 
-__all__ = ["EmailPurchaseNotification", "send_notification"]
+__all__ = ["EmailPurchaseNotification"]
 
 
 class _BaseEmailNotification:
@@ -44,12 +44,6 @@ class EmailPurchaseNotification(_BaseEmailNotification):
                                                    userid=user_id,
                                                    productid=product.id)
 
-        send_notification(message=message, recipient_mail=recipient_mail, subject="purchase")
-
-
-def send_notification(message: str, recipient_mail: str, subject: str = "info") -> None:
-    send_mail(subject=subject,
-              recipient_list=[recipient_mail],
-              from_email=settings.DEFAULT_FROM_EMAIL,
-              message=str(),
-              html_message=message)
+        tasks.send_notification(message=message,
+                                recipient_mail=recipient_mail,
+                                subject="purchase")
